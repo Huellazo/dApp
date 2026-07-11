@@ -1,0 +1,23 @@
+{
+  "name": "huellazo-monorepo",
+  "private": true,
+  "workspaces": [
+    "mobile"
+  ],
+  "scripts": {
+    "mobile:dev": "cd mobile && expo start",
+    "mobile:web": "cd mobile && expo start --web",
+    "mobile:android": "cd mobile && expo run:android",
+    "mobile:prebuild": "cd mobile && expo prebuild -p android",
+    "docker:up": "docker compose up -d postgres backend",
+    "docker:up:all": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:logs:api": "docker compose logs -f backend",
+    "anchor:build": "cd anchor && anchor build",
+    "anchor:test": "cd anchor && anchor test",
+    "anchor:deploy:local": "cd anchor && anchor deploy --provider.cluster localnet",
+    "anchor:deploy:devnet": "cd anchor && anchor deploy --provider.cluster devnet",
+    "setup": "npm install && cp -n .env.example .env || true && echo 'Done. Edit .env with your tokens.'"
+  }
+}

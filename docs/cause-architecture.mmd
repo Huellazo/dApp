@@ -1,0 +1,51 @@
+%%{init: {"flowchart": {"nodeSpacing": 45, "rankSpacing": 80}} }%%
+flowchart TB
+  classDef browser fill:#102033,stroke:#4d9fff,color:#f0f0f2;
+  classDef action fill:#1f2433,stroke:#7c8cff,color:#f0f0f2;
+  classDef analysis fill:#102033,stroke:#4d9fff,color:#f0f0f2;
+  classDef collection fill:#251b33,stroke:#a78bfa,color:#f0f0f2;
+  classDef rendering fill:#2b2414,stroke:#ff9f43,color:#f0f0f2;
+  classDef testing fill:#252529,stroke:#8b8b95,color:#f0f0f2;
+  classDef fixtures fill:#1f2b1f,stroke:#22c55e,color:#f0f0f2;
+  classDef storage fill:#2b2414,stroke:#ff9f43,color:#f0f0f2;
+  classDef application fill:#252529,stroke:#8b8b95,color:#f0f0f2;
+  classDef appentry fill:#102033,stroke:#4d9fff,color:#f0f0f2;
+  classDef frontend fill:#102033,stroke:#4d9fff,color:#f0f0f2;
+  classDef fecomponents fill:#152238,stroke:#6eb6ff,color:#f0f0f2;
+  classDef backend fill:#251b33,stroke:#a78bfa,color:#f0f0f2;
+  classDef config fill:#2b2414,stroke:#ff9f43,color:#f0f0f2;
+  classDef content fill:#1f2b1f,stroke:#22c55e,color:#f0f0f2;
+  classDef buildoutput fill:#252529,stroke:#666,color:#aaa;
+  subgraph Backend___API_Layer_Group["Backend / API Layer"]
+    direction TB
+    agg_backend_routes["API Routes<br/>cause-pots/backend/src/routes/activities.ts"]
+  end
+  subgraph Services___Business_Logic_Group["Services / Business Logic"]
+    direction TB
+    agg_backend_seed["Seed<br/>cause-pots/backend/scripts/seed.ts"]
+    agg_backend_database["Database<br/>cause-pots/backend/src/db/database.ts"]
+    agg_backend_init["Init<br/>cause-pots/backend/src/db/init.ts"]
+    agg_backend_src["Src<br/>cause-pots/backend/src/index.ts"]
+    agg_backend_types["Types<br/>cause-pots/backend/src/types/index.ts"]
+    agg_backend_domain["Domain<br/>cause-pots/backend/src/utils/domain.ts"]
+  end
+  subgraph Shared___Utilities_Group["Shared / Utilities"]
+    direction TB
+    agg_shared_utilities["Utilities<br/>cause-pots/contract/migrations/deploy.ts"]
+  end
+  agg_backend_init -->|"depends on"| agg_backend_database
+  agg_backend_routes -->|"depends on"| agg_backend_database
+  agg_backend_routes -->|"depends on"| agg_backend_domain
+  agg_backend_routes -->|"depends on"| agg_backend_types
+  agg_backend_seed -->|"depends on"| agg_backend_database
+  agg_backend_seed -->|"depends on"| agg_backend_domain
+  agg_backend_src -->|"depends on"| agg_backend_database
+  agg_backend_src -->|"depends on"| agg_backend_routes
+  class agg_shared_utilities shared;
+  class agg_backend_seed services;
+  class agg_backend_database services;
+  class agg_backend_init services;
+  class agg_backend_src services;
+  class agg_backend_routes backend;
+  class agg_backend_types services;
+  class agg_backend_domain services;

@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+
+  # --- PostgreSQL ---
+  postgres:
+    image: postgres:16-alpine
+    container_name: huellazo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-huellazo}
+      POSTGRES_USER: ${POSTGRES_USER:-huellazo_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-huellazo_dev_2026}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-huellazo_user} -d ${POSTGRES_DB:-huellazo}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # --- Backend API (FastAPI) ---
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: huellazo-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-huellazo_user}:${POSTGRES_PASSWORD:-huellazo_dev_2026}@postgres:5432/${POSTGRES_DB:-huellazo}
+      SOLANA_RPC_URL: ${SOLANA_RPC_URL:-http://solana-validator:8899}
+      CORS_ORIGINS: "*"
+      ENVIRONMENT: development
+    ports:
+      - "8000:8000"
+    volumes:
+      # Hot reload: mount source dir only
+      - ./backend/app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # --- Solana Test Validator (optional, comment out if using devnet) ---
+  solana-validator:
+    image: solanalabs/solana:v2.2.7
+    container_name: huellazo-validator
+    restart: unless-stopped
+    entrypoint: >
+      solana-test-validator
+        --reset
+        --quiet
+        --bind-address 0.0.0.0
+        --rpc-port 8899
+        --faucet-port 9900
+        --limit-ledger-size 50000000
+    ports:
+      - "${VALIDATOR_RPC_PORT:-8899}:8899"
+      - "8900:8900"
+      - "9900:9900"
+    healthcheck:
+      test: ["CMD", "solana", "cluster-version", "--url", "http://localhost:8899"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
+    driver: local

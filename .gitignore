@@ -1,0 +1,38 @@
+# --- Environment ---
+.env
+*.env.local
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+dist/
+*.egg-info/
+
+# --- Node / Expo ---
+node_modules/
+.expo/
+dist/
+build/
+.cache/
+
+# --- Anchor / Rust ---
+packages/anchor/target/
+packages/anchor/.anchor/
+
+# --- Docker ---
+pgdata/
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+
+# --- macOS ---
+.DS_Store
+
+# --- Solana ---
+*.so
+test-ledger/

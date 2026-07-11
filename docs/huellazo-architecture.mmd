@@ -1,0 +1,46 @@
+%%{init: {"flowchart": {"nodeSpacing": 45, "rankSpacing": 80}} }%%
+flowchart TB
+  classDef browser fill:#102033,stroke:#4d9fff,color:#f0f0f2;
+  classDef action fill:#1f2433,stroke:#7c8cff,color:#f0f0f2;
+  classDef analysis fill:#102033,stroke:#4d9fff,color:#f0f0f2;
+  classDef collection fill:#251b33,stroke:#a78bfa,color:#f0f0f2;
+  classDef rendering fill:#2b2414,stroke:#ff9f43,color:#f0f0f2;
+  classDef testing fill:#252529,stroke:#8b8b95,color:#f0f0f2;
+  classDef fixtures fill:#1f2b1f,stroke:#22c55e,color:#f0f0f2;
+  classDef storage fill:#2b2414,stroke:#ff9f43,color:#f0f0f2;
+  classDef application fill:#252529,stroke:#8b8b95,color:#f0f0f2;
+  classDef appentry fill:#102033,stroke:#4d9fff,color:#f0f0f2;
+  classDef frontend fill:#102033,stroke:#4d9fff,color:#f0f0f2;
+  classDef fecomponents fill:#152238,stroke:#6eb6ff,color:#f0f0f2;
+  classDef backend fill:#251b33,stroke:#a78bfa,color:#f0f0f2;
+  classDef config fill:#2b2414,stroke:#ff9f43,color:#f0f0f2;
+  classDef content fill:#1f2b1f,stroke:#22c55e,color:#f0f0f2;
+  classDef buildoutput fill:#252529,stroke:#666,color:#aaa;
+  subgraph Frontend_Components_Group["Frontend Components"]
+    direction TB
+    agg_fe_shared_ui_components["Shared UI Components<br/>huellazo-app/src/components/Dashboard/Sidebar.tsx"]
+  end
+  subgraph Services___Business_Logic_Group["Services / Business Logic"]
+    direction TB
+    agg_backend_client["Client<br/>backend/client/client.ts"]
+    agg_backend_test_cliente["Test Cliente<br/>backend/client/test_cliente.ts"]
+    agg_backend_deploy["Deploy<br/>backend/migrations/deploy.ts"]
+    agg_backend_lib["Lib<br/>backend/programs/huellazo/src/lib.rs"]
+  end
+  subgraph Shared___Utilities_Group["Shared / Utilities"]
+    direction TB
+    agg_shared_utilities["Utilities<br/>huellazo-app/index.html"]
+  end
+  subgraph Configuration_Group["Configuration"]
+    direction TB
+    agg_config["App Config<br/>huellazo-app/eslint.config.js"]
+  end
+  agg_shared_utilities -->|"renders Sidebar"| agg_fe_shared_ui_components
+  agg_shared_utilities -->|"depends on"| agg_fe_shared_ui_components
+  class agg_shared_utilities shared;
+  class agg_fe_shared_ui_components fecomponents;
+  class agg_backend_client services;
+  class agg_backend_test_cliente services;
+  class agg_backend_deploy services;
+  class agg_backend_lib services;
+  class agg_config config;
