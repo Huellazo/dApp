@@ -1,90 +1,105 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, ScrollView, Image, TouchableOpacity, Alert } from 'react-native'
+import { View, StyleSheet, ScrollView, Image, Alert } from 'react-native'
 import { AppText } from '@/components/app-text'
+import { BrutalistCard } from '@/components/ui/brutalist-card'
+import { BrutalistButton } from '@/components/ui/brutalist-button'
 import { Colors } from '@/constants/colors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useAppState } from '@/context/app-state'
 
-// Mock data for rewards catalog
-const REWARDS_CATALOG = [
-  { id: 1, name: "DESCUENTO EN CAFÉ LOCAL", pointsCost: 200, iconPath: require('@/assets/images/coffee.png'), backgroundColor: Colors.light.accent },
-  { id: 2, name: "ENTRADA GRATIS CENOTE", pointsCost: 500, iconPath: require('@/assets/images/water.png'), backgroundColor: Colors.light.success },
-  { id: 3, name: "NOCHE HOTEL ECO", pointsCost: 2000, iconPath: require('@/assets/images/hotel.png'), backgroundColor: Colors.light.primary },
+// Rewards catalog
+const REWARDS = [
+  { id: 'cafe', name: 'DESCUENTO EN CAFÉ LOCAL', points: 200, image: require('@/assets/images/coffee.png'), bg: Colors.light.accent },
+  { id: 'cenote', name: 'ENTRADA GRATIS CENOTE', points: 500, image: require('@/assets/images/water.png'), bg: Colors.light.success },
+  { id: 'hotel', name: 'NOCHE HOTEL ECO', points: 2000, image: require('@/assets/images/hotel.png'), bg: Colors.light.primary },
 ]
 
 export default function RewardsScreen() {
   const insets = useSafeAreaInsets()
-  
-  // Simulated local points balance
-  const [localPoints, setLocalPoints] = useState(650) 
+  const { points, spendPoints } = useAppState()
+  const [redeeming, setRedeeming] = useState<string | null>(null)
 
-  // Handle reward redemption simulation
-  const handleRedeemReward = (reward: typeof REWARDS_CATALOG[0]) => {
-    if (localPoints >= reward.pointsCost) {
-      setLocalPoints(prevPoints => prevPoints - reward.pointsCost)
-      Alert.alert('¡Éxito!', `Has canjeado: ${reward.name}`)
-    }
+  const handleRedeem = (reward: typeof REWARDS[0]) => {
+    setRedeeming(reward.id)
+    setTimeout(() => {
+      setRedeeming(null)
+      const success = spendPoints(reward.points)
+      if (success) {
+        Alert.alert('🎉 Canje Exitoso', `Has canjeado:\n${reward.name}`)
+      } else {
+        Alert.alert('❌ Puntos Insuficientes', `Necesitas ${reward.points} Huellazos para este canje.`)
+      }
+    }, 1000)
   }
 
   return (
-    <ScrollView 
+    <ScrollView
       style={styles.container}
       contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 20, paddingBottom: 120 }]}
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.headerBox}>
-        <View style={styles.headerTextColumn}>
-          <AppText style={styles.headerTitle}>BÓVEDA DE RECOMPENSAS</AppText>
-          <AppText style={styles.headerSubtitle}>Canjea tus Puntos Eco "Huellazos" por beneficios reales.</AppText>
-        </View>
+      {/* Header vault card */}
+      <BrutalistCard color="#3D405B" shadowColor={Colors.light.accent} shadowSize={8}>
+        <AppText style={styles.vaultTitle}>BÓVEDA DE RECOMPENSAS</AppText>
+        <AppText style={styles.vaultSubtitle}>
+          Canjea tus Huellazos por beneficios reales en destinos sustentables
+        </AppText>
 
-        <View style={styles.balanceCard}>
-          <AppText style={styles.balanceLabel}>TU SALDO</AppText>
-          <AppText style={styles.balancePoints}>{localPoints}</AppText>
-          <AppText style={styles.balanceSubLabel}>PUNTOS ECO</AppText>
+        {/* Tilted balance card */}
+        <View style={styles.balanceTiltedWrapper}>
+          <BrutalistCard color="#FFFFFF" shadowColor={Colors.light.accent} shadowSize={4} style={styles.balanceTilted}>
+            <AppText style={styles.balanceLabel}>TU SALDO</AppText>
+            <AppText style={styles.balanceValue}>{points}</AppText>
+            <AppText style={styles.balanceUnit}>HUELLAZOS</AppText>
+          </BrutalistCard>
         </View>
-      </View>
+      </BrutalistCard>
 
-      <View style={styles.gridContainer}>
-        {REWARDS_CATALOG.map(rewardItem => {
-          const canAfford = localPoints >= rewardItem.pointsCost
+      {/* Rewards grid */}
+      <View style={styles.grid}>
+        {REWARDS.map((reward) => {
+          const canAfford = points >= reward.points
+          const isBusy = redeeming === reward.id
 
           return (
-            <View key={rewardItem.id} style={styles.rewardCard}>
-              <View style={[styles.rewardImageContainer, { backgroundColor: rewardItem.backgroundColor }]}>
-                <Image source={rewardItem.iconPath} style={styles.rewardIcon} />
+            <BrutalistCard key={reward.id} style={styles.rewardCard}>
+              {/* Image banner */}
+              <View style={[styles.imageBanner, { backgroundColor: reward.bg }]}>
+                <Image source={reward.image} style={styles.rewardImage} />
               </View>
-              
-              <View style={styles.rewardInfoContainer}>
-                <AppText style={styles.rewardNameText}>{rewardItem.name}</AppText>
-                
+
+              {/* Info */}
+              <View style={styles.rewardInfo}>
+                <AppText style={styles.rewardName}>{reward.name}</AppText>
+
                 <View style={styles.costRow}>
-                  <AppText style={styles.costLabelText}>COSTO</AppText>
-                  <AppText style={styles.costValueText}>{rewardItem.pointsCost} pts</AppText>
+                  <AppText style={styles.costLabel}>COSTO</AppText>
+                  <AppText style={styles.costValue}>{reward.points} HUELLAS</AppText>
                 </View>
-                
-                <TouchableOpacity 
-                  activeOpacity={0.8}
-                  disabled={!canAfford}
-                  onPress={() => handleRedeemReward(rewardItem)}
-                  style={[
-                    styles.redeemButton,
-                    canAfford ? styles.redeemButtonActive : styles.redeemButtonDisabled
-                  ]}
-                >
-                  <AppText style={[styles.redeemButtonText, !canAfford && styles.redeemButtonTextDisabled]}>
-                    {canAfford ? 'CANJEAR' : 'PUNTOS INSUFICIENTES'}
-                  </AppText>
-                </TouchableOpacity>
+
+                {/* Affordability indicator */}
+                {!canAfford && (
+                  <View style={styles.shortfallPill}>
+                    <AppText style={styles.shortfallText}>
+                      Te faltan {reward.points - points} Huellazos
+                    </AppText>
+                  </View>
+                )}
+
+                <BrutalistButton
+                  label={isBusy ? '⏳ PROCESANDO...' : canAfford ? 'CANJEAR' : 'PUNTOS INSUFICIENTES'}
+                  onPress={() => handleRedeem(reward)}
+                  disabled={!canAfford || isBusy}
+                  variant={canAfford ? 'primary' : 'ghost'}
+                />
               </View>
-            </View>
+            </BrutalistCard>
           )
         })}
       </View>
     </ScrollView>
   )
 }
-
-const BORDER_COLOR = '#3D405B'
 
 const styles = StyleSheet.create({
   container: {
@@ -93,154 +108,114 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    gap: 32,
+    gap: 20,
   },
-  headerBox: {
-    backgroundColor: BORDER_COLOR,
-    borderRadius: 24,
-    padding: 24,
-    borderWidth: 4,
-    borderColor: BORDER_COLOR,
-    shadowColor: Colors.light.accent,
-    shadowOffset: { width: 8, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 24,
-  },
-  headerTextColumn: {
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 28,
+  vaultTitle: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
+    fontSize: 24,
     color: Colors.light.accent,
-    textAlign: 'center',
     marginBottom: 8,
   },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    opacity: 0.8,
-    textAlign: 'center',
+  vaultSubtitle: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.75)',
+    textTransform: 'uppercase',
+    lineHeight: 18,
+    marginBottom: 20,
   },
-  balanceCard: {
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 16,
-    borderWidth: 4,
-    borderColor: Colors.light.accent,
-    shadowColor: Colors.light.accent,
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-    transform: [{ rotate: '3deg' }],
-    minWidth: 200,
+  balanceTiltedWrapper: {
     alignItems: 'center',
   },
+  balanceTilted: {
+    transform: [{ rotate: '3deg' }],
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 32,
+    minWidth: 200,
+    borderColor: Colors.light.accent,
+  },
   balanceLabel: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
     fontSize: 12,
+    color: '#3D405B',
+  },
+  balanceValue: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
-    color: BORDER_COLOR,
+    fontSize: 52,
+    color: '#3D405B',
+    lineHeight: 60,
   },
-  balancePoints: {
-    fontSize: 48,
+  balanceUnit: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
-    color: BORDER_COLOR,
-  },
-  balanceSubLabel: {
     fontSize: 10,
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
     color: Colors.light.success,
   },
-  gridContainer: {
-    gap: 24,
+  grid: {
+    gap: 20,
   },
   rewardCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    borderWidth: 4,
-    borderColor: BORDER_COLOR,
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 6, height: 6 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
+    padding: 0,
     overflow: 'hidden',
+    gap: 0,
   },
-  rewardImageContainer: {
-    height: 140,
+  imageBanner: {
+    height: 150,
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 4,
-    borderBottomColor: BORDER_COLOR,
+    borderBottomColor: '#3D405B',
   },
-  rewardIcon: {
-    width: 80,
-    height: 80,
+  rewardImage: {
+    width: 100,
+    height: 100,
     resizeMode: 'contain',
   },
-  rewardInfoContainer: {
-    padding: 24,
+  rewardInfo: {
+    padding: 20,
+    gap: 12,
   },
-  rewardNameText: {
-    fontSize: 20,
+  rewardName: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
-    color: BORDER_COLOR,
-    marginBottom: 16,
+    fontSize: 18,
+    color: '#3D405B',
   },
   costRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
   },
-  costLabelText: {
-    fontSize: 12,
-    fontWeight: 'bold',
+  costLabel: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 11,
     color: Colors.light.primary,
   },
-  costValueText: {
-    fontSize: 24,
+  costValue: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
-    color: BORDER_COLOR,
+    fontSize: 20,
+    color: '#3D405B',
   },
-  redeemButton: {
-    width: '100%',
-    paddingVertical: 16,
-    borderRadius: 16,
-    borderWidth: 4,
-    borderColor: BORDER_COLOR,
-    alignItems: 'center',
+  shortfallPill: {
+    backgroundColor: 'rgba(224,122,95,0.15)',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: Colors.light.primary,
+    borderStyle: 'dashed',
   },
-  redeemButtonActive: {
-    backgroundColor: Colors.light.success,
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-  },
-  redeemButtonDisabled: {
-    backgroundColor: '#E5E7EB',
-  },
-  redeemButtonText: {
-    fontSize: 14,
+  shortfallText: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
-    color: '#FFFFFF',
-  },
-  redeemButtonTextDisabled: {
-    color: '#9CA3AF',
+    fontSize: 11,
+    color: Colors.light.primary,
   },
 })

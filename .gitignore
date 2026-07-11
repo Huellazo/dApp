@@ -36,3 +36,4 @@ pgdata/
 # --- Solana ---
 *.so
 test-ledger/
+huellazo-solana/

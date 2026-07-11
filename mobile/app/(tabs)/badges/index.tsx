@@ -1,70 +1,84 @@
 import React from 'react'
 import { View, StyleSheet, ScrollView, Image } from 'react-native'
 import { AppText } from '@/components/app-text'
+import { BrutalistCard } from '@/components/ui/brutalist-card'
 import { Colors } from '@/constants/colors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
-// Mock data for available NFTs using project images
-const AVAILABLE_NFTS = [
-  { id: 1, name: 'Cenote Sagrado', nftName: 'NFT: Agua Pura', image: require('@/assets/images/water.png') },
-  { id: 2, name: 'Museo Regional', nftName: 'NFT: Cultura Local', image: require('@/assets/images/negocio2.png') },
-  { id: 3, name: 'Café de Especialidad', nftName: 'NFT: Grano de Oro', image: require('@/assets/images/coffee.png') },
-  { id: 4, name: 'Hotel Boutique', nftName: 'NFT: Eco Estancia', image: require('@/assets/images/hotel.png') },
-]
-
-// Simulate that the user has unlocked the first 2 NFTs
-const activeNfts = [1, 2]
+import { useAppState, NFT_CATALOG } from '@/context/app-state'
 
 export default function NftGalleryScreen() {
   const insets = useSafeAreaInsets()
+  const { activeNfts } = useAppState()
+
+  const unlockedCount = activeNfts.length
+  const totalCount = NFT_CATALOG.length
 
   return (
-    <ScrollView 
+    <ScrollView
       style={styles.container}
       contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 20, paddingBottom: 120 }]}
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.header}>
-        <AppText style={styles.titleText}>GALERÍA DE NFTS</AppText>
-        <AppText style={styles.subtitleText}>Colecciona NFTs únicos visitando puntos de interés</AppText>
-      </View>
+      {/* Gallery header */}
+      <BrutalistCard color="#3D405B">
+        <AppText style={styles.galleryTitle}>GALERÍA DE NFTS</AppText>
+        <AppText style={styles.gallerySubtitle}>Coleccionables acuñados on-chain con Metaplex Bubblegum</AppText>
+        <View style={styles.counterRow}>
+          <View style={styles.counterChip}>
+            <AppText style={styles.counterText}>{unlockedCount}/{totalCount} NFTS OBTENIDOS</AppText>
+          </View>
+        </View>
+      </BrutalistCard>
 
+      {/* NFT cards grid */}
       <View style={styles.grid}>
-        {AVAILABLE_NFTS.map(nft => {
+        {NFT_CATALOG.map((nft) => {
           const isUnlocked = activeNfts.includes(nft.id)
 
           return (
-            <View 
-              key={nft.id} 
-              style={[
-                styles.badgeCard, 
-                isUnlocked ? styles.cardUnlocked : styles.cardLocked
-              ]}
+            <BrutalistCard
+              key={nft.id}
+              shadowSize={isUnlocked ? 7 : 3}
+              style={[styles.nftCard, !isUnlocked && styles.lockedCard]}
             >
-              <View style={[styles.badgeCircle, isUnlocked ? styles.circleUnlocked : styles.circleLocked]}>
-                <Image 
-                  source={nft.image} 
-                  style={[styles.nftImage, !isUnlocked && styles.nftImageLocked]} 
+              {/* NFT Image */}
+              <View style={[styles.imageContainer, isUnlocked ? styles.imageBgUnlocked : styles.imageBgLocked]}>
+                <Image
+                  source={nft.image}
+                  style={[styles.nftImage, !isUnlocked && styles.nftImageGrayscale]}
                 />
+                {isUnlocked && (
+                  <View style={styles.unlockedBadge}>
+                    <AppText style={styles.unlockedBadgeText}>✅</AppText>
+                  </View>
+                )}
+                {!isUnlocked && (
+                  <View style={styles.lockedOverlay}>
+                    <AppText style={styles.lockEmoji}>🔒</AppText>
+                  </View>
+                )}
               </View>
-              
-              <AppText style={styles.badgeName}>{nft.nftName}</AppText>
-              <AppText style={styles.locationName}>{nft.name}</AppText>
-              
-              <View style={[styles.statusBadge, isUnlocked ? styles.statusUnlocked : styles.statusLocked]}>
-                <AppText style={styles.statusText}>
-                  {isUnlocked ? 'NFT EN BILLETERA' : 'BLOQUEADO'}
+
+              {/* NFT Info */}
+              <View style={styles.nftInfo}>
+                <AppText style={styles.nftName}>{nft.name}</AppText>
+                <AppText style={styles.nftCollection}>{nft.collectionName}</AppText>
+                <AppText style={styles.nftPlace}>📍 {nft.placeName}</AppText>
+              </View>
+
+              {/* Status tag */}
+              <View style={[styles.statusTag, isUnlocked ? styles.statusTagUnlocked : styles.statusTagLocked]}>
+                <AppText style={styles.statusTagText}>
+                  {isUnlocked ? 'EN BILLETERA' : `VISITA ${nft.placeName.toUpperCase()}`}
                 </AppText>
               </View>
-            </View>
+            </BrutalistCard>
           )
         })}
       </View>
     </ScrollView>
   )
 }
-
-const BORDER_COLOR = '#3D405B'
 
 const styles = StyleSheet.create({
   container: {
@@ -73,129 +87,150 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    gap: 32,
+    gap: 20,
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  titleText: {
-    fontSize: 32,
+  galleryTitle: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
-    color: BORDER_COLOR,
-    textAlign: 'center',
+    fontSize: 26,
+    color: Colors.light.accent,
+    marginBottom: 6,
+  },
+  gallerySubtitle: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.7)',
+    textTransform: 'uppercase',
     marginBottom: 12,
   },
-  subtitleText: {
-    fontSize: 14,
-    color: Colors.light.primary, // Terracotta
-    fontWeight: 'bold',
-    textAlign: 'center',
-    textTransform: 'uppercase',
-  },
-  grid: {
+  counterRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 16,
   },
-  badgeCard: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 4,
-    borderColor: BORDER_COLOR,
-    borderRadius: 24,
-    padding: 20,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  cardUnlocked: {
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 8, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-  },
-  cardLocked: {
-    opacity: 0.7,
-    transform: [{ scale: 0.95 }],
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-  },
-  badgeCircle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 4,
-    borderColor: BORDER_COLOR,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-    overflow: 'hidden',
-  },
-  circleUnlocked: {
-    backgroundColor: Colors.light.accent, // Mustard
-  },
-  circleLocked: {
-    backgroundColor: '#D1D5DB', // Gray 300
-  },
-  nftImage: {
-    width: '60%',
-    height: '60%',
-    resizeMode: 'contain',
-  },
-  nftImageLocked: {
-    opacity: 0.5,
-    tintColor: '#6B7280', // Grayscale tint for locked
-  },
-  badgeName: {
-    fontSize: 18,
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
-    color: BORDER_COLOR,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  locationName: {
-    fontSize: 12,
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
-    color: Colors.light.success, // Pale Green
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  statusBadge: {
+  counterChip: {
+    backgroundColor: Colors.light.accent,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 6,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: BORDER_COLOR,
-    marginTop: 'auto',
+    borderColor: '#FFFFFF',
   },
-  statusUnlocked: {
+  counterText: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 12,
+    color: '#3D405B',
+  },
+  grid: {
+    gap: 16,
+  },
+  nftCard: {
+    gap: 16,
+    padding: 0,
+    overflow: 'hidden',
+  },
+  lockedCard: {
+    opacity: 0.75,
+    transform: [{ scale: 0.97 }],
+  },
+  imageContainer: {
+    height: 180,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  imageBgUnlocked: {
+    backgroundColor: Colors.light.accent,
+    borderBottomWidth: 4,
+    borderBottomColor: '#3D405B',
+  },
+  imageBgLocked: {
+    backgroundColor: '#D1D5DB',
+    borderBottomWidth: 4,
+    borderBottomColor: '#3D405B',
+  },
+  nftImage: {
+    width: 120,
+    height: 120,
+    resizeMode: 'contain',
+  },
+  nftImageGrayscale: {
+    opacity: 0.4,
+  },
+  unlockedBadge: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
     backgroundColor: Colors.light.success,
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 3,
+    borderColor: '#3D405B',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  statusLocked: {
-    backgroundColor: BORDER_COLOR,
+  unlockedBadgeText: {
+    fontSize: 18,
   },
-  statusText: {
-    color: '#FFFFFF',
+  lockedOverlay: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    backgroundColor: '#6B7280',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 3,
+    borderColor: '#3D405B',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  lockEmoji: {
+    fontSize: 18,
+  },
+  nftInfo: {
+    paddingHorizontal: 20,
+    gap: 4,
+  },
+  nftName: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 18,
+    color: '#3D405B',
+  },
+  nftCollection: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 12,
+    color: Colors.light.success,
+  },
+  nftPlace: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#3D405B',
+    opacity: 0.7,
+  },
+  statusTag: {
+    marginHorizontal: 20,
+    marginBottom: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#3D405B',
+    alignSelf: 'flex-start',
+  },
+  statusTagUnlocked: {
+    backgroundColor: Colors.light.success,
+  },
+  statusTagLocked: {
+    backgroundColor: '#3D405B',
+  },
+  statusTagText: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
     fontSize: 10,
+    color: '#FFFFFF',
   },
 })

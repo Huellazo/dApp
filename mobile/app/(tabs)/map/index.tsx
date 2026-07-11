@@ -1,146 +1,138 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { View, StyleSheet, ScrollView, Alert } from 'react-native'
 import { AppText } from '@/components/app-text'
+import { BrutalistCard } from '@/components/ui/brutalist-card'
+import { BrutalistButton } from '@/components/ui/brutalist-button'
+import { StatPill } from '@/components/ui/stat-pill'
 import { Colors } from '@/constants/colors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAuth } from '@/components/auth/auth-provider'
+import { useAppState, PLACES_CATALOG, NFT_CATALOG } from '@/context/app-state'
 
-// Simulated places from the original web app
-const AVAILABLE_PLACES = [
-  { id: 1, name: "Museo Regional", type: "Turístico (Nivel 1)", xp: 100, tier: 1, color: Colors.light.accent, solCost: 0.01 },
-  { id: 2, name: "Cenote Sagrado", type: "Ecológico (Nivel 2)", xp: 300, tier: 2, ecoBadge: "Agua Pura ♻️", actionId: 1, color: Colors.light.success, solCost: 0.05 },
-  { id: 3, name: "Café Local", type: "Comercio (Nivel 1)", xp: 50, tier: 1, color: '#FFFFFF', solCost: 0.005 },
-  { id: 4, name: "Reserva Biósfera", type: "Ecológico (Nivel 2)", xp: 500, tier: 2, ecoBadge: "Fauna Local ♻️", actionId: 2, color: Colors.light.primary, solCost: 0.1 },
-]
-
-export default function DashboardScreen() {
+export default function MapScreen() {
   const insets = useSafeAreaInsets()
   const { isAuthenticated } = useAuth()
-  
-  // Simulated State for points and active badges
-  const [localPoints, setLocalPoints] = useState(650)
-  const [activeBadges, setActiveBadges] = useState<number[]>([1])
-  const [isSending, setIsSending] = useState(false)
+  const { xp, points, level, activeNfts, addXp, unlockNft } = useAppState()
+  const [sendingId, setSendingId] = useState<string | null>(null)
 
-  // Record a simulated visit/transaction
-  const handleRecordVisit = (place: typeof AVAILABLE_PLACES[0]) => {
+  // Simulate paying SOL at a POI — triggers XP gain and NFT unlock
+  const handleRecordVisit = (place: typeof PLACES_CATALOG[0]) => {
     if (!isAuthenticated) {
       Alert.alert(
-        'Wallet Not Connected',
-        'Por favor ve a la pestaña BILLETERA y conecta tu cuenta de Solana para poder pagar.',
+        'Wallet Requerida',
+        'Ve a "MI PERFIL" y conecta tu billetera Solana para pagar en lugares.',
         [{ text: 'OK' }]
       )
       return
     }
 
-    setIsSending(true)
+    setSendingId(place.id)
     setTimeout(() => {
-      setIsSending(false)
-      
-      // Simulate rewards distribution
-      setLocalPoints(prev => prev + (place.xp / 2))
-      if (place.actionId && !activeBadges.includes(place.actionId)) {
-        setActiveBadges(prev => [...prev, place.actionId!])
-      }
+      setSendingId(null)
+      addXp(place.xpReward)
+      if (place.nftId) unlockNft(place.nftId)
 
+      const nft = place.nftId ? NFT_CATALOG.find(n => n.id === place.nftId) : null
       Alert.alert(
-        '¡Transacción Exitosa!',
-        `Has pagado ${place.solCost} SOL.\n\nGanaste: +${place.xp} XP${place.actionId ? `\nSello Desbloqueado: ${place.ecoBadge}` : ''}`
+        '⚡ Transacción Confirmada',
+        [
+          `Pagaste ${place.solCost} SOL`,
+          `+${place.xpReward} XP ganados`,
+          nft ? `🖼️ NFT Acuñado: ${nft.name}` : '',
+          `Nivel actual: ${level}`,
+        ].filter(Boolean).join('\n'),
+        [{ text: '🎉 Genial!' }]
       )
     }, 1500)
   }
 
   return (
-    <ScrollView 
+    <ScrollView
       style={styles.container}
       contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 20, paddingBottom: 120 }]}
       showsVerticalScrollIndicator={false}
     >
-      
-      {/* SECTION 1: SIDE PANELS (Tokenomics and Badges) */}
-      <View style={styles.sidePanelsContainer}>
-        {/* Badges Panel */}
-        <View style={[styles.panelCard, { backgroundColor: BORDER_COLOR }]}>
-          <AppText style={[styles.panelTitle, { color: '#FFFFFF' }]}>🎖️ ECO-SELLOS</AppText>
-          <View style={styles.badgesWrapper}>
-            {activeBadges.map((badgeId) => {
-              const place = AVAILABLE_PLACES.find(p => p.actionId === badgeId)
-              return (
-                <View key={badgeId} style={styles.miniBadge}>
-                  <AppText style={styles.miniBadgeText}>{place?.ecoBadge}</AppText>
-                </View>
-              )
-            })}
-            {activeBadges.length === 0 && (
-              <AppText style={{ color: 'rgba(255,255,255,0.6)' }}>Visita lugares nivel 2 para desbloquear insignias.</AppText>
-            )}
-          </View>
-        </View>
-
-        {/* Tokenomics Panel */}
-        <View style={[styles.panelCard, { backgroundColor: Colors.light.primary }]}>
-          <AppText style={[styles.panelTitle, { color: '#FFFFFF' }]}>💎 TOKENOMICS</AppText>
-          <AppText style={{ color: 'rgba(255,255,255,0.8)', fontSize: 12, marginBottom: 8 }}>Puntos de fidelidad (Huellazos):</AppText>
-          <AppText style={styles.pointsText}>{localPoints}</AppText>
-        </View>
+      {/* Live stats header bar */}
+      <View style={styles.statsBar}>
+        <StatPill icon="⚡" value={xp} label="XP TOTAL" color={Colors.light.accent} />
+        <StatPill icon="💎" value={points} label="HUELLAZOS" color={Colors.light.success} />
+        <StatPill icon="🖼️" value={`${activeNfts.length}/${NFT_CATALOG.length}`} label="NFTS" color="#FFFFFF" />
       </View>
 
-      {/* SECTION 2: INTERACTIVE MAP (SIMULATED LIST) */}
-      <View style={styles.mainSection}>
-        <View style={styles.sectionHeader}>
-          <AppText style={styles.sectionTitle}>📍 MAPA INTERACTIVO</AppText>
+      {/* User rank banner */}
+      <BrutalistCard color={Colors.light.primary} shadowColor="#3D405B">
+        <View style={styles.rankRow}>
+          <AppText style={styles.rankEmoji}>🤠</AppText>
+          <View>
+            <AppText style={styles.rankTitle}>TURISTA DIGITAL</AppText>
+            <AppText style={styles.rankLevel}>Rango: {level}</AppText>
+          </View>
         </View>
+      </BrutalistCard>
 
-        <View style={styles.gridContainer}>
-          {AVAILABLE_PLACES.map((place) => (
-            <View key={place.id} style={[styles.placeCard, { backgroundColor: place.color }]}>
-              
-              <View style={styles.placeInfoContainer}>
+      {/* Interactive map section */}
+      <View style={styles.sectionHeader}>
+        <AppText style={styles.sectionTitle}>📍 MAPA INTERACTIVO</AppText>
+        <AppText style={styles.sectionSubtitle}>Paga SOL para registrar tu visita y ganar NFTs</AppText>
+      </View>
+
+      <View style={styles.placesGrid}>
+        {PLACES_CATALOG.map((place) => {
+          const alreadyVisited = place.nftId ? activeNfts.includes(place.nftId) : false
+          const isBusy = sendingId === place.id
+
+          return (
+            <BrutalistCard
+              key={place.id}
+              color={place.color}
+              shadowColor="#3D405B"
+              shadowSize={5}
+              style={styles.placeCard}
+            >
+              <View style={styles.placeInfo}>
                 <AppText style={[
-                  styles.placeNameText, 
-                  place.tier === 2 ? { color: '#FFFFFF' } : { color: BORDER_COLOR }
+                  styles.placeName,
+                  place.tier === 2 && place.color !== '#FFFFFF' ? styles.textLight : styles.textDark
                 ]}>
                   {place.name}
                 </AppText>
-                
                 <AppText style={[
-                  styles.placeTypeText,
-                  place.tier === 2 ? { color: 'rgba(255,255,255,0.8)' } : { color: 'rgba(61,64,91,0.7)' }
+                  styles.placeType,
+                  place.tier === 2 && place.color !== '#FFFFFF' ? styles.textLightMuted : styles.textDarkMuted
                 ]}>
                   {place.type}
                 </AppText>
-                
-                <View style={styles.tagsRowContainer}>
-                  <View style={styles.tagBaseItem}>
-                    <AppText style={styles.tagBaseText}>+{place.xp} XP</AppText>
+
+                <View style={styles.tagsRow}>
+                  <View style={styles.xpTag}>
+                    <AppText style={styles.xpTagText}>+{place.xpReward} XP</AppText>
                   </View>
                   {place.tier === 2 && (
-                    <View style={styles.tagSpecialItem}>
-                      <AppText style={styles.tagSpecialText}>Sello Eco</AppText>
+                    <View style={styles.nftTag}>
+                      <AppText style={styles.nftTagText}>🖼️ NFT</AppText>
+                    </View>
+                  )}
+                  {alreadyVisited && (
+                    <View style={styles.visitedTag}>
+                      <AppText style={styles.visitedTagText}>✅ VISITADO</AppText>
                     </View>
                   )}
                 </View>
               </View>
 
-              <TouchableOpacity
-                disabled={isSending}
-                activeOpacity={0.8}
+              <BrutalistButton
+                label={isBusy ? '⏳ CONFIRMANDO...' : `PAGAR ${place.solCost} SOL`}
                 onPress={() => handleRecordVisit(place)}
-                style={[styles.payButton, isSending && { opacity: 0.5 }]}
-              >
-                <AppText style={styles.payButtonText}>PAGAR {place.solCost} SOL</AppText>
-              </TouchableOpacity>
-
-            </View>
-          ))}
-        </View>
+                disabled={isBusy || alreadyVisited}
+                variant="ghost"
+              />
+            </BrutalistCard>
+          )
+        })}
       </View>
-
     </ScrollView>
   )
 }
-
-const BORDER_COLOR = '#3D405B'
 
 const styles = StyleSheet.create({
   container: {
@@ -149,150 +141,117 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    gap: 24,
+    gap: 20,
   },
-  sidePanelsContainer: {
-    flexDirection: 'column',
-    gap: 16,
-  },
-  panelCard: {
-    padding: 20,
-    borderRadius: 16,
-    borderWidth: 4,
-    borderColor: BORDER_COLOR,
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 6, height: 6 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-  },
-  panelTitle: {
-    fontSize: 16,
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
-    marginBottom: 12,
-  },
-  badgesWrapper: {
+  statsBar: {
     flexDirection: 'row',
+    gap: 10,
     flexWrap: 'wrap',
-    gap: 8,
   },
-  miniBadge: {
-    backgroundColor: Colors.light.success,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  miniBadgeText: {
-    color: '#FFFFFF',
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
-    fontSize: 12,
-  },
-  pointsText: {
-    color: '#FFFFFF',
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
-    fontSize: 36,
-  },
-  mainSection: {
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-    borderRadius: 24,
-    borderWidth: 4,
-    borderColor: BORDER_COLOR,
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 6, height: 6 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-  },
-  sectionHeader: {
-    borderBottomWidth: 4,
-    borderBottomColor: BORDER_COLOR,
-    paddingBottom: 16,
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
-    color: BORDER_COLOR,
-  },
-  gridContainer: {
+  rankRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 16,
   },
-  placeCard: {
-    borderRadius: 16,
-    borderWidth: 4,
-    borderColor: BORDER_COLOR,
-    padding: 16,
-    flexDirection: 'column',
+  rankEmoji: {
+    fontSize: 48,
   },
-  placeInfoContainer: {
-    marginBottom: 16,
-  },
-  placeNameText: {
-    fontSize: 18,
+  rankTitle: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
-    marginBottom: 4,
-  },
-  placeTypeText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    marginBottom: 12,
-  },
-  tagsRowContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  tagBaseItem: {
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  tagBaseText: {
-    color: BORDER_COLOR,
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
-    fontSize: 10,
-  },
-  tagSpecialItem: {
-    backgroundColor: Colors.light.success,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  tagSpecialText: {
+    fontSize: 20,
     color: '#FFFFFF',
-    fontFamily: 'SpaceMono',
-    fontWeight: '900',
-    fontSize: 10,
   },
-  payButton: {
-    backgroundColor: '#FAF9F6', // Warm Cream
-    paddingVertical: 12,
-    borderRadius: 12,
-    borderWidth: 3,
-    borderColor: BORDER_COLOR,
-    alignItems: 'center',
-    shadowColor: BORDER_COLOR,
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 0,
-  },
-  payButtonText: {
-    color: BORDER_COLOR,
+  rankLevel: {
     fontFamily: 'SpaceMono',
     fontWeight: '900',
     fontSize: 14,
+    color: 'rgba(255,255,255,0.85)',
+    marginTop: 4,
+  },
+  sectionHeader: {
+    gap: 4,
+  },
+  sectionTitle: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 22,
+    color: '#3D405B',
+  },
+  sectionSubtitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: Colors.light.primary,
+    textTransform: 'uppercase',
+  },
+  placesGrid: {
+    gap: 16,
+  },
+  placeCard: {
+    gap: 16,
+  },
+  placeInfo: {
+    gap: 6,
+  },
+  placeName: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 18,
+  },
+  placeType: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 11,
+    textTransform: 'uppercase',
+  },
+  textLight: { color: '#FFFFFF' },
+  textDark: { color: '#3D405B' },
+  textLightMuted: { color: 'rgba(255,255,255,0.75)' },
+  textDarkMuted: { color: 'rgba(61,64,91,0.65)' },
+  tagsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    flexWrap: 'wrap',
+    marginTop: 4,
+  },
+  xpTag: {
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  xpTagText: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 10,
+    color: '#3D405B',
+  },
+  nftTag: {
+    backgroundColor: Colors.light.success,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  nftTagText: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 10,
+    color: '#FFFFFF',
+  },
+  visitedTag: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#3D405B',
+  },
+  visitedTagText: {
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 10,
+    color: '#3D405B',
   },
 })

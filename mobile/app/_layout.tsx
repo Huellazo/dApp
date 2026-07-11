@@ -1,4 +1,5 @@
 import { AppProviders } from '@/components/app-providers'
+import { AppStateProvider } from '@/context/app-state'
 import { AppSplashController } from '@/components/app-splash-controller'
 import { useAuth } from '@/components/auth/auth-provider'
 import { useTrackLocations } from '@/hooks/use-track-locations'
@@ -43,9 +44,11 @@ export default function RootLayout() {
   return (
     <View style={{ flex: 1, backgroundColor: '#FAF9F6' }} onLayout={onLayoutRootView}>
       <AppProviders>
-        <AppSplashController />
-        <RootNavigator />
-        <StatusBar style="auto" />
+        <AppStateProvider>
+          <AppSplashController />
+          <RootNavigator />
+          <StatusBar style="auto" />
+        </AppStateProvider>
       </AppProviders>
       <PortalHost />
     </View>

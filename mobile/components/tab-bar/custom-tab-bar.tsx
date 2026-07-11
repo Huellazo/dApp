@@ -1,41 +1,46 @@
 import { Colors } from '@/constants/colors'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect, useState, useMemo } from 'react'
-import { View, StyleSheet, ScrollView, Animated } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CustomTabBarButton } from './custom-tab-bar-button'
-import { BrutalistStyles } from '@/constants/styles'
 
-// Navigation Mapping
+// Navigation Mapping — order here controls left-to-right tab order
 const TAB_ITEMS: Array<{ route: string; icon: any; label: string }> = [
-  { route: 'map', icon: require('@/assets/images/map-icon.png'), label: 'MAPA' },
+  { route: 'map',      icon: require('@/assets/images/map-icon.png'),      label: 'MAPA'      },
   { route: 'passport', icon: require('@/assets/images/passport-icon.png'), label: 'MI PERFIL' },
-  { route: 'badges', icon: require('@/assets/images/badges-icon.png'), label: 'MIS NFTS' },
-  { route: 'rewards', icon: require('@/assets/images/rewards-icon.png'), label: 'CANJEAR' },
+  { route: 'badges',   icon: require('@/assets/images/badges-icon.png'),   label: 'MIS NFTS'  },
+  { route: 'rewards',  icon: require('@/assets/images/rewards-icon.png'),  label: 'CANJEAR'   },
+  { route: 'qr',       icon: require('@/assets/images/map-icon.png'),      label: 'ESCANEAR'  },
 ]
 
 export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets()
   const [activeIndex, setActiveIndex] = useState(state.index)
-  
+
   useEffect(() => {
     setActiveIndex(state.index)
   }, [state.index])
 
+  // Filter and sort routes to only show tabs defined in TAB_ITEMS
   const visibleRoutes = useMemo(
     () =>
       state.routes
         .filter((route) => TAB_ITEMS.find((item) => item.route === route.name))
-        .sort((a, b) => TAB_ITEMS.findIndex((item) => item.route === a.name) - TAB_ITEMS.findIndex((item) => item.route === b.name)),
+        .sort(
+          (a, b) =>
+            TAB_ITEMS.findIndex((item) => item.route === a.name) -
+            TAB_ITEMS.findIndex((item) => item.route === b.name),
+        ),
     [state.routes],
   )
 
-  const tabBarHeight = 85 + insets.bottom
+  const tabBarHeight = 90 + insets.bottom
 
   return (
     <View style={[styles.container, { height: tabBarHeight }]}>
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom }]}
         bounces={true}
@@ -48,7 +53,11 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
           const isActive = activeIndex === routeIndex
 
           const onPress = () => {
-            const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true })
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            })
             if (!isActive && !event.defaultPrevented) {
               setActiveIndex(routeIndex)
               navigation.navigate(route.name, route.params)
