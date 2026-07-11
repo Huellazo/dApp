@@ -1,50 +1,27 @@
-import { UiIconSymbolName } from '@/components/ui/ui-icon-symbol'
 import { Colors } from '@/constants/colors'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
-import { usePathname } from 'expo-router'
-import React, { useEffect, useMemo, useState } from 'react'
-import { Animated, StyleSheet, useColorScheme, View } from 'react-native'
+import React, { useEffect, useState, useMemo } from 'react'
+import { View, StyleSheet, ScrollView, Animated } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CustomTabBarButton } from './custom-tab-bar-button'
-import { useScrollContext } from './scroll-context'
+import { BrutalistStyles } from '@/constants/styles'
 
-const TAB_ITEMS: Array<{ route: string; icon: UiIconSymbolName; label: string }> = [
-  { route: 'map', icon: 'map.fill' as UiIconSymbolName, label: 'Map' },
-  { route: 'qr', icon: 'qrcode.viewfinder' as UiIconSymbolName, label: 'Scan' },
-  { route: 'passport', icon: 'person.crop.circle.badge.checkmark' as UiIconSymbolName, label: 'Profile' },
-  { route: 'rewards', icon: 'star.fill' as UiIconSymbolName, label: 'Tokens' },
-  { route: 'account', icon: 'wallet.pass.fill' as UiIconSymbolName, label: 'Wallet' },
+// Navigation Mapping
+const TAB_ITEMS: Array<{ route: string; icon: any; label: string }> = [
+  { route: 'map', icon: require('@/assets/images/map-icon.png'), label: 'MAPA' },
+  { route: 'passport', icon: require('@/assets/images/passport-icon.png'), label: 'MI PERFIL' },
+  { route: 'badges', icon: require('@/assets/images/badges-icon.png'), label: 'MIS NFTS' },
+  { route: 'rewards', icon: require('@/assets/images/rewards-icon.png'), label: 'CANJEAR' },
 ]
 
 export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets()
   const [activeIndex, setActiveIndex] = useState(state.index)
-  const colorScheme = useColorScheme()
-  const isDark = colorScheme === 'dark'
-  const theme = Colors[isDark ? 'dark' : 'light']
-  const accentColor = theme.accentGreen ?? '#22E1A2'
-  const pathname = usePathname()
   
-  // Get scroll context for hide/show animation
-  let translateY: Animated.Value
-  try {
-    const scrollContext = useScrollContext()
-    translateY = scrollContext.translateY
-  } catch {
-    // Fallback if not in ScrollProvider
-    translateY = new Animated.Value(0)
-  }
-  
-  // Check if we're on a screen that should hide the tab bar (e.g., create pot page)
-  const currentRoute = state.routes[state.index]
-  const routeName = currentRoute?.name || ''
-  const routePath = currentRoute?.path || ''
-  
-  const shouldHideTabBar = pathname?.includes('/create') ||
-                          routeName.toLowerCase().includes('create') || 
-                          routePath.toLowerCase().includes('create')
-  
-  // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
+  useEffect(() => {
+    setActiveIndex(state.index)
+  }, [state.index])
+
   const visibleRoutes = useMemo(
     () =>
       state.routes
@@ -53,134 +30,62 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
     [state.routes],
   )
 
-  useEffect(() => {
-    setActiveIndex(state.index)
-  }, [state.index])
-
-  // If we should hide the tab bar, translate it completely off-screen
-  useEffect(() => {
-    if (shouldHideTabBar) {
-      Animated.timing(translateY, {
-        toValue: 200, // Move completely off-screen
-        duration: 250,
-        useNativeDriver: true,
-      }).start()
-    } else {
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 250,
-        useNativeDriver: true,
-      }).start()
-    }
-  }, [shouldHideTabBar, translateY])
-  
-  // Don't render if we should hide (but all hooks have been called)
-  if (shouldHideTabBar) {
-    return null
-  }
-
-  const backgroundColor = isDark ? 'rgba(5,9,15,0.98)' : 'rgba(255,255,255,0.98)'
-  const borderColor = isDark ? theme.borderMuted : theme.border
-  const shadowColor = theme.shadowSoft
-  const tabBarHeight = 62 + Math.max(insets.bottom, 8)
+  const tabBarHeight = 85 + insets.bottom
 
   return (
-        <View
-      style={[
-        styles.wrapper,
-        {
-          height: tabBarHeight + 30, // Extra height to allow for translation off-screen
-          overflow: 'hidden',
-        },
-      ]}
-    >
-      <Animated.View
-          style={[
-        styles.container,
-            {
-          backgroundColor,
-          borderTopColor: borderColor,
-          paddingBottom: Math.max(insets.bottom, 8),
-          shadowColor,
-          shadowOpacity: isDark ? 0.35 : 0.12,
-          shadowRadius: 18,
-          shadowOffset: { width: 0, height: -6 },
-          elevation: isDark ? 12 : 8,
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            transform: [{ translateY }],
-            },
-          ]}
-    >
-      {visibleRoutes.map((route) => {
-        const descriptor = descriptors[route.key]
-        const tabMeta = TAB_ITEMS.find((item) => item.route === route.name)
-        if (!tabMeta) {
-          return null
-        }
+    <View style={[styles.container, { height: tabBarHeight }]}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom }]}
+        bounces={true}
+      >
+        {visibleRoutes.map((route) => {
+          const tabMeta = TAB_ITEMS.find((item) => item.route === route.name)
+          if (!tabMeta) return null
 
-        const routeIndex = state.routes.findIndex((r) => r.key === route.key)
-        const isRouteFocused = state.index === routeIndex
-        const isActive = activeIndex === routeIndex
+          const routeIndex = state.routes.findIndex((r) => r.key === route.key)
+          const isActive = activeIndex === routeIndex
 
-        const onPress = () => {
-          const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true })
-          if (!isRouteFocused && !event.defaultPrevented) {
-            setActiveIndex(routeIndex)
-            navigation.navigate(route.name, route.params)
+          const onPress = () => {
+            const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true })
+            if (!isActive && !event.defaultPrevented) {
+              setActiveIndex(routeIndex)
+              navigation.navigate(route.name, route.params)
+            }
           }
-        }
 
-        const onLongPress = () => {
-          navigation.emit({ type: 'tabLongPress', target: route.key })
-        }
-
-        if (descriptor.options.tabBarItemStyle && typeof descriptor.options.tabBarItemStyle === 'object' && 'display' in descriptor.options.tabBarItemStyle && descriptor.options.tabBarItemStyle.display === 'none') {
-          return null
-        }
-
-        return (
-          <CustomTabBarButton
-            key={route.key}
-            iconName={tabMeta.icon}
-            label={tabMeta.label}
-            isActive={isActive}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            accessibilityState={descriptor.options.tabBarAccessibilityLabel ? { selected: isRouteFocused } : undefined}
-            accessibilityLabel={descriptor.options.tabBarAccessibilityLabel}
-            accessibilityRole="button"
-            testID={descriptor.options.tabBarButtonTestID}
-            accentColor={accentColor}
-            isDark={isDark}
-          />
-        )
-      })}
-      </Animated.View>
-      </View>
+          return (
+            <CustomTabBarButton
+              key={route.key}
+              iconSource={tabMeta.icon}
+              label={tabMeta.label}
+              isActive={isActive}
+              onPress={onPress}
+            />
+          )
+        })}
+      </ScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
+  container: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    overflow: 'hidden',
+    backgroundColor: Colors.light.background, // Warm Cream
+    borderTopWidth: 4,
+    borderTopColor: Colors.light.border, // Dark Talavera Blue
+    zIndex: 100,
   },
-  container: {
+  scrollContent: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-around',
-    borderTopWidth: StyleSheet.hairlineWidth,
-    paddingTop: 8,
-    paddingHorizontal: 0,
-    minHeight: 62,
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
-    overflow: 'hidden',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    gap: 12,
+    height: '100%',
   },
 })

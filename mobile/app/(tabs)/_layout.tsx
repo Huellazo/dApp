@@ -31,7 +31,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen name="map" options={{ title: 'Explore' }} />
-      <Tabs.Screen name="qr" options={{ title: 'Scan' }} />
+      <Tabs.Screen name="badges" options={{ title: 'Insignias' }} />
       <Tabs.Screen name="passport" options={{ title: 'Passport' }} />
       <Tabs.Screen name="rewards" options={{ title: 'Rewards' }} />
       <Tabs.Screen name="account" options={{ title: 'Wallet' }} />

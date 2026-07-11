@@ -1,151 +1,76 @@
-import { UiIconSymbol, UiIconSymbolName } from '@/components/ui/ui-icon-symbol'
-import React, { memo } from 'react'
-import { AccessibilityState, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { TouchableOpacity, Image, StyleSheet, View } from 'react-native'
+import { AppText } from '@/components/app-text'
+import { Colors } from '@/constants/colors'
 
-interface CustomTabBarButtonProps {
-  iconName: string
+interface Props {
+  iconSource: any
   label: string
   isActive: boolean
   onPress: () => void
-  onPressIn?: () => void
-  onLongPress?: () => void
-  accessibilityState?: AccessibilityState
-  accessibilityLabel?: string
-  accessibilityRole?: string
-  testID?: string
-  accentColor?: string
-  isDark: boolean
 }
 
-// Helper to convert filled icon names to outlined versions
-function getIconName(iconName: string, isActive: boolean): UiIconSymbolName {
-  if (isActive) {
-    // Return filled version when active
-    return iconName as UiIconSymbolName
-  }
-  // Convert filled to outlined by removing .fill suffix
-  const outlinedName = iconName.replace('.fill', '') as UiIconSymbolName
-  return outlinedName
-}
-
-function CustomTabBarButtonComponent({
-  iconName,
-  label,
-  isActive,
-  onPress,
-  onPressIn,
-  onLongPress,
-  accessibilityState,
-  accessibilityLabel,
-  accessibilityRole,
-  testID,
-  accentColor = '#22E1A2',
-  isDark,
-}: CustomTabBarButtonProps) {
-  const computedLabel = accessibilityLabel ?? label
-  
-  const iconColor = isActive 
-    ? accentColor 
-    : isDark 
-      ? 'rgba(255,255,255,0.55)' 
-      : 'rgba(0,0,0,0.5)'
-
-  const labelColor = isActive
-    ? accentColor
-    : isDark
-      ? 'rgba(255,255,255,0.5)'
-      : 'rgba(0,0,0,0.5)'
-
-  // Get the appropriate icon (outlined when inactive, filled when active)
-  const displayIconName = getIconName(iconName, isActive)
-
+export function CustomTabBarButton({ iconSource, label, isActive, onPress }: Props) {
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onPress={onPress}
-      onPressIn={onPressIn}
-      onLongPress={onLongPress}
-      style={styles.button}
-      activeOpacity={0.7}
-      accessibilityState={accessibilityState}
-      accessibilityLabel={computedLabel}
-      accessibilityRole={accessibilityRole as any}
-      testID={testID}
+      style={[
+        styles.button,
+        isActive ? styles.activeButton : styles.inactiveButton
+      ]}
     >
-      <View style={styles.content}>
-        <View style={styles.iconContainer}>
-          <UiIconSymbol 
-            size={22} 
-            name={displayIconName} 
-            color={iconColor} 
-          />
-          {isActive && (
-            <View style={[styles.activeIndicator, { backgroundColor: accentColor }]} />
-          )}
-        </View>
-        <Text 
-          style={[
-            styles.label,
-            { color: labelColor },
-            isActive && styles.labelActive
-          ]}
-          numberOfLines={1}
-        >
-          {label}
-        </Text>
-      </View>
+      <Image 
+        source={iconSource} 
+        style={styles.icon} 
+      />
+      <AppText style={[styles.label, isActive ? styles.activeLabel : styles.inactiveLabel]}>
+        {label}
+      </AppText>
     </TouchableOpacity>
   )
 }
 
-function propsAreEqual(prev: CustomTabBarButtonProps, next: CustomTabBarButtonProps) {
-  return (
-    prev.iconName === next.iconName &&
-    prev.label === next.label &&
-    prev.isActive === next.isActive &&
-    prev.accentColor === next.accentColor &&
-    prev.isDark === next.isDark &&
-    prev.accessibilityLabel === next.accessibilityLabel &&
-    prev.testID === next.testID
-  )
-}
-
-export const CustomTabBarButton = memo(CustomTabBarButtonComponent, propsAreEqual)
-
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 4,
+    borderColor: Colors.light.border,
+    minWidth: 140, // Ensure wide enough for text
     justifyContent: 'center',
-    paddingVertical: 6,
-    minHeight: 56,
   },
-  content: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+  inactiveButton: {
+    backgroundColor: '#FFFFFF',
+    shadowColor: Colors.light.border,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
   },
-  iconContainer: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 3,
+  activeButton: {
+    backgroundColor: Colors.light.accent, // Mustard Yellow
+    transform: [{ translateY: 4 }], // Move down to simulate press
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  icon: {
     width: 28,
     height: 28,
-  },
-  activeIndicator: {
-    position: 'absolute',
-    bottom: -7,
-    width: 4,
-    height: 4,
-    borderRadius: 2,
+    resizeMode: 'contain',
   },
   label: {
-    fontSize: 10.5,
-    fontFamily: 'IBMPlexSans-Medium',
-    letterSpacing: -0.2,
-    marginTop: 0,
+    fontSize: 14,
+    fontWeight: '900',
   },
-  labelActive: {
-    fontFamily: 'IBMPlexSans-SemiBold',
+  inactiveLabel: {
+    color: Colors.light.border, 
+  },
+  activeLabel: {
+    color: Colors.light.border, 
   },
 })

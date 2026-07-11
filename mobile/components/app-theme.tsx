@@ -4,24 +4,13 @@ import { useColorScheme } from 'react-native'
 import { Colors } from '@/constants/colors'
 
 export function useAppTheme() {
-  const colorScheme = useColorScheme()
-  const isDark = colorScheme === 'dark'
-  const colors = Colors[isDark ? 'dark' : 'light']
+  // Force Light Mode globally for the Brutalist aesthetic
+  const colorScheme = 'light'
+  const isDark = false
+  const colors = Colors['light']
 
-  const theme = isDark
-    ? {
-        ...DarkTheme,
-        colors: {
-          ...DarkTheme.colors,
-          primary: colors.primary,
-          background: colors.background,
-          card: colors.surface,
-          text: colors.text,
-          border: colors.border,
-          notification: colors.accent,
-        },
-      }
-    : {
+  const theme = {
+
         ...DefaultTheme,
         colors: {
           ...DefaultTheme.colors,

@@ -1,445 +1,298 @@
-import React, { useState, useEffect } from 'react'
-import { View, Image, StyleSheet, TouchableOpacity, Alert, Modal, ScrollView } from 'react-native'
+import React, { useState } from 'react'
+import { View, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { AppText } from '@/components/app-text'
-import { BrutalistStyles } from '@/constants/styles'
 import { Colors } from '@/constants/colors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useAuth } from '@/components/auth/auth-provider'
 
-// Define Map Constants
-const MAP_WIDTH = 400
-const MAP_HEIGHT = 450
-const PLAYER_SIZE = 40
-const POI_SIZE = 40
-const STEP_SIZE = 25
-const INTERACTION_RADIUS = 40
-
-type PoiType = 'tourist' | 'business'
-
-interface POI {
-  id: string
-  name: string
-  type: PoiType
-  x: number
-  y: number
-  image: any
-  description: string
-  reward: string
-}
-
-// Points of Interest Data
-const POIS: POI[] = [
-  {
-    id: 'museum',
-    name: 'National Museum',
-    type: 'tourist',
-    x: 80,
-    y: 80,
-    image: require('@/assets/images/negocio2.png'),
-    description: 'Explore the ancient artifacts and history of the region.',
-    reward: '+1 Museum NFT Badge',
-  },
-  {
-    id: 'beach',
-    name: 'Hidden Cenote',
-    type: 'tourist',
-    x: 280,
-    y: 120,
-    image: require('@/assets/images/water.png'),
-    description: 'A beautiful natural sinkhole hidden in the jungle.',
-    reward: '+1 Cenote NFT Badge',
-  },
-  {
-    id: 'coffee',
-    name: 'Mary\'s Coffee',
-    type: 'business',
-    x: 100,
-    y: 300,
-    image: require('@/assets/images/coffee.png'),
-    description: 'Local coffee shop. Pay with Solana Pay to get discounts!',
-    reward: '+50 HUELLAS & Blink Interaction',
-  },
-  {
-    id: 'crafts',
-    name: 'Artisan Market',
-    type: 'business',
-    x: 250,
-    y: 320,
-    image: require('@/assets/images/negocio3.png'),
-    description: 'Support local artisans buying handcrafted souvenirs.',
-    reward: '+120 HUELLAS & Blink Interaction',
-  },
+// Simulated places from the original web app
+const AVAILABLE_PLACES = [
+  { id: 1, name: "Museo Regional", type: "Turístico (Nivel 1)", xp: 100, tier: 1, color: Colors.light.accent, solCost: 0.01 },
+  { id: 2, name: "Cenote Sagrado", type: "Ecológico (Nivel 2)", xp: 300, tier: 2, ecoBadge: "Agua Pura ♻️", actionId: 1, color: Colors.light.success, solCost: 0.05 },
+  { id: 3, name: "Café Local", type: "Comercio (Nivel 1)", xp: 50, tier: 1, color: '#FFFFFF', solCost: 0.005 },
+  { id: 4, name: "Reserva Biósfera", type: "Ecológico (Nivel 2)", xp: 500, tier: 2, ecoBadge: "Fauna Local ♻️", actionId: 2, color: Colors.light.primary, solCost: 0.1 },
 ]
 
-export default function MapScreen() {
+export default function DashboardScreen() {
   const insets = useSafeAreaInsets()
+  const { isAuthenticated } = useAuth()
   
-  // Player State
-  const [playerPosition, setPlayerPosition] = useState({ x: 180, y: 200 })
-  const [activePoi, setActivePoi] = useState<POI | null>(null)
-  const [modalVisible, setModalVisible] = useState(false)
+  // Simulated State for points and active badges
+  const [localPoints, setLocalPoints] = useState(650)
+  const [activeBadges, setActiveBadges] = useState<number[]>([1])
+  const [isSending, setIsSending] = useState(false)
 
-  // Move the player and keep them within bounds
-  const movePlayer = (dx: number, dy: number) => {
-    setPlayerPosition((prev) => {
-      let newX = prev.x + dx
-      let newY = prev.y + dy
-
-      // Boundaries
-      if (newX < 0) newX = 0
-      if (newX > MAP_WIDTH - PLAYER_SIZE) newX = MAP_WIDTH - PLAYER_SIZE
-      if (newY < 0) newY = 0
-      if (newY > MAP_HEIGHT - PLAYER_SIZE) newY = MAP_HEIGHT - PLAYER_SIZE
-
-      return { x: newX, y: newY }
-    })
-  }
-
-  // Check proximity to POIs whenever player moves
-  useEffect(() => {
-    let foundPoi = null
-    for (const poi of POIS) {
-      const dist = Math.sqrt(
-        Math.pow(playerPosition.x - poi.x, 2) + Math.pow(playerPosition.y - poi.y, 2)
+  // Record a simulated visit/transaction
+  const handleRecordVisit = (place: typeof AVAILABLE_PLACES[0]) => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        'Wallet Not Connected',
+        'Por favor ve a la pestaña BILLETERA y conecta tu cuenta de Solana para poder pagar.',
+        [{ text: 'OK' }]
       )
-      if (dist <= INTERACTION_RADIUS) {
-        foundPoi = poi
-        break
+      return
+    }
+
+    setIsSending(true)
+    setTimeout(() => {
+      setIsSending(false)
+      
+      // Simulate rewards distribution
+      setLocalPoints(prev => prev + (place.xp / 2))
+      if (place.actionId && !activeBadges.includes(place.actionId)) {
+        setActiveBadges(prev => [...prev, place.actionId!])
       }
-    }
-    setActivePoi(foundPoi)
-  }, [playerPosition])
 
-  // Handle Interaction
-  const handleInteract = () => {
-    if (activePoi) {
-      setModalVisible(true)
-    }
-  }
-
-  const claimReward = () => {
-    setModalVisible(false)
-    Alert.alert(
-      'Success!', 
-      `You interacted with ${activePoi?.name}.\n\nReward Claimed:\n${activePoi?.reward}`
-    )
+      Alert.alert(
+        '¡Transacción Exitosa!',
+        `Has pagado ${place.solCost} SOL.\n\nGanaste: +${place.xp} XP${place.actionId ? `\nSello Desbloqueado: ${place.ecoBadge}` : ''}`
+      )
+    }, 1500)
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 20 }]}>
-      <AppText type="title" style={styles.title}>Explore</AppText>
+    <ScrollView 
+      style={styles.container}
+      contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 20, paddingBottom: 120 }]}
+      showsVerticalScrollIndicator={false}
+    >
       
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
-        {/* Game Canvas */}
-        <View style={[BrutalistStyles.border, styles.canvasContainer]}>
-          <View style={styles.canvas}>
-            
-            {/* Render POIs */}
-            {POIS.map((poi) => (
-              <View 
-                key={poi.id} 
-                style={[
-                  styles.poiWrapper, 
-                  { left: poi.x, top: poi.y }
-                ]}
-              >
-                <Image source={poi.image} style={styles.poiImage} />
-                <View style={styles.poiLabel}>
-                  <AppText style={styles.poiLabelText} numberOfLines={1}>{poi.name}</AppText>
+      {/* SECTION 1: SIDE PANELS (Tokenomics and Badges) */}
+      <View style={styles.sidePanelsContainer}>
+        {/* Badges Panel */}
+        <View style={[styles.panelCard, { backgroundColor: BORDER_COLOR }]}>
+          <AppText style={[styles.panelTitle, { color: '#FFFFFF' }]}>🎖️ ECO-SELLOS</AppText>
+          <View style={styles.badgesWrapper}>
+            {activeBadges.map((badgeId) => {
+              const place = AVAILABLE_PLACES.find(p => p.actionId === badgeId)
+              return (
+                <View key={badgeId} style={styles.miniBadge}>
+                  <AppText style={styles.miniBadgeText}>{place?.ecoBadge}</AppText>
                 </View>
-              </View>
-            ))}
-
-            {/* Render Player Avatar */}
-            <View 
-              style={[
-                styles.playerWrapper, 
-                { left: playerPosition.x, top: playerPosition.y }
-              ]}
-            >
-              <Image source={require('@/assets/images/player.png')} style={styles.playerImage} />
-            </View>
-
-          </View>
-        </View>
-
-        {/* Interaction Prompt (Appears when near a POI) */}
-        <View style={styles.actionContainer}>
-          {activePoi ? (
-            <TouchableOpacity 
-              style={[BrutalistStyles.buttonPrimary, styles.interactButton]} 
-              onPress={handleInteract}
-              activeOpacity={0.8}
-            >
-              <MaterialIcons name="touch-app" size={24} color={Colors.light.background} />
-              <AppText style={BrutalistStyles.titleText}>INTERACT WITH {activePoi.name.toUpperCase()}</AppText>
-            </TouchableOpacity>
-          ) : (
-            <View style={[BrutalistStyles.card, styles.hintCard]}>
-              <AppText style={styles.hintText}>Use the D-Pad to explore and approach a location.</AppText>
-            </View>
-          )}
-        </View>
-
-        {/* Virtual D-Pad */}
-        <View style={styles.dpadContainer}>
-          <View style={styles.dpadRow}>
-            <TouchableOpacity style={styles.dpadButton} onPress={() => movePlayer(0, -STEP_SIZE)}>
-              <MaterialIcons name="keyboard-arrow-up" size={36} color={Colors.light.background} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.dpadRow}>
-            <TouchableOpacity style={styles.dpadButton} onPress={() => movePlayer(-STEP_SIZE, 0)}>
-              <MaterialIcons name="keyboard-arrow-left" size={36} color={Colors.light.background} />
-            </TouchableOpacity>
-            <View style={styles.dpadCenter} />
-            <TouchableOpacity style={styles.dpadButton} onPress={() => movePlayer(STEP_SIZE, 0)}>
-              <MaterialIcons name="keyboard-arrow-right" size={36} color={Colors.light.background} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.dpadRow}>
-            <TouchableOpacity style={styles.dpadButton} onPress={() => movePlayer(0, STEP_SIZE)}>
-              <MaterialIcons name="keyboard-arrow-down" size={36} color={Colors.light.background} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-      </ScrollView>
-
-      {/* Interaction Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={[BrutalistStyles.card, styles.modalContent]}>
-            {activePoi && (
-              <>
-                <Image source={activePoi.image} style={styles.modalImage} />
-                <AppText type="title" style={styles.modalTitle}>{activePoi.name}</AppText>
-                
-                <View style={styles.modalBadge}>
-                  <AppText style={styles.modalBadgeText}>
-                    {activePoi.type === 'tourist' ? 'TOURIST SPOT' : 'LOCAL BUSINESS'}
-                  </AppText>
-                </View>
-
-                <AppText style={styles.modalDesc}>{activePoi.description}</AppText>
-                
-                <View style={styles.rewardBox}>
-                  <AppText type="defaultSemiBold" style={{ color: Colors.light.primary }}>Potential Reward:</AppText>
-                  <AppText style={styles.rewardText}>{activePoi.reward}</AppText>
-                </View>
-
-                {activePoi.type === 'business' && (
-                  <TouchableOpacity 
-                    style={[BrutalistStyles.buttonSecondary, { marginBottom: 15, width: '100%' }]}
-                    onPress={() => Alert.alert("Solana Pay", "Simulating Solana Pay transaction...")}
-                  >
-                    <AppText style={BrutalistStyles.titleText}>PAY WITH SOLANA PAY</AppText>
-                  </TouchableOpacity>
-                )}
-
-                <TouchableOpacity 
-                  style={[BrutalistStyles.buttonPrimary, { width: '100%' }]}
-                  onPress={claimReward}
-                >
-                  <AppText style={BrutalistStyles.titleText}>CLAIM & DISCOVER</AppText>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                  style={{ marginTop: 20 }}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <AppText style={{ color: Colors.light.textTertiary, textDecorationLine: 'underline' }}>Cancel</AppText>
-                </TouchableOpacity>
-              </>
+              )
+            })}
+            {activeBadges.length === 0 && (
+              <AppText style={{ color: 'rgba(255,255,255,0.6)' }}>Visita lugares nivel 2 para desbloquear insignias.</AppText>
             )}
           </View>
         </View>
-      </Modal>
 
-    </View>
+        {/* Tokenomics Panel */}
+        <View style={[styles.panelCard, { backgroundColor: Colors.light.primary }]}>
+          <AppText style={[styles.panelTitle, { color: '#FFFFFF' }]}>💎 TOKENOMICS</AppText>
+          <AppText style={{ color: 'rgba(255,255,255,0.8)', fontSize: 12, marginBottom: 8 }}>Puntos de fidelidad (Huellazos):</AppText>
+          <AppText style={styles.pointsText}>{localPoints}</AppText>
+        </View>
+      </View>
+
+      {/* SECTION 2: INTERACTIVE MAP (SIMULATED LIST) */}
+      <View style={styles.mainSection}>
+        <View style={styles.sectionHeader}>
+          <AppText style={styles.sectionTitle}>📍 MAPA INTERACTIVO</AppText>
+        </View>
+
+        <View style={styles.gridContainer}>
+          {AVAILABLE_PLACES.map((place) => (
+            <View key={place.id} style={[styles.placeCard, { backgroundColor: place.color }]}>
+              
+              <View style={styles.placeInfoContainer}>
+                <AppText style={[
+                  styles.placeNameText, 
+                  place.tier === 2 ? { color: '#FFFFFF' } : { color: BORDER_COLOR }
+                ]}>
+                  {place.name}
+                </AppText>
+                
+                <AppText style={[
+                  styles.placeTypeText,
+                  place.tier === 2 ? { color: 'rgba(255,255,255,0.8)' } : { color: 'rgba(61,64,91,0.7)' }
+                ]}>
+                  {place.type}
+                </AppText>
+                
+                <View style={styles.tagsRowContainer}>
+                  <View style={styles.tagBaseItem}>
+                    <AppText style={styles.tagBaseText}>+{place.xp} XP</AppText>
+                  </View>
+                  {place.tier === 2 && (
+                    <View style={styles.tagSpecialItem}>
+                      <AppText style={styles.tagSpecialText}>Sello Eco</AppText>
+                    </View>
+                  )}
+                </View>
+              </View>
+
+              <TouchableOpacity
+                disabled={isSending}
+                activeOpacity={0.8}
+                onPress={() => handleRecordVisit(place)}
+                style={[styles.payButton, isSending && { opacity: 0.5 }]}
+              >
+                <AppText style={styles.payButtonText}>PAGAR {place.solCost} SOL</AppText>
+              </TouchableOpacity>
+
+            </View>
+          ))}
+        </View>
+      </View>
+
+    </ScrollView>
   )
 }
+
+const BORDER_COLOR = '#3D405B'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,
-    paddingHorizontal: 20,
-  },
-  title: {
-    marginBottom: 10,
-    color: Colors.light.primary,
   },
   scrollContent: {
-    paddingBottom: 100,
-    alignItems: 'center',
+    paddingHorizontal: 20,
+    gap: 24,
   },
-  canvasContainer: {
-    width: MAP_WIDTH,
-    height: MAP_HEIGHT,
-    backgroundColor: '#EBE5D9', // Slightly darker cream for the map
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginTop: 10,
-    position: 'relative',
+  sidePanelsContainer: {
+    flexDirection: 'column',
+    gap: 16,
   },
-  canvas: {
-    flex: 1,
-    position: 'relative',
-    // Subtle dot grid background
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.05)',
+  panelCard: {
+    padding: 20,
+    borderRadius: 16,
+    borderWidth: 4,
+    borderColor: BORDER_COLOR,
+    shadowColor: BORDER_COLOR,
+    shadowOffset: { width: 6, height: 6 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 0,
   },
-  poiWrapper: {
-    position: 'absolute',
-    width: POI_SIZE,
-    height: POI_SIZE,
-    justifyContent: 'center',
-    alignItems: 'center',
+  panelTitle: {
+    fontSize: 16,
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    marginBottom: 12,
   },
-  poiImage: {
-    width: POI_SIZE,
-    height: POI_SIZE,
-    resizeMode: 'contain',
-  },
-  poiLabel: {
-    position: 'absolute',
-    top: POI_SIZE + 2,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    paddingHorizontal: 4,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
-    minWidth: 80,
-    alignItems: 'center',
-  },
-  poiLabelText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-  playerWrapper: {
-    position: 'absolute',
-    width: PLAYER_SIZE,
-    height: PLAYER_SIZE,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-  playerImage: {
-    width: PLAYER_SIZE + 10,
-    height: PLAYER_SIZE + 10,
-    resizeMode: 'contain',
-  },
-  actionContainer: {
-    width: '100%',
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  interactButton: {
+  badgesWrapper: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 16,
-    width: '100%',
+    flexWrap: 'wrap',
     gap: 8,
   },
-  hintCard: {
-    width: '100%',
-    padding: 12,
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.7)',
-  },
-  hintText: {
-    color: Colors.light.textTertiary,
-    textAlign: 'center',
-  },
-  dpadContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  dpadRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dpadButton: {
-    backgroundColor: Colors.light.border,
-    width: 60,
-    height: 60,
-    margin: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 12,
-    ...BrutalistStyles.hardShadow,
-  },
-  dpadCenter: {
-    width: 60,
-    height: 60,
-    margin: 5,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(61, 64, 91, 0.8)', // Dark Talavera Blue with opacity
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  modalContent: {
-    width: '100%',
-    alignItems: 'center',
-    paddingVertical: 30,
-  },
-  modalImage: {
-    width: 80,
-    height: 80,
-    marginBottom: 15,
-  },
-  modalTitle: {
-    color: Colors.light.textPrimary,
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  modalBadge: {
-    backgroundColor: Colors.light.accent,
+  miniBadge: {
+    backgroundColor: Colors.light.success,
     paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 20,
+    paddingVertical: 8,
+    borderRadius: 12,
     borderWidth: 2,
-    borderColor: Colors.light.border,
-    marginBottom: 20,
+    borderColor: '#FFFFFF',
   },
-  modalBadgeText: {
-    fontSize: 10,
+  miniBadgeText: {
+    color: '#FFFFFF',
+    fontFamily: 'SpaceMono',
     fontWeight: '900',
-    color: Colors.light.textPrimary,
+    fontSize: 12,
   },
-  modalDesc: {
-    textAlign: 'center',
-    color: Colors.light.textSecondary,
+  pointsText: {
+    color: '#FFFFFF',
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 36,
+  },
+  mainSection: {
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    borderRadius: 24,
+    borderWidth: 4,
+    borderColor: BORDER_COLOR,
+    shadowColor: BORDER_COLOR,
+    shadowOffset: { width: 6, height: 6 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 0,
+  },
+  sectionHeader: {
+    borderBottomWidth: 4,
+    borderBottomColor: BORDER_COLOR,
+    paddingBottom: 16,
     marginBottom: 20,
-    paddingHorizontal: 10,
   },
-  rewardBox: {
-    width: '100%',
-    backgroundColor: 'rgba(224, 122, 95, 0.1)', // Light terracotta tint
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: Colors.light.primary,
-    borderStyle: 'dashed',
-    alignItems: 'center',
-    marginBottom: 25,
+  sectionTitle: {
+    fontSize: 20,
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    color: BORDER_COLOR,
   },
-  rewardText: {
-    fontSize: 16,
+  gridContainer: {
+    gap: 16,
+  },
+  placeCard: {
+    borderRadius: 16,
+    borderWidth: 4,
+    borderColor: BORDER_COLOR,
+    padding: 16,
+    flexDirection: 'column',
+  },
+  placeInfoContainer: {
+    marginBottom: 16,
+  },
+  placeNameText: {
+    fontSize: 18,
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    marginBottom: 4,
+  },
+  placeTypeText: {
+    fontSize: 12,
     fontWeight: 'bold',
-    marginTop: 5,
+    textTransform: 'uppercase',
+    marginBottom: 12,
+  },
+  tagsRowContainer: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  tagBaseItem: {
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  tagBaseText: {
+    color: BORDER_COLOR,
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 10,
+  },
+  tagSpecialItem: {
+    backgroundColor: Colors.light.success,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  tagSpecialText: {
+    color: '#FFFFFF',
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 10,
+  },
+  payButton: {
+    backgroundColor: '#FAF9F6', // Warm Cream
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 3,
+    borderColor: BORDER_COLOR,
+    alignItems: 'center',
+    shadowColor: BORDER_COLOR,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 0,
+  },
+  payButtonText: {
+    color: BORDER_COLOR,
+    fontFamily: 'SpaceMono',
+    fontWeight: '900',
+    fontSize: 14,
   },
 })

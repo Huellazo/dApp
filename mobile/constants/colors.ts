@@ -44,6 +44,9 @@ const baseTheme: ThemeTokens = {
   success: '#81B29A', // Pale Green (complementary)
   warning: '#F2CC8F',
   danger: '#E07A5F',
+
+  // Legacy compatibility for cause-pots components (Account, Welcome, SignIn)
+  gradientMint: ['#E07A5F', '#F2CC8F'], // Replaced with Terracotta to Mustard Brutalist gradient
 }
 
 // In brutalism we usually avoid a traditional "dark mode" to
