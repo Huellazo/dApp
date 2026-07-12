@@ -14,7 +14,8 @@
     "lint:check": "expo lint",
     "reset-project": "node ./scripts/reset-project.js",
     "start": "expo start",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "vercel-build": "npx expo export -p web"
   },
   "displayName": "Mobile Expo Boilerplate",
   "description": "A template for building a Solana mobile app with Expo and React Native.",
@@ -39,6 +40,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",
+    "@expo/metro-runtime": "^6.1.2",
     "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-clipboard/clipboard": "^1.16.2",

@@ -99,5 +99,26 @@ source "$HOME/.sdkman/bin/sdkman-init.sh"
 sdk install java 17.0.12-tem
 
 # 3. Build the native Android app
+sdk use java 17.0.12-tem
 npm run mobile:android
 ```
+
+---
+
+## 🎮 Gamification Modules (Hackathon Features)
+
+During the hackathon, we built several dynamic modules that bring the Huellazo economy to life on the frontend:
+
+- **Dynamic NFT Passport (`ownedNfts` state):** Unlike a static list, your passport is a dynamic inventory. You can earn, trade, and lose stamps based on your actions.
+- **P2P Synchronous Trading (Pokémon Style):** Users can offer their Stamps/NFTs by generating a QR Code (`TradeOfferModal`). Another user can scan it using the Huellazo Radar to initiate a 1-on-1 swap (`TradeAcceptModal`), making the NFTs truly liquid assets.
+- **Overclocked Radar (Token Utility):** Users can burn 100 `$HUELLAZOS` to "Overclock" their radar for 30 minutes. This visually transforms the UI to neon green and simulates the discovery of hidden POIs and rare drops.
+- **Local Blockchain Feed:** The scanner includes a "Local Node Feed" that simulates real-time on-chain activity from nearby explorers (e.g., "User 0x8A... minted a Taco Stamp"), creating a multiplayer Web3 experience.
+- **Piñata Loot Engine:** A probabilistic loot system where users can spend points to break a piñata and win random rewards, including ultra-rare "Chromatic" NFTs.
+
+---
+
+## 🌐 Deploying to Vercel (Web Demo)
+
+While Huellazo is a mobile-first app designed around the **Solana Mobile Wallet Adapter (MWA)**, you can deploy the web export to Vercel for demonstration purposes.
+
+> **⚠️ Important Note on Phantom Wallet:** When deployed to the web, the "Connect Wallet" button uses MWA. If you open the Vercel link on a desktop browser, it will not connect to the Phantom Chrome Extension. **To test the wallet connection, you must open the Vercel link on a mobile device (iOS/Android)** so it can deep-link into the Phantom mobile app.
