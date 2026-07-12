@@ -1,5 +1,6 @@
-import { Redirect } from 'expo-router'
+import { Redirect } from 'expo-router';
 
 export default function Index() {
-  return <Redirect href="/(tabs)/map" />
+  // Redirect to the tourism tab by default
+  return <Redirect href="/(tabs)/tourism" />;
 }

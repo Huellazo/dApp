@@ -1,0 +1,129 @@
+export const MOCK_USER = {
+  publicKey: 'HuelLaZo1111111111111111111111111111111111',
+  passportLevel: 5,
+  balanceHuellazos: 1450.50,
+  nfts: [
+    {
+      id: '1',
+      title: 'Eagle Warrior',
+      location: 'Templo Mayor',
+      image: require('@/assets/images/badges-icon.png'),
+      date: '2026-05-12T10:30:00Z'
+    },
+    {
+      id: '2',
+      title: 'Pyramid of the Sun',
+      location: 'Teotihuacán',
+      image: require('@/assets/images/rewards-icon.png'),
+      date: '2026-06-01T14:15:00Z'
+    },
+    {
+      id: '3',
+      title: 'Xochimilco Explorer',
+      location: 'Trajineras',
+      image: require('@/assets/images/passport-icon.png'),
+      date: '2026-06-15T09:20:00Z'
+    }
+  ]
+};
+
+export const MOCK_POIS = [
+  {
+    id: 'poi1',
+    name: 'Chapultepec Castle',
+    description: 'National Museum of History. Located at the top of Chapulín Hill, it is the only royal castle in Latin America. Scan the QR at the main entrance to earn 50 $HUELLAZOS.',
+    coordinates: { latitude: 19.4204, longitude: -99.1819 },
+    reward: 50,
+    nftReward: 'Imperial Castle Badge',
+    type: 'historical',
+    category: 'tourism',
+    image: require('@/assets/images/ciren.png'), 
+    layoutStyle: 'square',
+    rating: 4.9,
+    features: ['Accessible', 'Restrooms', 'Guided Tours', 'Panoramic Views'],
+    duration: '3 hours',
+    price: '$90 MXN',
+    address: 'Bosque de Chapultepec I Secc, 11100 Mexico City'
+  },
+  {
+    id: 'poi2',
+    name: 'Don Porfirio Coffee',
+    description: 'Enjoy traditional Mexican coffee with the best view of the Palace of Fine Arts. Use your $HUELLAZOS for discounts.',
+    coordinates: { latitude: 19.4352, longitude: -99.1412 },
+    reward: 15,
+    type: 'cafe',
+    category: 'business',
+    image: require('@/assets/images/coffee.png'),
+    layoutStyle: 'square',
+    rating: 4.8,
+    features: ['Coffee', 'Discounts', 'WiFi', 'Scenic View'],
+    duration: '1 hour',
+    price: 'Varies',
+    address: 'Av. Juárez 14, Centro Histórico, Mexico City'
+  },
+  {
+    id: 'poi3',
+    name: 'Templo Mayor',
+    description: 'Main temple of the Mexica people in their capital city of Tenochtitlan. Uncover ancient secrets.',
+    coordinates: { latitude: 19.4349, longitude: -99.1314 },
+    reward: 60,
+    nftReward: 'Mexica Explorer Stamp',
+    type: 'historical',
+    category: 'tourism',
+    image: require('@/assets/images/negocio1.png'),
+    layoutStyle: 'banner',
+    rating: 4.7,
+    features: ['Museum', 'Outdoors', 'History'],
+    duration: '2 hours',
+    price: '$90 MXN',
+    address: 'Seminario 8, Centro Histórico, Mexico City'
+  },
+  {
+    id: 'poi4',
+    name: 'Coyoacán Market',
+    description: 'Vibrant local market known for traditional food and crafts. Spend your $HUELLAZOS here!',
+    coordinates: { latitude: 19.3496, longitude: -99.1626 },
+    reward: 25,
+    type: 'commerce',
+    category: 'business',
+    image: require('@/assets/images/negocio2.png'),
+    layoutStyle: 'banner',
+    rating: 4.6,
+    features: ['Food', 'Crafts', 'Local Business'],
+    duration: '1.5 hours',
+    price: 'Free Entry',
+    address: 'Ignacio Allende s/n, Coyoacán, Mexico City'
+  },
+  {
+    id: 'poi5',
+    name: 'Frida Kahlo Museum',
+    description: 'The Blue House, historic art museum dedicated to the life and work of Mexican artist Frida Kahlo.',
+    coordinates: { latitude: 19.3551, longitude: -99.1622 },
+    reward: 45,
+    type: 'cultural',
+    category: 'tourism',
+    image: require('@/assets/images/negocio3.png'),
+    layoutStyle: 'banner',
+    rating: 4.9,
+    features: ['Art', 'Museum', 'Accessible'],
+    duration: '2 hours',
+    price: '$250 MXN',
+    address: 'Londres 247, Del Carmen, Coyoacán, Mexico City'
+  },
+  {
+    id: 'poi6',
+    name: 'La Ciudadela Artisans',
+    description: 'Traditional Mexican handicrafts market. Perfect for souvenirs, supports local artisans.',
+    coordinates: { latitude: 19.4300, longitude: -99.1500 },
+    reward: 10,
+    type: 'crafts',
+    category: 'business',
+    image: require('@/assets/images/negocio1.png'),
+    layoutStyle: 'square',
+    rating: 4.5,
+    features: ['Shopping', 'Souvenirs', 'Culture'],
+    duration: '2 hours',
+    price: 'Free Entry',
+    address: 'Balderas S/N, Centro, Mexico City'
+  }
+];

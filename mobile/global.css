@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .shadow-brutal {
+    box-shadow: 4px 4px 0px 0px #3D405B;
+  }
+}
