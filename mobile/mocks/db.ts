@@ -1,30 +1,39 @@
 export const MOCK_USER = {
-  publicKey: 'HuelLaZo1111111111111111111111111111111111',
-  passportLevel: 5,
-  balanceHuellazos: 1450.50,
-  businessesSupported: 3,
+  name: 'Mario Explorer',
+  publicKey: '7XbN...9QkP',
+  balanceHuellazos: 1450,
+  passportLevel: 4,
+  businessesSupported: 12,
   weeklyRank: 4,
+  avatarUrl: require('@/assets/images/profile_wallet.png'),
   nfts: [
     {
       id: '1',
       title: 'Eagle Warrior',
       location: 'Templo Mayor',
-      image: require('@/assets/images/badges-icon.png'),
+      image: require('@/assets/images/nft_eagle.png'),
       date: '2026-05-12T10:30:00Z'
     },
     {
       id: '2',
-      title: 'Pyramid of the Sun',
-      location: 'Teotihuacán',
-      image: require('@/assets/images/rewards-icon.png'),
-      date: '2026-06-01T14:15:00Z'
+      title: 'Xochimilco Explorer',
+      location: 'Trajineras',
+      image: require('@/assets/images/nft_xochimilco.png'),
+      date: '2026-05-15T14:15:00Z'
     },
     {
       id: '3',
-      title: 'Xochimilco Explorer',
-      location: 'Trajineras',
-      image: require('@/assets/images/passport-icon.png'),
-      date: '2026-06-15T09:20:00Z'
+      title: 'Lucha Libre Legend',
+      location: 'Arena México',
+      image: require('@/assets/images/nft_luchador.png'),
+      date: '2026-06-01T20:00:00Z'
+    },
+    {
+      id: '4',
+      title: 'Alebrije Tamer',
+      location: 'Coyoacán Market',
+      image: require('@/assets/images/nft_alebrije.png'),
+      date: '2026-06-10T12:00:00Z'
     }
   ]
 };
@@ -80,7 +89,7 @@ export const MOCK_POIS = [
     reward: 15,
     type: 'cafe',
     category: 'business',
-    image: require('@/assets/images/coffee.png'),
+    image: require('@/assets/images/business_taco.png'),
     layoutStyle: 'square',
     rating: 4.8,
     distanceKm: 1.2,
@@ -98,7 +107,7 @@ export const MOCK_POIS = [
     nftReward: 'Mexica Explorer Stamp',
     type: 'historical',
     category: 'tourism',
-    image: require('@/assets/images/negocio1.png'),
+    image: require('@/assets/images/tourism_pyramid.png'),
     layoutStyle: 'banner',
     rating: 4.7,
     distanceKm: 2.5,
@@ -149,7 +158,7 @@ export const MOCK_POIS = [
     reward: 10,
     type: 'crafts',
     category: 'business',
-    image: require('@/assets/images/negocio1.png'),
+    image: require('@/assets/images/workshop_pottery.png'),
     layoutStyle: 'square',
     rating: 4.5,
     distanceKm: 3.1,
