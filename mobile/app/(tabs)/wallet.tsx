@@ -6,6 +6,9 @@ import { MOCK_USER } from '@/mocks/db';
 import { useAuth } from '@/components/auth/auth-provider';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
+import { useMobileWallet } from '@wallet-ui/react-native-web3js';
+import { AppConfig } from '@/constants/app-config';
+import { ellipsify } from '@/utils/ellipsify';
 
 const AVATAR_OPTIONS = [
   require('@/assets/images/profile_wallet.png'),
@@ -16,11 +19,37 @@ const AVATAR_OPTIONS = [
 ];
 
 export default function WalletScreen() {
-  const { isAuthenticated, signIn, signOut, user } = useAuth();
+  const { isLoading, signIn, signOut } = useAuth();
+  const { account } = useMobileWallet();
+  const walletAddress = account?.address.toString();
+  const isWalletConnected = !!walletAddress;
+  const [connectionError, setConnectionError] = useState<string | null>(null);
   
   // Local state for avatar customization
   const [selectedAvatar, setSelectedAvatar] = useState(MOCK_USER.avatarUrl);
   const [isAvatarModalVisible, setAvatarModalVisible] = useState(false);
+
+  const handleConnectWallet = async () => {
+    setConnectionError(null);
+
+    try {
+      await signIn();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Could not connect wallet';
+      const isCancelled = /cancel|reject|declin|denied/i.test(message);
+
+      setConnectionError(
+        isCancelled
+          ? 'Connection cancelled in the wallet.'
+          : 'Could not connect. Make sure Phantom or another Solana MWA wallet is installed and unlocked.',
+      );
+    }
+  };
+
+  const handleDisconnectWallet = async () => {
+    setConnectionError(null);
+    await signOut();
+  };
 
   return (
     <ScrollView className="flex-1 bg-background pt-12 px-4 pb-24">
@@ -56,25 +85,48 @@ export default function WalletScreen() {
         </View>
         
         <View className="p-4 bg-background">
-          {isAuthenticated ? (
+          {isWalletConnected ? (
             <View>
               <View className="bg-secondary/20 border-4 border-border p-3 mb-4 shadow-brutal-sm flex-row items-center justify-between">
                  <View className="flex-row items-center">
                    <FontAwesome5 name="wallet" size={16} color={colors.border} />
                    <Text className="text-border font-bold text-sm ml-3" numberOfLines={1} ellipsizeMode="middle">
-                     {user?.pubkey || MOCK_USER.publicKey}
+                     {walletAddress}
                    </Text>
                  </View>
                  <FontAwesome5 name="link" size={14} color={colors.primary} />
               </View>
-              <BrutalistButton title="Disconnect" colorClass="bg-primary" onPress={signOut} />
+              <View className="flex-row justify-between mb-4">
+                <View className="bg-accent2 px-2 py-1 border-2 border-border shadow-brutal-sm">
+                  <Text className="text-border font-bold text-xs uppercase">{AppConfig.clusters[0].name}</Text>
+                </View>
+                <Text className="text-border font-bold text-xs uppercase">
+                  {ellipsify(walletAddress, 6)}
+                </Text>
+              </View>
+              <BrutalistButton
+                title={isLoading ? 'Disconnecting...' : 'Disconnect'}
+                colorClass="bg-primary"
+                disabled={isLoading}
+                onPress={handleDisconnectWallet}
+              />
             </View>
           ) : (
             <View>
               <Text className="text-border font-bold text-sm mb-4 leading-5">
-                Connect your Solana wallet (e.g. Phantom) to pay and receive tourism benefits.
+                Connect your Solana wallet with Mobile Wallet Adapter to pay and receive tourism benefits.
               </Text>
-              <BrutalistButton title="Connect Wallet" colorClass="bg-secondary" onPress={signIn} />
+              {connectionError && (
+                <Text className="text-primary font-black text-xs mb-4 uppercase leading-4">
+                  {connectionError}
+                </Text>
+              )}
+              <BrutalistButton
+                title={isLoading ? 'Connecting...' : 'Connect Wallet'}
+                colorClass="bg-secondary"
+                disabled={isLoading}
+                onPress={handleConnectWallet}
+              />
             </View>
           )}
         </View>
