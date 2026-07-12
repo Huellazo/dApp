@@ -18,7 +18,7 @@ export function AppProviders({ children }: PropsWithChildren) {
         <MobileWalletProvider
           chain={defaultCluster.id}
           endpoint={defaultCluster.endpoint}
-          identity={{ name: AppConfig.name }}
+          identity={{ name: AppConfig.name, uri: AppConfig.uri }}
         >
           <AuthProvider>
             <ToastProvider>{children}</ToastProvider>

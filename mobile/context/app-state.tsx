@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react'
 
 // --- NFT Data Types ---
 export type NftId = 'cenote' | 'museo' | 'cafe' | 'hotel' | 'reserva' | 'artesanal'
@@ -25,6 +26,30 @@ export interface Place {
   nftId?: NftId
 }
 
+export interface MintablePoi {
+  id: string
+  name: string
+  description?: string
+  category?: string
+  reward?: number
+  nftReward?: string
+}
+
+export interface EarnedSolanaToken {
+  id: string
+  poiId: string
+  name: string
+  symbol: string
+  collectionName: string
+  location: string
+  description: string
+  reward: number
+  mintAddress: string
+  transactionSignature: string
+  network: 'solana-devnet-simulated'
+  mintedAt: string
+}
+
 // --- Context Type ---
 interface AppState {
   // State
@@ -33,12 +58,43 @@ interface AppState {
   level: string
   passportMinted: boolean
   activeNfts: NftId[]
+  earnedTokens: EarnedSolanaToken[]
 
   // Actions
   addXp: (amount: number) => void
   spendPoints: (amount: number) => boolean
   unlockNft: (id: NftId) => void
   mintPassport: () => void
+  mintPoiToken: (poi: MintablePoi) => { token: EarnedSolanaToken; alreadyMinted: boolean }
+}
+
+const EARNED_TOKENS_STORAGE_KEY = 'huellazo:earned-solana-tokens:v1'
+const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+
+function createMockBase58Address(length: number): string {
+  return Array.from({ length }, () => BASE58_ALPHABET[Math.floor(Math.random() * BASE58_ALPHABET.length)]).join('')
+}
+
+function createSolanaTokenFromPoi(poi: MintablePoi): EarnedSolanaToken {
+  const reward = poi.reward ?? 50
+  const tokenName = poi.nftReward ?? `${poi.name} Huellazo Token`
+
+  return {
+    id: `${poi.id}-${Date.now()}`,
+    poiId: poi.id,
+    name: tokenName,
+    symbol: 'HUELLA',
+    collectionName: 'Huellazo Passport',
+    location: poi.name,
+    description:
+      poi.description ??
+      `Token de prueba obtenido por validar una visita real en ${poi.name} dentro de Huellazo.`,
+    reward,
+    mintAddress: createMockBase58Address(44),
+    transactionSignature: createMockBase58Address(88),
+    network: 'solana-devnet-simulated',
+    mintedAt: new Date().toISOString(),
+  }
 }
 
 // --- NFT Catalog ---
@@ -125,6 +181,40 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [points, setPoints] = useState(650)
   const [passportMinted, setPassportMinted] = useState(false)
   const [activeNfts, setActiveNfts] = useState<NftId[]>(['cenote'])
+  const [earnedTokens, setEarnedTokens] = useState<EarnedSolanaToken[]>([])
+  const [tokensLoaded, setTokensLoaded] = useState(false)
+
+  useEffect(() => {
+    let mounted = true
+
+    AsyncStorage.getItem(EARNED_TOKENS_STORAGE_KEY)
+      .then(value => {
+        if (!mounted || !value) return
+
+        const parsed = JSON.parse(value) as EarnedSolanaToken[]
+        if (Array.isArray(parsed)) {
+          setEarnedTokens(prev => (prev.length > 0 ? prev : parsed))
+        }
+      })
+      .catch(error => {
+        console.warn('Could not load earned Huellazo tokens', error)
+      })
+      .finally(() => {
+        if (mounted) setTokensLoaded(true)
+      })
+
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!tokensLoaded) return
+
+    AsyncStorage.setItem(EARNED_TOKENS_STORAGE_KEY, JSON.stringify(earnedTokens)).catch(error => {
+      console.warn('Could not save earned Huellazo tokens', error)
+    })
+  }, [earnedTokens, tokensLoaded])
 
   const addXp = useCallback((amount: number) => {
     setXp(prev => prev + amount)
@@ -145,12 +235,27 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setPassportMinted(true)
   }, [])
 
+  const mintPoiToken = useCallback((poi: MintablePoi) => {
+    const existingToken = earnedTokens.find(token => token.poiId === poi.id)
+
+    if (existingToken) {
+      return { token: existingToken, alreadyMinted: true }
+    }
+
+    const token = createSolanaTokenFromPoi(poi)
+    setEarnedTokens(prev => [token, ...prev])
+    setXp(prev => prev + token.reward * 2)
+    setPoints(prev => prev + token.reward)
+
+    return { token, alreadyMinted: false }
+  }, [earnedTokens])
+
   const level = calculateLevel(xp)
 
   return (
     <AppStateContext.Provider value={{
-      xp, points, level, passportMinted, activeNfts,
-      addXp, spendPoints, unlockNft, mintPassport,
+      xp, points, level, passportMinted, activeNfts, earnedTokens,
+      addXp, spendPoints, unlockNft, mintPassport, mintPoiToken,
     }}>
       {children}
     </AppStateContext.Provider>

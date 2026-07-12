@@ -5,6 +5,7 @@
     "mobile"
   ],
   "scripts": {
+    "postinstall": "node scripts/patch-css-interop.js",
     "mobile:dev": "cd mobile && expo start",
     "mobile:web": "cd mobile && expo start --web",
     "mobile:android": "cd mobile && expo run:android",
