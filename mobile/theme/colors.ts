@@ -3,8 +3,8 @@ export const colors = {
   border: '#3D405B', // Dark Talavera Blue
   primary: '#E07A5F', // Terracotta
   secondary: '#F2CC8F', // Mustard Yellow
-  accent1: '#FF007F', // Fuchsia
-  accent2: '#40E0D0', // Turquoise
+  accent1: '#F15BB5', // Vibrant Magenta / Fucsia Festivo
+  accent2: '#00F5D4', // Vivid Turquoise / Cian Vivo
 } as const;
 
 export type ColorType = keyof typeof colors;

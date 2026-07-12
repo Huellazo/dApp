@@ -2,6 +2,8 @@ export const MOCK_USER = {
   publicKey: 'HuelLaZo1111111111111111111111111111111111',
   passportLevel: 5,
   balanceHuellazos: 1450.50,
+  businessesSupported: 3,
+  weeklyRank: 4,
   nfts: [
     {
       id: '1',
@@ -27,6 +29,30 @@ export const MOCK_USER = {
   ]
 };
 
+export const MOCK_QUESTS = [
+  {
+    id: 'q1',
+    title: 'Ruta Imperial',
+    description: 'Visit the historical castles and museums of the city center.',
+    pois: ['poi1', 'poi3'],
+    progress: 1, // 1 out of 2 completed
+    rewardMultiplier: 2.0,
+    nftReward: 'Imperial Route Champion'
+  }
+];
+
+export const MOCK_FLASH_DEALS = [
+  {
+    id: 'fd1',
+    businessId: 'poi2',
+    businessName: 'Don Porfirio Coffee',
+    title: '2x1 in Americanos',
+    discount: '50% OFF',
+    expiresIn: '2h 15m',
+    costHZ: 20
+  }
+];
+
 export const MOCK_POIS = [
   {
     id: 'poi1',
@@ -40,6 +66,7 @@ export const MOCK_POIS = [
     image: require('@/assets/images/ciren.png'), 
     layoutStyle: 'square',
     rating: 4.9,
+    distanceKm: 0.8,
     features: ['Accessible', 'Restrooms', 'Guided Tours', 'Panoramic Views'],
     duration: '3 hours',
     price: '$90 MXN',
@@ -56,6 +83,7 @@ export const MOCK_POIS = [
     image: require('@/assets/images/coffee.png'),
     layoutStyle: 'square',
     rating: 4.8,
+    distanceKm: 1.2,
     features: ['Coffee', 'Discounts', 'WiFi', 'Scenic View'],
     duration: '1 hour',
     price: 'Varies',
@@ -73,6 +101,7 @@ export const MOCK_POIS = [
     image: require('@/assets/images/negocio1.png'),
     layoutStyle: 'banner',
     rating: 4.7,
+    distanceKm: 2.5,
     features: ['Museum', 'Outdoors', 'History'],
     duration: '2 hours',
     price: '$90 MXN',
@@ -89,6 +118,7 @@ export const MOCK_POIS = [
     image: require('@/assets/images/negocio2.png'),
     layoutStyle: 'banner',
     rating: 4.6,
+    distanceKm: 8.4,
     features: ['Food', 'Crafts', 'Local Business'],
     duration: '1.5 hours',
     price: 'Free Entry',
@@ -105,6 +135,7 @@ export const MOCK_POIS = [
     image: require('@/assets/images/negocio3.png'),
     layoutStyle: 'banner',
     rating: 4.9,
+    distanceKm: 8.6,
     features: ['Art', 'Museum', 'Accessible'],
     duration: '2 hours',
     price: '$250 MXN',
@@ -121,6 +152,7 @@ export const MOCK_POIS = [
     image: require('@/assets/images/negocio1.png'),
     layoutStyle: 'square',
     rating: 4.5,
+    distanceKm: 3.1,
     features: ['Shopping', 'Souvenirs', 'Culture'],
     duration: '2 hours',
     price: 'Free Entry',

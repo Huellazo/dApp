@@ -26,12 +26,12 @@ export default function TourismDetailScreen() {
       <ScrollView className="flex-1 pb-32">
         
         {/* Banner Header */}
-        <View className="h-64 w-full border-b-4 border-border relative bg-secondary">
+        <View className="h-64 w-full border-b-4 border-border relative bg-secondary overflow-hidden items-center justify-center">
           {place.image ? (
             <Image 
               source={place.image as any} 
-              className="w-full h-full"
-              resizeMode="cover"
+              className="w-11/12 h-5/6"
+              resizeMode="contain"
             />
           ) : (
             <View className="flex-1 justify-center items-center opacity-50">
@@ -52,19 +52,15 @@ export default function TourismDetailScreen() {
           >
             <FontAwesome5 name="bookmark" solid size={20} color={colors.border} />
           </Pressable>
-
-          {/* Banner Title Overlay */}
-          <View className="absolute bottom-4 left-4 right-4 items-center">
-             <View className="bg-background border-4 border-border shadow-brutal px-6 py-2">
-                <Text className="text-border font-black text-xl uppercase text-center">{place.name}</Text>
-             </View>
-          </View>
         </View>
 
-        <View className="p-4">
-          <Text className="text-3xl font-black text-border mb-4 uppercase tracking-tight">
-            {place.name}
-          </Text>
+        <View className="p-4 mt-2">
+          {/* Main Title Brutalist Style */}
+          <View className="bg-primary border-4 border-border shadow-brutal p-4 mb-6 -mt-8 mx-2 z-30">
+            <Text className="text-3xl font-black text-border uppercase tracking-tight text-center">
+              {place.name}
+            </Text>
+          </View>
           
           {/* Highlights / Features */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6 flex-row">

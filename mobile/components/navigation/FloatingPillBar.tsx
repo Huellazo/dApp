@@ -38,14 +38,13 @@ export function FloatingPillBar({ state, descriptors, navigation }: BottomTabBar
             onPress={onPress}
             className="items-center justify-center flex-1 active:opacity-50"
           >
-            <FontAwesome5 
-              name={iconName} 
-              size={24} 
-              color={isFocused ? colors.primary : colors.border} 
-            />
-            {isFocused && (
-              <View className="w-1.5 h-1.5 bg-primary rounded-full mt-1" />
-            )}
+            <View className={`${isFocused ? 'bg-accent2 border-2 border-border shadow-brutal-sm px-4 py-2' : 'p-2'}`}>
+              <FontAwesome5 
+                name={iconName} 
+                size={isFocused ? 26 : 24} 
+                color={colors.border} 
+              />
+            </View>
           </Pressable>
         );
       })}
