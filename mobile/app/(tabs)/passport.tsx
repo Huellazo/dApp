@@ -36,7 +36,7 @@ export default function PassportScreen() {
         {MOCK_USER.nfts.map(nft => (
           <View key={nft.id} className="w-[48%] mb-6">
             <BrutalistCard colorClass="bg-background p-0 overflow-hidden">
-              <View className="w-full aspect-square bg-accent1 border-b-4 border-border justify-center items-center relative overflow-hidden">
+              <View style={{ aspectRatio: 1 }} className="w-full bg-accent1 border-b-4 border-border justify-center items-center relative overflow-hidden">
                 {nft.image ? (
                   <Image source={nft.image as any} className="w-11/12 h-11/12" resizeMode="contain" />
                 ) : (

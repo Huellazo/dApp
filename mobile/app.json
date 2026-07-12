@@ -48,7 +48,8 @@
         {
           "RNMAPBOX_MAPS_DOWNLOAD_TOKEN": "REPLACE_WITH_YOUR_MAPBOX_DOWNLOADS_TOKEN"
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true

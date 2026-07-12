@@ -155,7 +155,8 @@ export default function WalletScreen() {
                     <Pressable
                       key={index}
                       onPress={() => setSelectedAvatar(avatarImg)}
-                      className={`w-[48%] aspect-square mb-4 border-4 overflow-hidden shadow-brutal-sm justify-center items-center ${
+                      style={{ aspectRatio: 1 }}
+                      className={`w-[48%] mb-4 border-4 overflow-hidden shadow-brutal-sm justify-center items-center ${
                         selectedAvatar === avatarImg ? 'border-accent2 bg-accent2' : 'border-border bg-secondary'
                       }`}
                     >

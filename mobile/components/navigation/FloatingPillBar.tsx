@@ -1,16 +1,23 @@
 import React from 'react';
-import { View, Pressable, Text, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 
-export function FloatingPillBar({ state, descriptors, navigation }: BottomTabBarProps) {
+const tabIcons: Record<string, React.ComponentProps<typeof FontAwesome5>['name']> = {
+  tourism: 'map-marked-alt',
+  business: 'store',
+  passport: 'passport',
+  wallet: 'wallet',
+  scan: 'qrcode',
+};
+
+export function FloatingPillBar({ state, navigation }: BottomTabBarProps) {
   return (
-    <View className="absolute bottom-6 left-4 right-4 flex-row items-center justify-around bg-background border-4 border-border shadow-brutal px-2 py-3">
+    <View style={styles.container}>
       {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
         const isFocused = state.index === index;
-        const isScan = route.name === 'scan';
+        const iconName = tabIcons[route.name] ?? 'question';
 
         const onPress = () => {
           const event = navigation.emit({
@@ -24,21 +31,16 @@ export function FloatingPillBar({ state, descriptors, navigation }: BottomTabBar
           }
         };
 
-        // Icons mapping
-        let iconName = 'question';
-        if (route.name === 'tourism') iconName = 'map-marked-alt';
-        if (route.name === 'business') iconName = 'store';
-        if (route.name === 'passport') iconName = 'passport';
-        if (route.name === 'wallet') iconName = 'wallet';
-        if (route.name === 'scan') iconName = 'qrcode';
-
         return (
           <Pressable
             key={route.key}
             onPress={onPress}
-            className="items-center justify-center flex-1 active:opacity-50"
+            style={({ pressed }) => [
+              styles.tabButton,
+              pressed && styles.pressed,
+            ]}
           >
-            <View className={`${isFocused ? 'bg-accent2 border-2 border-border shadow-brutal-sm px-4 py-2' : 'p-2'}`}>
+            <View style={[styles.iconWrap, isFocused && styles.iconWrapFocused]}>
               <FontAwesome5 
                 name={iconName} 
                 size={isFocused ? 26 : 24} 
@@ -51,4 +53,50 @@ export function FloatingPillBar({ state, descriptors, navigation }: BottomTabBar
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 24,
+    left: 16,
+    right: 16,
+    zIndex: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    backgroundColor: colors.background,
+    borderWidth: 4,
+    borderColor: colors.border,
+    shadowColor: colors.border,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
+  },
+  tabButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pressed: {
+    opacity: 0.5,
+  },
+  iconWrap: {
+    padding: 8,
+  },
+  iconWrapFocused: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: colors.accent2,
+    borderWidth: 2,
+    borderColor: colors.border,
+    shadowColor: colors.border,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 2,
+  },
+});
 

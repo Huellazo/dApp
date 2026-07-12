@@ -140,7 +140,16 @@ export default function BusinessDetailScreen() {
       </ScrollView>
 
       {/* Fixed Bottom Action Bar for Commerce */}
-      <View className="absolute bottom-0 left-0 right-0 bg-background border-t-4 border-border p-4 pb-8 flex-row items-center justify-between z-10" style={{ boxShadow: '0px -4px 0px 0px #3D405B' }}>
+      <View
+        className="absolute bottom-0 left-0 right-0 bg-background border-t-4 border-border p-4 pb-8 flex-row items-center justify-between z-10"
+        style={{
+          shadowColor: colors.border,
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 1,
+          shadowRadius: 0,
+          elevation: 8,
+        }}
+      >
         <View>
           <Text className="text-border font-bold uppercase text-xs">Discount</Text>
           <Text className="text-primary font-black text-2xl">-15% OFF</Text>

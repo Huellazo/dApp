@@ -23,6 +23,11 @@ module.exports = {
         'brutal-sm': '2px 2px 0px 0px #3D405B',
         'brutal-lg': '6px 6px 0px 0px #3D405B',
       },
+      elevation: {
+        'brutal': '4',
+        'brutal-sm': '2',
+        'brutal-lg': '6',
+      },
     },
   },
   plugins: [],
