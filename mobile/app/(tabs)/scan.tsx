@@ -4,7 +4,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
-import { EarnedSolanaToken, useAppState } from '@/context/app-state';
+import { useAppState } from '@/context/app-state';
+import type { EarnedSolanaToken } from '@/context/app-state';
 import { colors } from '@/theme/colors';
 import { MOCK_POIS } from '@/mocks/db';
 

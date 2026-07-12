@@ -21,7 +21,7 @@ export function FeaturedCarousel({ pois }: { pois: any[] }) {
                 {/* Randomly alternate background color for empty states */}
                 <View className={`absolute inset-0 ${idx % 2 === 0 ? 'bg-primary' : 'bg-accent1'}`} />
                 {poi.image && (
-                  <Image source={poi.image} className="w-full h-full" resizeMode="contain" />
+                  <Image source={poi.image} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
                 )}
                 {/* Hot badge */}
                 <View className="absolute top-2 left-2 bg-accent2 px-2 py-1 border-2 border-border flex-row items-center shadow-brutal-sm">

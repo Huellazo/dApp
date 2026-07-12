@@ -19,60 +19,60 @@ export default function BusinessTabScreen() {
 
   return (
     <View className="flex-1 bg-background pt-12 px-4 pb-24">
-        {/* Header */}
-        <View className="flex-row justify-between items-center mb-6">
-          <View>
-            <Text className="text-4xl font-black text-border uppercase tracking-tight">Local</Text>
-            <Text className="text-lg font-bold text-primary">Support commerce</Text>
-          </View>
-          <View className="bg-accent2 p-3 rounded-none border-4 border-border shadow-brutal">
-            <FontAwesome5 name="store" size={20} color={colors.border} />
-          </View>
+      {/* Header */}
+      <View className="flex-row justify-between items-center mb-6">
+        <View>
+          <Text className="text-4xl font-black text-border uppercase tracking-tight">Local</Text>
+          <Text className="text-lg font-bold text-primary">Support commerce</Text>
         </View>
+        <View className="bg-accent2 p-3 rounded-none border-4 border-border shadow-brutal">
+          <FontAwesome5 name="store" size={20} color={colors.border} />
+        </View>
+      </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          
-          <ImpactMeter supported={MOCK_USER.businessesSupported} />
+      <ScrollView showsVerticalScrollIndicator={false}>
 
-          <FlashDealCard deal={activeDeal} />
+        <ImpactMeter supported={MOCK_USER.businessesSupported} />
 
-          <CategoryGrid />
+        <FlashDealCard deal={activeDeal} />
 
-          <Text className="text-xl font-bold text-border mb-4 uppercase mt-2">Nearby Businesses</Text>
-          <View className="mb-8">
-            {businessPOIs.map(poi => (
-              <Pressable key={`list-${poi.id}`} onPress={() => router.push(`/business/${poi.id}`)} className="active:opacity-80 mb-4">
-                <BrutalistCard colorClass="bg-background p-0 w-full overflow-hidden">
-                  <View className="w-full h-40 border-b-4 border-border bg-accent1 relative justify-center items-center overflow-hidden">
-                     {poi.image && (
-                       <Image source={poi.image as any} className="w-11/12 h-5/6" resizeMode="contain" />
-                     )}
-                     <View className="absolute top-2 right-2 bg-primary px-2 py-1 border-2 border-border shadow-brutal-sm">
-                       <Text className="text-border font-bold text-xs uppercase">Pay with HZ</Text>
-                     </View>
+        <CategoryGrid />
+
+        <Text className="text-xl font-bold text-border mb-4 uppercase mt-2">Nearby Businesses</Text>
+        <View className="mb-8">
+          {businessPOIs.map(poi => (
+            <Pressable key={`list-${poi.id}`} onPress={() => router.push(`/business/${poi.id}`)} className="active:opacity-80 mb-4">
+              <BrutalistCard colorClass="bg-background p-0 w-full overflow-hidden">
+                <View className="w-full h-40 border-b-4 border-border bg-accent1 relative justify-center items-center overflow-hidden">
+                  {poi.image && (
+                    <Image source={poi.image as any} className="w-11/12 h-5/6" resizeMode="contain" />
+                  )}
+                  <View className="absolute top-2 right-2 bg-primary px-2 py-1 border-2 border-border shadow-brutal-sm">
+                    <Text className="text-border font-bold text-xs uppercase">Pay with HZ</Text>
                   </View>
-                  <View className="p-4 bg-background z-10 w-full">
-                    <Text className="text-border font-black uppercase text-2xl" numberOfLines={1}>{poi.name}</Text>
-                    <View className="flex-row items-center justify-between mt-2">
-                      <View className="flex-row items-center">
-                        <FontAwesome5 name="star" solid size={16} color={colors.primary} />
-                        <Text className="text-border font-black ml-1 text-base">{poi.rating}</Text>
-                        <Text className="text-border font-bold text-xs ml-3 uppercase bg-secondary px-3 py-1 border-2 border-border">{poi.type}</Text>
-                      </View>
-                      
-                      <View className="flex-row items-center">
-                        {poi.distanceKm && (
-                          <Text className="text-border text-sm font-black mr-3">{poi.distanceKm}km</Text>
-                        )}
-                        <FontAwesome5 name="shopping-bag" solid size={18} color={colors.border} />
-                      </View>
+                </View>
+                <View className="p-4 bg-background z-10 w-full">
+                  <Text className="text-border font-black uppercase text-2xl" numberOfLines={1}>{poi.name}</Text>
+                  <View className="flex-row items-center justify-between mt-2">
+                    <View className="flex-row items-center">
+                      <FontAwesome5 name="star" solid size={16} color={colors.primary} />
+                      <Text className="text-border font-black ml-1 text-base">{poi.rating}</Text>
+                      <Text className="text-border font-bold text-xs ml-3 uppercase bg-secondary px-3 py-1 border-2 border-border">{poi.type}</Text>
+                    </View>
+
+                    <View className="flex-row items-center">
+                      {poi.distanceKm && (
+                        <Text className="text-border text-sm font-black mr-3">{poi.distanceKm}km</Text>
+                      )}
+                      <FontAwesome5 name="shopping-bag" solid size={18} color={colors.border} />
                     </View>
                   </View>
-                </BrutalistCard>
-              </Pressable>
-            ))}
-          </View>
-        </ScrollView>
+                </View>
+              </BrutalistCard>
+            </Pressable>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 }

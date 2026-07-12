@@ -51,7 +51,7 @@ export interface EarnedSolanaToken {
 }
 
 // --- Context Type ---
-interface AppState {
+export interface HuellazoAppState {
   // State
   xp: number
   points: number
@@ -88,7 +88,7 @@ function createSolanaTokenFromPoi(poi: MintablePoi): EarnedSolanaToken {
     location: poi.name,
     description:
       poi.description ??
-      `Token de prueba obtenido por validar una visita real en ${poi.name} dentro de Huellazo.`,
+      `Test token earned by validating a physical visit at ${poi.name} within Huellazo.`,
     reward,
     mintAddress: createMockBase58Address(44),
     transactionSignature: createMockBase58Address(88),
@@ -101,54 +101,54 @@ function createSolanaTokenFromPoi(poi: MintablePoi): EarnedSolanaToken {
 export const NFT_CATALOG: NftItem[] = [
   {
     id: 'cenote',
-    name: 'NFT: Agua Pura',
-    collectionName: 'Cenote Sagrado',
-    placeName: 'Cenote Sagrado',
+    name: 'NFT: Pure Water',
+    collectionName: 'Sacred Cenote',
+    placeName: 'Sacred Cenote',
     image: require('@/assets/images/water.png'),
     xpReward: 300,
     solCost: 0.05,
   },
   {
     id: 'museo',
-    name: 'NFT: Cultura Local',
-    collectionName: 'Museo Regional',
-    placeName: 'Museo Regional',
+    name: 'NFT: Local Culture',
+    collectionName: 'Regional Museum',
+    placeName: 'Regional Museum',
     image: require('@/assets/images/negocio2.png'),
     xpReward: 100,
     solCost: 0.01,
   },
   {
     id: 'cafe',
-    name: 'NFT: Grano de Oro',
-    collectionName: 'Café de Especialidad',
-    placeName: 'Café Local',
+    name: 'NFT: Golden Bean',
+    collectionName: 'Specialty Coffee',
+    placeName: 'Local Coffee Shop',
     image: require('@/assets/images/coffee.png'),
     xpReward: 50,
     solCost: 0.005,
   },
   {
     id: 'hotel',
-    name: 'NFT: Eco Estancia',
-    collectionName: 'Hotel Boutique',
-    placeName: 'Hotel Boutique Eco',
+    name: 'NFT: Eco Stay',
+    collectionName: 'Boutique Hotel',
+    placeName: 'Boutique Eco Hotel',
     image: require('@/assets/images/hotel.png'),
     xpReward: 200,
     solCost: 0.08,
   },
   {
     id: 'reserva',
-    name: 'NFT: Fauna Local',
-    collectionName: 'Reserva Biósfera',
-    placeName: 'Reserva Biósfera',
+    name: 'NFT: Local Wildlife',
+    collectionName: 'Biosphere Reserve',
+    placeName: 'Biosphere Reserve',
     image: require('@/assets/images/negocio1.png'),
     xpReward: 500,
     solCost: 0.1,
   },
   {
     id: 'artesanal',
-    name: 'NFT: Artesano',
-    collectionName: 'Mercado Artesanal',
-    placeName: 'Mercado Artesanal',
+    name: 'NFT: Artisan',
+    collectionName: 'Artisan Market',
+    placeName: 'Artisan Market',
     image: require('@/assets/images/negocio3.png'),
     xpReward: 120,
     solCost: 0.02,
@@ -157,23 +157,23 @@ export const NFT_CATALOG: NftItem[] = [
 
 // --- Places Catalog ---
 export const PLACES_CATALOG: Place[] = [
-  { id: 'museo', name: 'Museo Regional', type: 'Turístico · Nivel 1', tier: 1, color: '#F2CC8F', solCost: 0.01, xpReward: 100, nftId: 'museo' },
-  { id: 'cenote', name: 'Cenote Sagrado', type: 'Ecológico · Nivel 2', tier: 2, color: '#81B29A', solCost: 0.05, xpReward: 300, nftId: 'cenote' },
-  { id: 'cafe', name: 'Café Local', type: 'Comercio · Nivel 1', tier: 1, color: '#FFFFFF', solCost: 0.005, xpReward: 50, nftId: 'cafe' },
-  { id: 'reserva', name: 'Reserva Biósfera', type: 'Ecológico · Nivel 2', tier: 2, color: '#E07A5F', solCost: 0.1, xpReward: 500, nftId: 'reserva' },
-  { id: 'hotel', name: 'Hotel Boutique Eco', type: 'Hospedaje · Nivel 2', tier: 2, color: '#3D405B', solCost: 0.08, xpReward: 200, nftId: 'hotel' },
-  { id: 'artesanal', name: 'Mercado Artesanal', type: 'Comercio · Nivel 1', tier: 1, color: '#FFFFFF', solCost: 0.02, xpReward: 120, nftId: 'artesanal' },
+  { id: 'museo', name: 'Regional Museum', type: 'Tourism · Tier 1', tier: 1, color: '#F2CC8F', solCost: 0.01, xpReward: 100, nftId: 'museo' },
+  { id: 'cenote', name: 'Sacred Cenote', type: 'Eco · Tier 2', tier: 2, color: '#81B29A', solCost: 0.05, xpReward: 300, nftId: 'cenote' },
+  { id: 'cafe', name: 'Local Coffee Shop', type: 'Commerce · Tier 1', tier: 1, color: '#FFFFFF', solCost: 0.005, xpReward: 50, nftId: 'cafe' },
+  { id: 'reserva', name: 'Biosphere Reserve', type: 'Eco · Tier 2', tier: 2, color: '#E07A5F', solCost: 0.1, xpReward: 500, nftId: 'reserva' },
+  { id: 'hotel', name: 'Boutique Eco Hotel', type: 'Lodging · Tier 2', tier: 2, color: '#3D405B', solCost: 0.08, xpReward: 200, nftId: 'hotel' },
+  { id: 'artesanal', name: 'Artisan Market', type: 'Commerce · Tier 1', tier: 1, color: '#FFFFFF', solCost: 0.02, xpReward: 120, nftId: 'artesanal' },
 ]
 
 // --- Level calculation ---
 export function calculateLevel(xp: number): string {
-  if (xp >= 5000) return 'Oro 🏆'
-  if (xp >= 1000) return 'Plata 🥈'
-  return 'Bronce 🥉'
+  if (xp >= 5000) return 'Gold 🏆'
+  if (xp >= 1000) return 'Silver 🥈'
+  return 'Bronze 🥉'
 }
 
 // --- Context ---
-const AppStateContext = createContext<AppState | undefined>(undefined)
+const AppStateContext = createContext<HuellazoAppState | undefined>(undefined)
 
 // --- Provider ---
 export function AppStateProvider({ children }: { children: React.ReactNode }) {
@@ -263,7 +263,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 }
 
 // --- Hook ---
-export function useAppState(): AppState {
+export function useAppState(): HuellazoAppState {
   const context = useContext(AppStateContext)
   if (!context) throw new Error('useAppState must be used within AppStateProvider')
   return context

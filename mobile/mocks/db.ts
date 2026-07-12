@@ -72,7 +72,7 @@ export const MOCK_POIS = [
     nftReward: 'Imperial Castle Badge',
     type: 'historical',
     category: 'tourism',
-    image: require('@/assets/images/ciren.png'), 
+    image: require('@/assets/images/tourism_chapultepec.png'), 
     layoutStyle: 'square',
     rating: 4.9,
     distanceKm: 0.8,
