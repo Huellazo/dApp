@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react'
+import { MOCK_USER } from '@/mocks/db'
 
 // --- NFT Data Types ---
 export type NftId = 'cenote' | 'museo' | 'cafe' | 'hotel' | 'reserva' | 'artesanal'
@@ -50,6 +51,39 @@ export interface EarnedSolanaToken {
   mintedAt: string
 }
 
+export type UserStatus = 'normal' | 'wanted' | 'dusty' | 'premium';
+export type Faction = 'Ajolotes' | 'Eagles' | 'Jaguars' | null;
+
+export interface Transaction {
+  id: string;
+  type: 'earn' | 'burn' | 'penalty';
+  amount: number;
+  description: string;
+  timestamp: string;
+}
+
+export type InventoryItemType = 'token' | 'nft' | 'coupon' | 'trash' | 'cosmetic';
+
+export interface InventoryItem {
+  id: string;
+  type: InventoryItemType;
+  name: string;
+  image?: any;
+  value?: number;
+  description?: string;
+  obtainedAt: string;
+  style?: string;
+}
+
+export interface LootItem {
+  type: InventoryItemType;
+  name: string;
+  image?: any;
+  value?: number;
+  description?: string;
+  style?: string;
+}
+
 // --- Context Type ---
 export interface HuellazoAppState {
   // State
@@ -59,6 +93,11 @@ export interface HuellazoAppState {
   passportMinted: boolean
   activeNfts: NftId[]
   earnedTokens: EarnedSolanaToken[]
+  status: UserStatus
+  faction: Faction
+  transactions: Transaction[]
+  inventory: InventoryItem[]
+  ownedNfts: any[]
 
   // Actions
   addXp: (amount: number) => void
@@ -66,6 +105,13 @@ export interface HuellazoAppState {
   unlockNft: (id: NftId) => void
   mintPassport: () => void
   mintPoiToken: (poi: MintablePoi) => { token: EarnedSolanaToken; alreadyMinted: boolean }
+  burnTokens: (amount: number, description: string, type?: 'burn' | 'penalty') => boolean
+  applyPenalty: (amount: number, reason: string) => void
+  openPinata: () => LootItem | null
+  joinFaction: (faction: Faction) => void
+  executeTrade: (givenNftId: string, receivedNft: any) => void
+  isRadarBoosted: boolean
+  activateRadarBoost: (cost: number) => boolean
 }
 
 const EARNED_TOKENS_STORAGE_KEY = 'huellazo:earned-solana-tokens:v1'
@@ -183,6 +229,28 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [activeNfts, setActiveNfts] = useState<NftId[]>(['cenote'])
   const [earnedTokens, setEarnedTokens] = useState<EarnedSolanaToken[]>([])
   const [tokensLoaded, setTokensLoaded] = useState(false)
+  
+  // Gamification state
+  const [status, setStatus] = useState<UserStatus>('normal')
+  const [faction, setFaction] = useState<Faction>(null)
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  
+  // Radar Boost State
+  const [isRadarBoosted, setIsRadarBoosted] = useState(false)
+  
+  // Dynamic state for NFTs that can be traded
+  const [ownedNfts, setOwnedNfts] = useState<any[]>(MOCK_USER.nfts)
+  
+  // Initialize with one chromatic NFT for testing purposes
+  const [inventory, setInventory] = useState<InventoryItem[]>([{
+    id: 'mock-chromatic-1',
+    type: 'nft',
+    name: 'Chromatic Quetzal',
+    description: 'A super rare chromatic holographic stamp.',
+    image: require('@/assets/images/nft_chromatic_1.png'),
+    obtainedAt: new Date().toISOString(),
+    style: 'chromatic'
+  }])
 
   useEffect(() => {
     let mounted = true
@@ -216,16 +284,34 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     })
   }, [earnedTokens, tokensLoaded])
 
+  const logTransaction = useCallback((type: 'earn' | 'burn' | 'penalty', amount: number, description: string) => {
+    setTransactions(prev => [{
+      id: Date.now().toString(),
+      type,
+      amount,
+      description,
+      timestamp: new Date().toISOString()
+    }, ...prev])
+  }, [])
+
   const addXp = useCallback((amount: number) => {
     setXp(prev => prev + amount)
     setPoints(prev => prev + Math.floor(amount / 2))
-  }, [])
+    logTransaction('earn', Math.floor(amount / 2), 'Exploration XP converted')
+  }, [logTransaction])
 
   const spendPoints = useCallback((amount: number): boolean => {
     if (points < amount) return false
     setPoints(prev => prev - amount)
     return true
   }, [points])
+
+  const burnTokens = useCallback((amount: number, description: string, type: 'burn' | 'penalty' = 'burn'): boolean => {
+    if (points < amount) return false
+    setPoints(prev => prev - amount)
+    logTransaction(type, amount, description)
+    return true
+  }, [points, logTransaction])
 
   const unlockNft = useCallback((id: NftId) => {
     setActiveNfts(prev => prev.includes(id) ? prev : [...prev, id])
@@ -234,6 +320,81 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const mintPassport = useCallback(() => {
     setPassportMinted(true)
   }, [])
+
+  const applyPenalty = useCallback((amount: number, reason: string) => {
+    setPoints(prev => Math.max(0, prev - amount))
+    setXp(prev => Math.max(0, prev - (amount * 2))) // Deduct XP on penalty
+    setStatus('wanted')
+    logTransaction('penalty', amount, reason)
+    
+    setTimeout(() => {
+      setStatus('normal')
+    }, 30000)
+  }, [logTransaction])
+
+  const openPinata = useCallback((): LootItem | null => {
+    if (points < 100) return null;
+    burnTokens(100, 'Broke a Digital Piñata');
+    
+    const rand = Math.random();
+    let loot: LootItem;
+
+    if (rand < 0.40) {
+      // 40% chance: Tokens Jackpot
+      const winAmount = Math.floor(Math.random() * 151) + 50; // 50 to 200
+      setPoints(prev => prev + winAmount);
+      logTransaction('earn', winAmount, 'Jackpot! Piñata Prize');
+      loot = { type: 'token', name: `${winAmount} $HUELLAZOS`, value: winAmount, description: 'You hit the jackpot!' };
+    } else if (rand < 0.65) {
+      // 25% chance: Trash
+      loot = { type: 'trash', name: 'Chewed Gum', description: 'Eww... better luck next time.', image: require('@/assets/images/loot_trash_1783886312470.png') };
+    } else if (rand < 0.85) {
+      // 20% chance: Coupon
+      loot = { type: 'coupon', name: 'Don Porfirio 100% OFF', description: 'A rare flash deal!', image: require('@/assets/images/workshop_pottery.png') };
+    } else if (rand < 0.95) {
+      // 10% chance: Cosmetic
+      loot = { type: 'cosmetic', name: 'Mariachi Hat', description: 'Equip it on your Nano Banana.', image: require('@/assets/images/loot_sombrero_1783886306265.png') };
+    } else {
+      // 5% chance: Chromatic NFT
+      const isSerpent = Math.random() > 0.5;
+      loot = { 
+        type: 'nft', 
+        name: isSerpent ? 'Chromatic Serpent Stamp' : 'Chromatic Jaguar Stamp', 
+        description: 'An ultra-rare holographic Piñata drop.', 
+        image: isSerpent ? require('@/assets/images/nft_chromatic_1.png') : require('@/assets/images/nft_chromatic_2.png'),
+        style: 'chromatic'
+      };
+    }
+
+    if (loot.type !== 'token') {
+      const newItem: InventoryItem = {
+        id: Math.random().toString(36).substr(2, 9),
+        ...loot,
+        obtainedAt: new Date().toISOString()
+      };
+      setInventory(prev => [newItem, ...prev]);
+    }
+
+    return loot;
+  }, [points, burnTokens, logTransaction]);
+
+  const joinFaction = useCallback((newFaction: Faction) => {
+    setFaction(newFaction)
+  }, [])
+
+  const executeTrade = useCallback((givenNftId: string, receivedNft: any) => {
+    setOwnedNfts(prev => prev.filter(nft => nft.id !== givenNftId).concat(receivedNft))
+    logTransaction('earn', 0, `Traded NFT for ${receivedNft.title}`)
+  }, [logTransaction])
+
+  const activateRadarBoost = useCallback((cost: number) => {
+    if (burnTokens(cost, 'Overclocked Radar for 30 mins')) {
+      setIsRadarBoosted(true);
+      setTimeout(() => setIsRadarBoosted(false), 30 * 60 * 1000); // 30 mins (mocked)
+      return true;
+    }
+    return false;
+  }, [burnTokens])
 
   const mintPoiToken = useCallback((poi: MintablePoi) => {
     const existingToken = earnedTokens.find(token => token.poiId === poi.id)
@@ -246,16 +407,19 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setEarnedTokens(prev => [token, ...prev])
     setXp(prev => prev + token.reward * 2)
     setPoints(prev => prev + token.reward)
+    logTransaction('earn', token.reward, `Scanned ${poi.name}`)
 
     return { token, alreadyMinted: false }
-  }, [earnedTokens])
+  }, [earnedTokens, logTransaction])
 
   const level = calculateLevel(xp)
 
   return (
     <AppStateContext.Provider value={{
       xp, points, level, passportMinted, activeNfts, earnedTokens,
+      status, faction, transactions, inventory, ownedNfts, isRadarBoosted,
       addXp, spendPoints, unlockNft, mintPassport, mintPoiToken,
+      burnTokens, applyPenalty, openPinata, joinFaction, executeTrade, activateRadarBoost
     }}>
       {children}
     </AppStateContext.Provider>

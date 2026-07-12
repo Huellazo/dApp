@@ -7,10 +7,12 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { useMobileWallet } from '@wallet-ui/react-native-web3js';
+import { PinataModal } from '@/components/features/wallet/PinataModal';
 import { AppConfig } from '@/constants/app-config';
 import { ellipsify } from '@/utils/ellipsify';
 import { useGetBalance } from '@/components/account/use-get-balance';
 import { lamportsToSol } from '@/utils/lamports-to-sol';
+import { useAppState } from '@/context/app-state';
 
 const AVATAR_OPTIONS = [
   require('@/assets/images/profile_wallet.png'),
@@ -36,9 +38,36 @@ export default function WalletScreen() {
   const solBalance = balanceQuery.data == null ? null : lamportsToSol(balanceQuery.data);
   const [connectionError, setConnectionError] = useState<string | null>(null);
   
+  const { 
+    xp, points, status, faction, transactions, 
+    openPinata, joinFaction 
+  } = useAppState();
+
   // Local state for avatar customization
   const [selectedAvatar, setSelectedAvatar] = useState(MOCK_USER.avatarUrl);
   const [isAvatarModalVisible, setAvatarModalVisible] = useState(false);
+  const [isFactionModalVisible, setFactionModalVisible] = useState(false);
+  const [isPinataModalVisible, setPinataModalVisible] = useState(false);
+
+  const statusBorderColor = 
+    status === 'wanted' ? 'border-primary' : 
+    status === 'premium' ? 'border-accent2' : 
+    status === 'dusty' ? 'border-gray-500' : 
+    'border-border';
+
+  // XP Progress Calculation
+  let currentLevelBaseXp = 0;
+  let nextLevelXp = 1000;
+  
+  if (xp >= 5000) {
+    currentLevelBaseXp = 5000;
+    nextLevelXp = 5000;
+  } else if (xp >= 1000) {
+    currentLevelBaseXp = 1000;
+    nextLevelXp = 5000;
+  }
+  
+  const xpProgress = xp >= 5000 ? 100 : ((xp - currentLevelBaseXp) / (nextLevelXp - currentLevelBaseXp)) * 100;
 
   const handleConnectWallet = async () => {
     setConnectionError(null);
@@ -71,7 +100,7 @@ export default function WalletScreen() {
         <View className="bg-primary p-4 border-b-4 border-border flex-row items-center">
           <Pressable 
             onPress={() => setAvatarModalVisible(true)}
-            className="w-16 h-16 bg-background border-4 border-border shadow-brutal-sm rounded-full overflow-hidden mr-4 relative active:opacity-70 justify-center items-center"
+            className={`w-16 h-16 bg-background border-4 ${statusBorderColor} shadow-brutal-sm rounded-full overflow-hidden mr-4 relative active:opacity-70 justify-center items-center`}
           >
              {selectedAvatar ? (
                <Image source={selectedAvatar} style={{ width: '100%', height: '100%', resizeMode: 'contain', backgroundColor: 'white' }} />
@@ -84,13 +113,21 @@ export default function WalletScreen() {
           </Pressable>
           <View className="flex-1">
              <Text className="text-border font-black uppercase text-xl">{MOCK_USER.name}</Text>
-             <View className="flex-row mt-1">
-               <View className="bg-background px-2 py-0.5 border-2 border-border shadow-brutal-sm mr-2">
+             <View className="flex-row mt-1 mb-2 flex-wrap">
+               <View className="bg-background px-2 py-0.5 border-2 border-border shadow-brutal-sm mr-2 mb-1">
                  <Text className="text-border font-bold text-[10px] uppercase">Lvl {MOCK_USER.passportLevel} Explorer</Text>
                </View>
-               <View className="bg-accent1 px-2 py-0.5 border-2 border-border shadow-brutal-sm">
-                 <Text className="text-border font-bold text-[10px] uppercase">{MOCK_USER.nfts.length} Stamps</Text>
-               </View>
+               <Pressable onPress={() => setFactionModalVisible(true)} className="bg-accent1 px-2 py-0.5 border-2 border-border shadow-brutal-sm mb-1 active:opacity-70">
+                 <Text className="text-border font-bold text-[10px] uppercase">{faction ? `Faction: ${faction}` : 'Join Faction'}</Text>
+               </Pressable>
+             </View>
+             {/* XP Progress Bar */}
+             <View className="w-full h-2 bg-background border-2 border-border flex-row overflow-hidden shadow-brutal-sm">
+                <View style={{ width: `${xpProgress}%` }} className={`h-full ${status === 'wanted' ? 'bg-primary' : 'bg-secondary'}`} />
+             </View>
+             <View className="flex-row justify-between mt-0.5">
+               <Text className="text-background text-[8px] font-black uppercase">XP: {xp}</Text>
+               <Text className="text-background text-[8px] font-black uppercase">{xp >= 5000 ? 'MAX LVL' : `NEXT: ${nextLevelXp}`}</Text>
              </View>
           </View>
         </View>
@@ -172,12 +209,20 @@ export default function WalletScreen() {
       <BrutalistCard colorClass="bg-accent1 mb-6 items-center py-8">
         <Text className="text-border font-bold uppercase mb-2 text-center">Explorer Fund</Text>
         <View className="flex-row items-center bg-background border-4 border-border px-6 py-2 shadow-brutal">
-           <Text className="text-5xl font-black text-border">{MOCK_USER.balanceHuellazos}</Text>
+           <Text className="text-5xl font-black text-border">{points}</Text>
         </View>
         <Text className="text-background font-black uppercase tracking-widest mt-3 text-xl">$HUELLAZOS</Text>
-        <Text className="text-border text-xs text-center mt-4 px-4 font-bold bg-background/50 py-2">
+        <Text className="text-border text-xs text-center mt-4 px-4 font-bold bg-background/50 py-2 mb-4">
           * Points redeemable for discounts. Real payments are processed in SOL.
         </Text>
+        
+        <View className="w-full px-6">
+          <BrutalistButton 
+            title="Break Digital Piñata (100 HZ)" 
+            colorClass="bg-primary" 
+            onPress={() => setPinataModalVisible(true)} 
+          />
+        </View>
       </BrutalistCard>
 
       <Text className="text-xl font-bold text-border mb-4 uppercase">Quick Actions</Text>
@@ -192,33 +237,32 @@ export default function WalletScreen() {
 
       <Text className="text-xl font-bold text-border mb-4 uppercase">History (Blinks)</Text>
       
-      {/* Transaction Item - Expense */}
-      <View className="bg-background border-4 border-border mb-4 p-0 shadow-brutal overflow-hidden flex-row">
-        <View className="bg-primary w-16 justify-center items-center border-r-4 border-border">
-           <FontAwesome5 name="arrow-up" size={24} color={colors.border} />
+      {transactions.length === 0 ? (
+        <View className="bg-background border-4 border-border p-6 shadow-brutal items-center mb-8">
+          <FontAwesome5 name="ghost" size={32} color={colors.border} className="mb-2" />
+          <Text className="text-border font-bold uppercase text-center">No transactions yet</Text>
+          <Text className="text-border text-xs text-center opacity-70 mt-1">Start exploring or spending tokens!</Text>
         </View>
-        <View className="flex-1 p-3 flex-row justify-between items-center">
-          <View>
-            <Text className="text-border font-bold uppercase text-lg">Don Porfirio Cafe</Text>
-            <Text className="text-border text-xs font-bold opacity-70">Solana Pay - 12 May</Text>
+      ) : (
+        transactions.map((tx) => (
+          <View key={tx.id} className="bg-background border-4 border-border mb-4 p-0 shadow-brutal overflow-hidden flex-row">
+            <View className={`${tx.type === 'earn' ? 'bg-accent2' : tx.type === 'penalty' ? 'bg-primary' : 'bg-secondary'} w-16 justify-center items-center border-r-4 border-border`}>
+               <FontAwesome5 name={tx.type === 'earn' ? 'arrow-down' : tx.type === 'penalty' ? 'exclamation-triangle' : 'arrow-up'} size={24} color={colors.border} />
+            </View>
+            <View className="flex-1 p-3 flex-row justify-between items-center">
+              <View className="flex-1 pr-2">
+                <Text className="text-border font-bold uppercase text-lg" numberOfLines={1}>{tx.description}</Text>
+                <Text className="text-border text-[10px] font-bold opacity-70">
+                  {new Date(tx.timestamp).toLocaleDateString()} - {new Date(tx.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </Text>
+              </View>
+              <Text className={`${tx.type === 'earn' ? 'text-accent2' : 'text-primary'} font-black text-xl`}>
+                {tx.type === 'earn' ? '+' : '-'}{tx.amount}
+              </Text>
+            </View>
           </View>
-          <Text className="text-primary font-black text-xl">-150</Text>
-        </View>
-      </View>
-      
-      {/* Transaction Item - Income */}
-      <View className="bg-background border-4 border-border mb-8 p-0 shadow-brutal overflow-hidden flex-row">
-        <View className="bg-accent2 w-16 justify-center items-center border-r-4 border-border">
-           <FontAwesome5 name="arrow-down" size={24} color={colors.border} />
-        </View>
-        <View className="flex-1 p-3 flex-row justify-between items-center">
-          <View>
-            <Text className="text-border font-bold uppercase text-lg">Templo Mayor</Text>
-            <Text className="text-border text-xs font-bold opacity-70">QR Reward - 10 May</Text>
-          </View>
-          <Text className="text-accent2 font-black text-xl">+50</Text>
-        </View>
-      </View>
+        ))
+      )}
 
       {/* Avatar Selection Modal */}
       <Modal
@@ -268,6 +312,55 @@ export default function WalletScreen() {
           </BrutalistCard>
         </View>
       </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isFactionModalVisible}
+        onRequestClose={() => setFactionModalVisible(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-black/60 px-4">
+          <BrutalistCard colorClass="bg-background w-full max-w-sm p-0 overflow-hidden">
+             <View className="bg-secondary p-4 border-b-4 border-border flex-row justify-between items-center">
+                <Text className="text-border font-black text-xl uppercase">Join Faction</Text>
+                <FontAwesome5 name="users" size={24} color={colors.border} />
+             </View>
+             
+             <View className="p-4">
+                <Text className="text-border text-sm mb-4 font-bold text-center">
+                  Choose your team. Earn points together and compete for monthly airdrops!
+                </Text>
+                
+                {['Ajolotes', 'Eagles', 'Jaguars'].map((f) => (
+                  <Pressable
+                    key={f}
+                    onPress={() => {
+                      joinFaction(f as any);
+                      setFactionModalVisible(false);
+                    }}
+                    className={`mb-3 p-4 border-4 shadow-brutal-sm flex-row justify-between items-center ${faction === f ? 'border-accent2 bg-accent2' : 'border-border bg-background'}`}
+                  >
+                    <Text className="text-border font-black uppercase text-lg">{f}</Text>
+                    {faction === f && <FontAwesome5 name="check-circle" solid size={20} color={colors.border} />}
+                  </Pressable>
+                ))}
+
+                <View className="mt-2">
+                  <BrutalistButton 
+                    title="Cancel" 
+                    colorClass="bg-primary" 
+                    onPress={() => setFactionModalVisible(false)} 
+                  />
+                </View>
+             </View>
+          </BrutalistCard>
+        </View>
+      </Modal>
+
+      <PinataModal 
+        visible={isPinataModalVisible} 
+        onClose={() => setPinataModalVisible(false)} 
+      />
 
     </ScrollView>
   );

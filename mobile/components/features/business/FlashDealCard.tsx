@@ -1,24 +1,36 @@
-import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Pressable, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
+import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
+import { useAppState } from '@/context/app-state';
 
 export function FlashDealCard({ deal }: { deal: any }) {
   const router = useRouter();
+  const { burnTokens } = useAppState();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalType, setModalType] = useState<'success' | 'error' | null>(null);
 
   if (!deal) return null;
+
+  const handleClaim = () => {
+    const success = burnTokens(deal.costHZ, `Flash Deal: ${deal.title}`);
+    if (success) {
+      setModalType('success');
+    } else {
+      setModalType('error');
+    }
+    setModalVisible(true);
+  };
 
   return (
     <View className="mb-8 relative">
        {/* Background offset for brutalist pop */}
        <View className="absolute inset-0 bg-border translate-x-2 translate-y-2" />
        
-       <Pressable 
-         onPress={() => router.push(`/business/${deal.businessId}`)}
-         className="bg-accent2 border-4 border-border p-4 active:translate-x-1 active:translate-y-1"
-       >
+       <View className="bg-accent2 border-4 border-border p-4">
          <View className="flex-row justify-between items-start mb-2">
            <View className="bg-background px-2 py-1 border-2 border-border shadow-brutal-sm flex-row items-center">
              <FontAwesome5 name="bolt" solid size={12} color={colors.accent1} />
@@ -37,11 +49,67 @@ export function FlashDealCard({ deal }: { deal: any }) {
            {deal.title} at {deal.businessName}
          </Text>
 
-         <View className="flex-row items-center mt-2 border-t-4 border-border pt-3">
-           <Text className="text-border font-bold uppercase text-xs mr-2">Cost:</Text>
-           <Text className="bg-background px-2 py-1 border-2 border-border font-black">{deal.costHZ} HZ</Text>
+         <View className="flex-row items-center justify-between mt-2 border-t-4 border-border pt-3">
+           <View className="flex-row items-center">
+             <Text className="text-border font-bold uppercase text-xs mr-2">Cost:</Text>
+             <Text className="bg-background px-2 py-1 border-2 border-border font-black">{deal.costHZ} HZ</Text>
+           </View>
+           <BrutalistButton 
+             title="CLAIM NOW" 
+             colorClass="bg-primary" 
+             onPress={handleClaim} 
+             style={{ paddingVertical: 8, paddingHorizontal: 16 }}
+           />
          </View>
-       </Pressable>
+       </View>
+
+       <Modal
+         animationType="fade"
+         transparent={true}
+         visible={modalVisible}
+         onRequestClose={() => setModalVisible(false)}
+       >
+         <View className="flex-1 justify-center items-center bg-black/60 px-4">
+           <BrutalistCard colorClass="bg-background w-full max-w-sm p-0 overflow-hidden">
+              <View className={`${modalType === 'success' ? 'bg-accent2' : 'bg-primary'} p-4 border-b-4 border-border flex-row justify-between items-center`}>
+                 <Text className="text-border font-black text-xl uppercase">
+                   {modalType === 'success' ? 'Deal Claimed!' : 'Not enough funds'}
+                 </Text>
+                 <FontAwesome5 name={modalType === 'success' ? 'ticket-alt' : 'exclamation-circle'} size={24} color={colors.border} />
+              </View>
+              
+              <View className="p-4">
+                 <Text className="text-border text-base mb-6 font-bold text-center">
+                   {modalType === 'success' 
+                     ? `You have successfully burned ${deal.costHZ} $HUELLAZOS to claim your ${deal.discount} discount at ${deal.businessName}.`
+                     : `You don't have enough $HUELLAZOS to claim this deal. Keep exploring to earn more!`}
+                 </Text>
+                 
+                 <View className="flex-row">
+                   <View className="flex-1">
+                     <BrutalistButton 
+                       title="OKAY" 
+                       colorClass="bg-secondary" 
+                       onPress={() => setModalVisible(false)} 
+                     />
+                   </View>
+                   {modalType === 'success' && (
+                     <View className="flex-1 ml-2">
+                       <BrutalistButton 
+                         title="VIEW BIZ" 
+                         colorClass="bg-accent1" 
+                         onPress={() => {
+                           setModalVisible(false);
+                           router.push(`/business/${deal.businessId}`);
+                         }} 
+                       />
+                     </View>
+                   )}
+                 </View>
+              </View>
+           </BrutalistCard>
+         </View>
+       </Modal>
     </View>
   );
 }
