@@ -9,6 +9,8 @@ import { colors } from '@/theme/colors';
 import { useMobileWallet } from '@wallet-ui/react-native-web3js';
 import { AppConfig } from '@/constants/app-config';
 import { ellipsify } from '@/utils/ellipsify';
+import { useGetBalance } from '@/components/account/use-get-balance';
+import { lamportsToSol } from '@/utils/lamports-to-sol';
 
 const AVATAR_OPTIONS = [
   require('@/assets/images/profile_wallet.png'),
@@ -18,11 +20,20 @@ const AVATAR_OPTIONS = [
   require('@/assets/images/nft_alebrije.png'),
 ];
 
+function formatSolBalance(balance: number) {
+  return balance.toLocaleString('en-US', {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4,
+  });
+}
+
 export default function WalletScreen() {
   const { isLoading, signIn, signOut } = useAuth();
   const { account } = useMobileWallet();
   const walletAddress = account?.address.toString();
   const isWalletConnected = !!walletAddress;
+  const balanceQuery = useGetBalance({ address: account?.address });
+  const solBalance = balanceQuery.data == null ? null : lamportsToSol(balanceQuery.data);
   const [connectionError, setConnectionError] = useState<string | null>(null);
   
   // Local state for avatar customization
@@ -103,6 +114,32 @@ export default function WalletScreen() {
                 <Text className="text-border font-bold text-xs uppercase">
                   {ellipsify(walletAddress, 6)}
                 </Text>
+              </View>
+              <View className="bg-accent2 border-4 border-border p-4 mb-4 shadow-brutal-sm">
+                <View className="flex-row items-center justify-between mb-2">
+                  <Text className="text-border font-black text-xs uppercase">Solana Balance</Text>
+                  <Pressable onPress={() => balanceQuery.refetch()} disabled={balanceQuery.isFetching}>
+                    <FontAwesome5
+                      name="sync-alt"
+                      size={14}
+                      color={colors.border}
+                      style={{ opacity: balanceQuery.isFetching ? 0.45 : 1 }}
+                    />
+                  </Pressable>
+                </View>
+                <Text className="text-border font-black text-4xl">
+                  {balanceQuery.isLoading
+                    ? '...'
+                    : solBalance == null
+                      ? '0.0000'
+                      : formatSolBalance(solBalance)}
+                </Text>
+                <Text className="text-border font-black text-sm uppercase">SOL</Text>
+                {balanceQuery.isError && (
+                  <Text className="text-primary font-black text-xs uppercase mt-2">
+                    Could not load balance. Tap refresh.
+                  </Text>
+                )}
               </View>
               <BrutalistButton
                 title={isLoading ? 'Disconnecting...' : 'Disconnect'}
