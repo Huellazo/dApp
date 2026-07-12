@@ -1,32 +1,73 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Modal, Pressable, StyleSheet, Image } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
+import { EarnedSolanaToken, useAppState } from '@/context/app-state';
 import { colors } from '@/theme/colors';
 import { MOCK_POIS } from '@/mocks/db';
 
+type MapPoi = (typeof MOCK_POIS)[number] & {
+  top: `${number}%`;
+  left: `${number}%`;
+};
+
+function shortHash(value: string) {
+  return `${value.slice(0, 6)}...${value.slice(-6)}`;
+}
+
 export default function ScanScreen() {
+  const { mintPoiToken } = useAppState();
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedPoi, setSelectedPoi] = useState<any>(null);
+  const [selectedPoi, setSelectedPoi] = useState<MapPoi | null>(null);
+  const [mintedToken, setMintedToken] = useState<EarnedSolanaToken | null>(null);
+  const [alreadyMinted, setAlreadyMinted] = useState(false);
 
   // Static mock positions for the "PokeStops" around the center
-  const mapPoints = MOCK_POIS.slice(0, 5).map((poi, idx) => ({
+  const mapPoints: MapPoi[] = MOCK_POIS.slice(0, 5).map((poi, idx) => ({
     ...poi,
     // Distribute them around the center (0 to 100%)
-    top: `${15 + (idx * 37) % 70}%`,
-    left: `${10 + (idx * 43) % 75}%`,
+    top: `${15 + (idx * 37) % 70}%` as `${number}%`,
+    left: `${10 + (idx * 43) % 75}%` as `${number}%`,
   }));
 
-  const handlePoiClick = (poi: any) => {
+  const handlePoiClick = (poi: MapPoi) => {
     setSelectedPoi(poi);
+    setMintedToken(null);
+    setAlreadyMinted(false);
     setModalVisible(true);
+  };
+
+  const handleOpenScanner = () => {
+    const nearestPoi = mapPoints[0];
+    if (!nearestPoi) return;
+
+    setSelectedPoi(nearestPoi);
+    setMintedToken(null);
+    setAlreadyMinted(false);
+    setModalVisible(true);
+  };
+
+  const handleSimulateMint = () => {
+    const poiToMint = selectedPoi ?? mapPoints[0];
+    if (!poiToMint) return;
+
+    const result = mintPoiToken(poiToMint);
+    setSelectedPoi(poiToMint);
+    setMintedToken(result.token);
+    setAlreadyMinted(result.alreadyMinted);
+  };
+
+  const handleGoToPassport = () => {
+    setModalVisible(false);
+    router.push('/(tabs)/passport');
   };
 
   return (
     <View className="flex-1 bg-background pt-12">
       <Text className="text-3xl font-black text-border px-4 mb-2 uppercase tracking-tight">Huellazo Radar</Text>
-      <Text className="text-border px-4 mb-4 font-bold text-sm">Find footprints near you.</Text>
+      <Text className="text-border px-4 mb-4 font-bold text-sm">Escanea lugares aliados y mintea tokens de recuerdo.</Text>
 
       {/* Static Map Area */}
       <View className="flex-1 border-y-4 border-border bg-secondary relative overflow-hidden justify-center items-center">
@@ -73,12 +114,9 @@ export default function ScanScreen() {
       {/* Bottom Action Area */}
       <View className="p-4 pb-24 bg-background">
         <BrutalistButton 
-          title="SCAN QR CODE" 
+          title="SIMULAR ESCANEO" 
           colorClass="bg-accent2"
-          onPress={() => {
-            setSelectedPoi(null);
-            setModalVisible(true);
-          }} 
+          onPress={handleOpenScanner} 
         />
       </View>
 
@@ -91,27 +129,64 @@ export default function ScanScreen() {
       >
         <View className="flex-1 justify-center items-center bg-black/60 px-4">
           <BrutalistCard colorClass="bg-background w-full max-w-sm p-0 overflow-hidden">
-             <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
-                <Text className="text-border font-black text-xl uppercase">Footprint Found!</Text>
-                <FontAwesome5 name="qrcode" size={24} color={colors.border} />
+             <View className={`${mintedToken ? 'bg-accent2' : 'bg-primary'} p-4 border-b-4 border-border flex-row justify-between items-center`}>
+                <Text className="text-border font-black text-xl uppercase">
+                  {mintedToken ? 'Token obtenido!' : 'Huella encontrada!'}
+                </Text>
+                <FontAwesome5 name={mintedToken ? 'certificate' : 'qrcode'} size={24} color={colors.border} />
              </View>
              
              <View className="p-4">
-                <Text className="text-border text-base mb-6 font-bold">
-                  {selectedPoi 
-                    ? `You have arrived at ${selectedPoi.name}. Scan the physical code at the location to claim your reward.`
-                    : 'Point the camera at the physical QR code of the monument or business to validate it.'}
-                </Text>
-                
-                <View className="bg-secondary p-3 border-4 border-border shadow-brutal-sm mb-6 flex-row items-center">
-                   <FontAwesome5 name="coins" size={20} color={colors.border} />
-                   <Text className="text-border font-black ml-3">Reward: 50 $HUELLAZOS</Text>
-                </View>
+                {selectedPoi?.image ? (
+                  <View className="w-full bg-secondary border-4 border-border mb-4 justify-center items-center overflow-hidden" style={{ aspectRatio: 1.8 }}>
+                    <Image source={selectedPoi.image as any} className="w-full h-full" resizeMode="cover" />
+                  </View>
+                ) : null}
 
+                {mintedToken ? (
+                  <>
+                    <Text className="text-border text-lg mb-2 font-black uppercase">
+                      Obtuviste este token:
+                    </Text>
+                    <Text className="text-border text-base mb-4 font-bold">
+                      {mintedToken.name} por validar tu visita en {mintedToken.location}. Queda guardado en tu pasaporte como NFT de Huellazo sobre Solana Devnet simulado.
+                    </Text>
+
+                    <View className="bg-secondary p-3 border-4 border-border shadow-brutal-sm mb-3">
+                      <Text className="text-border font-black uppercase text-xs mb-1">Mint address</Text>
+                      <Text className="text-border font-bold text-sm">{shortHash(mintedToken.mintAddress)}</Text>
+                    </View>
+
+                    <View className="bg-background p-3 border-4 border-border mb-4">
+                      <Text className="text-border font-black uppercase text-xs mb-1">Transaction signature</Text>
+                      <Text className="text-border font-bold text-sm">{shortHash(mintedToken.transactionSignature)}</Text>
+                    </View>
+
+                    {alreadyMinted ? (
+                      <Text className="text-border font-bold text-xs mb-4 uppercase">
+                        Ya tenías este token, por eso no se duplicó en tu perfil.
+                      </Text>
+                    ) : null}
+                  </>
+                ) : (
+                  <>
+                    <Text className="text-border text-base mb-6 font-bold">
+                      {selectedPoi 
+                        ? `Llegaste a ${selectedPoi.name}. Al simular el escaneo se minteará un token de visita relacionado con este punto del proyecto.`
+                        : 'Apunta la cámara al QR físico del monumento o negocio aliado para validar tu visita.'}
+                    </Text>
+                    
+                    <View className="bg-secondary p-3 border-4 border-border shadow-brutal-sm mb-6 flex-row items-center">
+                      <FontAwesome5 name="coins" size={20} color={colors.border} />
+                      <Text className="text-border font-black ml-3">Reward: {selectedPoi?.reward ?? 50} $HUELLAZOS</Text>
+                    </View>
+                  </>
+                )}
+                
                 <BrutalistButton 
-                  title="Simulate Scan" 
+                  title={mintedToken ? 'VER EN MI PERFIL' : 'MINTEAR NFT'} 
                   colorClass="bg-accent1" 
-                  onPress={() => setModalVisible(false)} 
+                  onPress={mintedToken ? handleGoToPassport : handleSimulateMint} 
                 />
              </View>
           </BrutalistCard>
