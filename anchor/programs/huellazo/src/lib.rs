@@ -1,188 +1,112 @@
+pub mod constants;
+pub mod error;
+pub mod instructions;
+pub mod state;
+
 use anchor_lang::prelude::*;
 
-// Tu ID de programa detectado en Solana Playground
-declare_id!("CB2sVYQ48i3rTdM51zKxipweoFpxEEmJVC1NgxLeT5Xj");
+use ephemeral_rollups_sdk::anchor::ephemeral;
 
+pub use constants::*;
+pub use instructions::*;
+pub use state::*;
+
+declare_id!("4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk");
+
+// ===========================================================================
+// Programa Huellazo
+// ===========================================================================
+// El macro `#[ephemeral]` inyecta el callback de undelegation necesario para
+// que MagicBlock pueda devolver la propiedad de las PDAs delegadas al programa.
+// Todas las instrucciones de delegación, commit y undelegation usan el SDK
+// `ephemeral-rollups-sdk` con el feature `anchor`.
+// ===========================================================================
+
+#[ephemeral]
 #[program]
 pub mod huellazo {
     use super::*;
 
-    /// [CREATE] Inicializa el protocolo como una PDA única usando la semilla "config".
-    pub fn initialize_config(ctx: Context<InitializeConfig>) -> Result<()> {
-        let config = &mut ctx.accounts.config;
-        config.admin = ctx.accounts.admin.key();
-        config.total_users = 0;
-        Ok(())
+    // -----------------------------------------------------------------------
+    // Inicialización
+    // -----------------------------------------------------------------------
+
+    /// Inicializa la configuración global del programa Huellazo.
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        crate::instructions::initialize::handle_initialize(ctx)
     }
 
-    /// [CREATE] Crea el pasaporte del turista y aumenta el contador global de usuarios.
-    pub fn initialize_passport(ctx: Context<InitializePassport>) -> Result<()> {
-        let passport = &mut ctx.accounts.passport;
-        passport.owner = ctx.accounts.user.key();
-        passport.level = 1; // Nivel Bronce inicial.
-        passport.experience = 0;
-        passport.fidelity_points = 0;
-        passport.eco_flags = 0;
-        passport.bump = ctx.bumps.passport;
+    // -----------------------------------------------------------------------
+    // Vista A — Turista (Minteo de POAP de lugar turístico)
+    // -----------------------------------------------------------------------
 
-        ctx.accounts.config.total_users += 1;
-        Ok(())
+    /// Mintea un POAP de lugar turístico. Verifica que el turista esté dentro
+    /// del radio válido del punto de interés. Esta acción se ejecuta en el
+    /// Ephemeral Rollup para ser instantánea y sin gas para el turista.
+    pub fn mint_place(
+        ctx: Context<MintPlace>,
+        token_id: u64,
+        token_uri: String,
+        poi_latitude: f64,
+        poi_longitude: f64,
+        poap_type: u8,
+    ) -> Result<()> {
+        crate::instructions::mint_place::handle_mint_place(
+            ctx,
+            token_id,
+            token_uri,
+            poi_latitude,
+            poi_longitude,
+            poap_type,
+        )
     }
 
-    /// [CREATE] Registra un comercio local validando que solo el admin pueda hacerlo.
-    pub fn register_merchant(ctx: Context<RegisterMerchant>, name: String, tier: u8) -> Result<()> {
-        let merchant = &mut ctx.accounts.merchant;
-        merchant.authority = ctx.accounts.merchant_authority.key();
-        merchant.name = name;
-        merchant.tier = tier;
-        merchant.is_active = true;
-        Ok(())
+    // -----------------------------------------------------------------------
+    // Vista B — Negociante (Pago + Minteo atómico)
+    // -----------------------------------------------------------------------
+
+    /// Procesa el pago de un producto del negocio y mintea atómicamente la
+    /// insignia/POAP del negocio al turista en la misma transacción.
+    /// Transfiere lamports del turista al negocio y crea el PoapState.
+    pub fn mint_business(
+        ctx: Context<MintBusiness>,
+        token_id: u64,
+        token_uri: String,
+        business_latitude: f64,
+        business_longitude: f64,
+        amount_lamports: u64,
+    ) -> Result<()> {
+        crate::instructions::mint_business::handle_mint_business(
+            ctx,
+            token_id,
+            token_uri,
+            business_latitude,
+            business_longitude,
+            amount_lamports,
+        )
     }
 
-    /// [UPDATE] Incrementa XP y puntos; sube de nivel automáticamente si alcanza los umbrales.
-    pub fn record_visit(ctx: Context<RecordVisit>, xp: u64, points: u64) -> Result<()> {
-        let passport = &mut ctx.accounts.passport;
-        passport.experience += xp;
-        passport.fidelity_points += points;
+    // -----------------------------------------------------------------------
+    // MagicBlock — Delegación / Commit / Undelegation
+    // -----------------------------------------------------------------------
 
-        if passport.experience >= 5000 { passport.level = 3; } // Oro.
-        else if passport.experience >= 1000 { passport.level = 2; } // Plata.
-        Ok(())
+    /// Delega la PDA del POAP al programa de delegación de MagicBlock.
+    /// Esto transfiere temporalmente la propiedad de la cuenta a un
+    /// Ephemeral Rollup, permitiendo minteos rápidos y sin gas.
+    /// Se ejecuta en la capa base (Solana L1).
+    pub fn delegate(ctx: Context<DelegateInput>, token_id: u64) -> Result<()> {
+        crate::instructions::delegate::handle_delegate(ctx, token_id)
     }
 
-    /// [UPDATE] Activa sellos ecológicos mediante bits (0: sin plásticos, 1: transporte eco, etc).
-    pub fn validate_eco_action(ctx: Context<ValidateEcoAction>, action_id: u8) -> Result<()> {
-        let passport = &mut ctx.accounts.passport;
-        passport.eco_flags |= 1 << action_id;
-        Ok(())
+    /// Hace commit del estado de la PDA delegada desde el ER hacia la
+    /// capa base. Se ejecuta en el Ephemeral Rollup.
+    pub fn commit(ctx: Context<CommitInput>) -> Result<()> {
+        crate::instructions::commit::handle_commit(ctx)
     }
 
-    /// [UPDATE] Permite a un comercio cambiar su nombre o estado de actividad.
-    pub fn update_merchant(ctx: Context<UpdateMerchant>, name: Option<String>, active: Option<bool>) -> Result<()> {
-        let merchant = &mut ctx.accounts.merchant;
-        if let Some(new_name) = name { merchant.name = new_name; }
-        if let Some(status) = active { merchant.is_active = status; }
-        Ok(())
+    /// Hace commit + undelegate: sincroniza el estado final y devuelve
+    /// la propiedad de la PDA al programa. Se ejecuta en el ER.
+    pub fn undelegate(ctx: Context<UndelegateInput>) -> Result<()> {
+        crate::instructions::undelegate::handle_undelegate(ctx)
     }
-
-    /// [DELETE] Cierra el pasaporte y devuelve los fondos de la renta al usuario.
-    pub fn close_passport(_ctx: Context<ClosePassport>) -> Result<()> {
-        Ok(()) // anchor ya lo hace automaticamente
-    }
-}
-
-// --- ESTRUCTURAS DE DATOS ---
-
-#[account]
-pub struct GlobalConfig {
-    pub admin: Pubkey,
-    pub total_users: u64,
-}
-
-#[account]
-pub struct Passport {
-    pub owner: Pubkey,
-    pub level: u8,
-    pub experience: u64,
-    pub fidelity_points: u64,
-    pub eco_flags: u8,
-    pub bump: u8,
-}
-
-#[account]
-pub struct Merchant {
-    pub authority: Pubkey,
-    pub name: String,
-    pub tier: u8,
-    pub is_active: bool,
-}
-
-// --- CONTEXTOS DE VALIDACIÓN ---
-
-#[derive(Accounts)]
-pub struct InitializeConfig<'info> {
-    #[account(
-        init, 
-        payer = admin, 
-        space = 8 + 32 + 8,
-        seeds = [b"config"], // Esto hace que la cuenta sea única y fácil de encontrar.
-        bump
-    )]
-    pub config: Account<'info, GlobalConfig>,
-    #[account(mut)]
-    pub admin: Signer<'info>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct InitializePassport<'info> {
-    #[account(
-        init, 
-        payer = user, 
-        space = 8 + 32 + 1 + 8 + 8 + 1 + 1, 
-        seeds = [b"passport", user.key().as_ref()], 
-        bump
-    )]
-    pub passport: Account<'info, Passport>,
-    #[account(mut)]
-    pub user: Signer<'info>,
-    #[account(mut, seeds = [b"config"], bump)] // Referencia a la PDA de Config.
-    pub config: Account<'info, GlobalConfig>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct RegisterMerchant<'info> {
-    #[account(
-        init, 
-        payer = admin, 
-        space = 8 + 32 + (4 + 30) + 1 + 1, 
-        seeds = [b"merchant", merchant_authority.key().as_ref()], 
-        bump
-    )]
-    pub merchant: Account<'info, Merchant>,
-    pub merchant_authority: SystemAccount<'info>,
-    #[account(mut, seeds = [b"config"], bump, has_one = admin)] // Solo el admin de la config puede registrar.
-    pub config: Account<'info, GlobalConfig>,
-    #[account(mut)]
-    pub admin: Signer<'info>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct RecordVisit<'info> {
-    #[account(mut, seeds = [b"passport", passport.owner.as_ref()], bump = passport.bump)]
-    pub passport: Account<'info, Passport>,
-    #[account(has_one = authority, constraint = merchant.is_active == true)]
-    pub merchant: Account<'info, Merchant>,
-    pub authority: Signer<'info>,
-}
-
-#[derive(Accounts)]
-pub struct ValidateEcoAction<'info> {
-    #[account(mut, seeds = [b"passport", passport.owner.as_ref()], bump = passport.bump)]
-    pub passport: Account<'info, Passport>,
-    #[account(has_one = authority, constraint = merchant.tier == 2)] // Solo hoteles (Tier 2).
-    pub merchant: Account<'info, Merchant>,
-    pub authority: Signer<'info>,
-}
-
-#[derive(Accounts)]
-pub struct UpdateMerchant<'info> {
-    #[account(mut, has_one = authority)]
-    pub merchant: Account<'info, Merchant>,
-    pub authority: Signer<'info>,
-}
-
-#[derive(Accounts)]
-pub struct ClosePassport<'info> {
-    #[account(
-        mut, 
-        seeds = [b"passport", user.key().as_ref()], 
-        bump = passport.bump, 
-        close = user
-    )]
-    pub passport: Account<'info, Passport>,
-    #[account(mut)]
-    pub user: Signer<'info>,
 }
