@@ -34,6 +34,7 @@ export interface MintablePoi {
   category?: string
   reward?: number
   nftReward?: string
+  image?: any
 }
 
 export interface EarnedSolanaToken {

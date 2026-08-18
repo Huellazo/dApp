@@ -1,4 +1,4 @@
-import type { Contract } from './idl'
-import IDL from './contract.json'
+import type { Huellazo } from './huellazo'
+import IDL from './huellazo.json'
 
-export { Contract, IDL }
+export { Huellazo, IDL }

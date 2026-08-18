@@ -68,7 +68,7 @@ export function TradeAcceptModal({ visible, onClose }: Props) {
           <View className="flex-row flex-wrap justify-between px-1">
             {ownedNfts.map((nft) => (
               <Pressable key={nft.id} className="w-[48%] mb-4 active:scale-95 transition-transform" onPress={() => setSelectedMyNftId(nft.id)}>
-                <BrutalistCard colorClass={selectedMyNftId === nft.id ? 'bg-primary' : 'bg-background'} customStyle={{ padding: 0 }}>
+                <BrutalistCard colorClass={selectedMyNftId === nft.id ? 'bg-primary' : 'bg-background'} style={{ padding: 0 }}>
                   <View style={{ aspectRatio: 1 }} className={`w-full ${nft.style === 'chromatic' ? 'bg-[#FF00FF]' : nft.style === 'metallic' ? 'bg-[#C0C0C0]' : 'bg-accent1'} border-b-4 border-border justify-center items-center relative overflow-hidden`}>
                     {nft.image ? (
                       <Image source={nft.image as any} className="w-11/12 h-11/12" resizeMode="contain" />

@@ -1,9 +1,9 @@
 import { Pot, CreatePotRequest, UpdatePotRequest, AddContributionRequest } from './types'
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3000'
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:8000'
 
 export async function createPot(request: CreatePotRequest): Promise<Pot> {
-  const response = await fetch(`${API_BASE_URL}/api/pots`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export async function createPot(request: CreatePotRequest): Promise<Pot> {
 }
 
 export async function getPotById(potId: string): Promise<Pot | null> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${potId}`)
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${potId}`)
 
   if (!response.ok) {
     return null
@@ -29,7 +29,7 @@ export async function getPotById(potId: string): Promise<Pot | null> {
 }
 
 export async function getAllPots(): Promise<Pot[]> {
-  const response = await fetch(`${API_BASE_URL}/api/pots`)
+  const response = await fetch(`${API_BASE_URL}/api/huellazo`)
 
   if (!response.ok) {
     return []
@@ -39,7 +39,7 @@ export async function getAllPots(): Promise<Pot[]> {
 }
 
 export async function getUserPots(userAddress: string): Promise<Pot[]> {
-  const response = await fetch(`${API_BASE_URL}/api/pots?userAddress=${userAddress}`)
+  const response = await fetch(`${API_BASE_URL}/api/huellazo?userAddress=${userAddress}`)
 
   if (!response.ok) {
     return []
@@ -49,7 +49,7 @@ export async function getUserPots(userAddress: string): Promise<Pot[]> {
 }
 
 export async function updatePot(potId: string, updates: UpdatePotRequest): Promise<Pot> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${potId}`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${potId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export async function updatePot(potId: string, updates: UpdatePotRequest): Promi
 }
 
 export async function deletePot(potId: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${potId}`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${potId}`, {
     method: 'DELETE',
   })
 
@@ -75,7 +75,7 @@ export async function deletePot(potId: string): Promise<void> {
 }
 
 export async function addContributorToPot(potId: string, contributorAddress: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${potId}/contributors`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${potId}/contributors`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export async function addContributorToPot(potId: string, contributorAddress: str
 }
 
 export async function removeContributorFromPot(potId: string, contributorAddress: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${potId}/contributors/${contributorAddress}`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${potId}/contributors/${contributorAddress}`, {
     method: 'DELETE',
   })
 
@@ -99,7 +99,7 @@ export async function removeContributorFromPot(potId: string, contributorAddress
 }
 
 export async function addContribution(request: AddContributionRequest): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${request.potId}/contributions`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${request.potId}/contributions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export async function addContribution(request: AddContributionRequest): Promise<
 }
 
 export async function removeContribution(potId: string, contributionId: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${potId}/contributions/${contributionId}`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${potId}/contributions/${contributionId}`, {
     method: 'DELETE',
   })
 
@@ -128,7 +128,7 @@ export async function removeContribution(potId: string, contributionId: string):
 }
 
 export async function signPotRelease(potId: string, signerAddress: string, transactionSignature?: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${potId}/sign`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${potId}/sign`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ export async function signPotRelease(potId: string, signerAddress: string, trans
 }
 
 export async function releasePot(potId: string, releasedBy: string, transactionSignature?: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/pots/${potId}/release`, {
+  const response = await fetch(`${API_BASE_URL}/api/huellazo/${potId}/release`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

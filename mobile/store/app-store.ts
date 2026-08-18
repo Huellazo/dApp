@@ -1,6 +1,6 @@
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { create } from 'zustand'
-import { createPot, addContribution, releasePot, getPotById } from '../api/pots'
+import { createPot, addContribution, releasePot, getPotById } from '../api/huellazo'
 import { getActivitiesForUser, getAllActivities } from '../api/activities'
 
 export type Friend = {

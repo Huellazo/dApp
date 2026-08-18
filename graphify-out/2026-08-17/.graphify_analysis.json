@@ -1,0 +1,3705 @@
+{
+  "communities": {
+    "0": [
+      "expo_router"
+    ],
+    "1": [
+      "mobile_components_account_account_feature"
+    ],
+    "2": [
+      "babel_core"
+    ],
+    "3": [
+      "backend_app_db_database"
+    ],
+    "4": [
+      "mobile_app_not_found"
+    ],
+    "5": [
+      "mobile_app"
+    ],
+    "6": [
+      "anchor_front_test_conection_app"
+    ],
+    "7": [
+      "mobile_components_friends_deletefriendmodal"
+    ],
+    "8": [
+      "anchor_programs_huellazo_src_lib_undelegate",
+      "backend_app_services_solana_solanarpcclient_init",
+      "mobile_hooks_use_huellazo_program"
+    ],
+    "9": [
+      "mobile_api_activities"
+    ],
+    "10": [
+      "package"
+    ],
+    "11": [
+      "expo_clipboard"
+    ],
+    "12": [
+      "mobile_components_account_account_feature_airdrop"
+    ],
+    "13": [
+      "anchor_programs_huellazo_src_instructions_commit"
+    ],
+    "14": [
+      "anchor_programs_huellazo_src_instructions_mint_place"
+    ],
+    "15": [
+      "anchor_programs_huellazo_src_lib"
+    ],
+    "16": [
+      "mobile_app_layout"
+    ],
+    "17": [
+      "mobile_api_friends"
+    ],
+    "18": [
+      "mobile_api_types_authuserrequest"
+    ],
+    "19": [
+      "mobile_components_toast_toast_provider"
+    ],
+    "20": [
+      "mobile_tsconfig"
+    ],
+    "21": [
+      "mobile_components_app_theme"
+    ],
+    "22": [
+      "expo_font"
+    ],
+    "23": [
+      "backend_app_main_health_check",
+      "mobile_api_huellazo"
+    ],
+    "24": [
+      "mobile_app_activity_detail_id"
+    ],
+    "25": [
+      "anchor_programs_huellazo_src_instructions_mint_business"
+    ],
+    "26": [
+      "anchor_programs_vault_src_lib"
+    ],
+    "27": [
+      "mobile_components_huellazo_potinfocard"
+    ],
+    "28": [
+      "mobile_components_ui_app_bar"
+    ],
+    "29": [
+      "mobile_components_friends_addtopotmodal"
+    ],
+    "30": [
+      "anchor_programs_huellazo_src_instructions_initialize"
+    ],
+    "31": [
+      "anchor_programs_vault_src_tests"
+    ],
+    "32": [
+      "mobile_components_solana_base_button"
+    ],
+    "33": [
+      "scripts_patch_css_interop"
+    ],
+    "34": [
+      "anchor_programs_huellazo_src_constants"
+    ],
+    "35": [
+      "mobile_components_huellazo_create_datepickermodal"
+    ],
+    "36": [
+      "mobile_components_tab_bar_custom_tab_bar"
+    ],
+    "37": [
+      "mobile_components_ui_brutalist_button"
+    ],
+    "38": [
+      "mobile_hooks_use_currency_conversion"
+    ],
+    "39": [
+      "backend_app_services_solana"
+    ],
+    "40": [
+      "expo"
+    ],
+    "41": [
+      "backend_app_core_config"
+    ],
+    "42": [
+      "mobile_components_friends_emptystate"
+    ],
+    "43": [
+      "mobile_components_huellazo_create_createpotheader"
+    ],
+    "44": [
+      "mobile_components_huellazo_create_goalsection"
+    ],
+    "45": [
+      "mobile_components_huellazo_potactions"
+    ],
+    "46": [
+      "mobile_components_huellazo_potprogresscard"
+    ],
+    "47": [
+      "mobile_components_ui_brutalist_card"
+    ],
+    "48": [
+      "mobile_components_ui_circular_progress"
+    ],
+    "49": [
+      "mobile_components_ui_stat_pill"
+    ],
+    "50": [
+      "mobile_metro_config"
+    ],
+    "51": [
+      "mobile_eslint_config"
+    ],
+    "52": [
+      "mobile_index"
+    ],
+    "53": [
+      "anchor_migrations_deploy"
+    ],
+    "54": [
+      "anchor_programs_huellazo_src_error"
+    ],
+    "55": [
+      "backend_app_main"
+    ],
+    "56": [
+      "backend_app_middleware_auth"
+    ],
+    "57": [
+      "canvases_huellazo_estado_proyecto_canvas"
+    ],
+    "58": [
+      "coral_xyz_anchor"
+    ],
+    "59": [
+      "expo_blur"
+    ],
+    "60": [
+      "expo_constants"
+    ],
+    "61": [
+      "expo_crypto"
+    ],
+    "62": [
+      "expo_haptics"
+    ],
+    "63": [
+      "expo_linear_gradient"
+    ],
+    "64": [
+      "expo_linking"
+    ],
+    "65": [
+      "expo_metro_runtime"
+    ],
+    "66": [
+      "expo_splash_screen"
+    ],
+    "67": [
+      "expo_status_bar"
+    ],
+    "68": [
+      "expo_symbols"
+    ],
+    "69": [
+      "expo_system_ui"
+    ],
+    "70": [
+      "expo_vector_icons"
+    ],
+    "71": [
+      "js_base64"
+    ],
+    "72": [
+      "mobile_nativewind_env_d"
+    ],
+    "73": [
+      "mobile_package_dependencies_nativewind"
+    ],
+    "74": [
+      "mobile_package_dependencies_react_dom"
+    ],
+    "75": [
+      "mobile_package_dependencies_react_native_clipboard_clipboard"
+    ],
+    "76": [
+      "mobile_package_dependencies_react_native_gesture_handler"
+    ],
+    "77": [
+      "mobile_package_dependencies_react_native_screens"
+    ],
+    "78": [
+      "mobile_package_dependencies_react_native_svg"
+    ],
+    "79": [
+      "mobile_package_dependencies_react_native_web"
+    ],
+    "80": [
+      "mobile_package_dependencies_react_native_webview"
+    ],
+    "81": [
+      "mobile_package_dependencies_react_native_worklets"
+    ],
+    "82": [
+      "mobile_package_dependencies_react_navigation_bottom_tabs"
+    ],
+    "83": [
+      "mobile_package_dependencies_react_qr_code"
+    ],
+    "84": [
+      "mobile_package_dependencies_rn_primitives_dropdown_menu"
+    ],
+    "85": [
+      "mobile_package_dependencies_rn_primitives_portal"
+    ],
+    "86": [
+      "mobile_package_dependencies_rnmapbox_maps"
+    ],
+    "87": [
+      "mobile_package_dependencies_solana_mobile_mobile_wallet_adapter_protocol"
+    ],
+    "88": [
+      "mobile_package_dependencies_solana_mobile_mobile_wallet_adapter_protocol_web3js"
+    ],
+    "89": [
+      "mobile_package_dependencies_solana_spl_token"
+    ],
+    "90": [
+      "mobile_package_dependencies_tanstack_react_query"
+    ],
+    "91": [
+      "mobile_package_dependencies_wallet_standard_core"
+    ],
+    "92": [
+      "mobile_package_dependencies_wallet_ui_react_native_web3js"
+    ],
+    "93": [
+      "scripts_sync_idl"
+    ],
+    "94": [
+      "anchor_programs_huellazo_src_lib_rs_context"
+    ],
+    "95": [
+      "anchor_programs_huellazo_src_lib_rs_result"
+    ],
+    "96": [
+      "anchor_programs_huellazo_src_lib_rs_string"
+    ],
+    "97": [
+      "anchor_tests_anchor"
+    ],
+    "98": [
+      "backend_app_core_init"
+    ],
+    "99": [
+      "backend_app_db_init"
+    ],
+    "100": [
+      "backend_app_init"
+    ],
+    "101": [
+      "backend_app_middleware_init"
+    ],
+    "102": [
+      "backend_app_routers_init"
+    ],
+    "103": [
+      "backend_app_schemas_init"
+    ],
+    "104": [
+      "backend_app_services_init"
+    ],
+    "105": [
+      "mobile_babel_config"
+    ],
+    "106": [
+      "mobile_tailwind_config"
+    ],
+    "107": [
+      "pkg_huellazo"
+    ],
+    "108": [
+      "pkg_vault"
+    ],
+    "109": [
+      "anchor_front_test_conection_app_bn"
+    ],
+    "110": [
+      "anchor_front_test_conection_app_bn_constructor"
+    ],
+    "111": [
+      "anchor_front_test_conection_app_bn_toarraylike"
+    ],
+    "112": [
+      "anchor_front_test_conection_app_builddelegateinstruction"
+    ],
+    "113": [
+      "anchor_front_test_conection_app_buildmintbusinessinstruction"
+    ],
+    "114": [
+      "anchor_front_test_conection_app_buildmintplaceinstruction"
+    ],
+    "115": [
+      "anchor_front_test_conection_app_connectwallet"
+    ],
+    "116": [
+      "anchor_front_test_conection_app_disconnectwallet"
+    ],
+    "117": [
+      "anchor_front_test_conection_app_encodemintbusinessargs"
+    ],
+    "118": [
+      "anchor_front_test_conection_app_encodemintplaceargs"
+    ],
+    "119": [
+      "anchor_front_test_conection_app_getanchordiscriminator"
+    ],
+    "120": [
+      "anchor_front_test_conection_app_init"
+    ],
+    "121": [
+      "anchor_front_test_conection_app_loadbusinesses"
+    ],
+    "122": [
+      "anchor_front_test_conection_app_loadidl"
+    ],
+    "123": [
+      "anchor_front_test_conection_app_loadpois"
+    ],
+    "124": [
+      "anchor_front_test_conection_app_mintplacepoap"
+    ],
+    "125": [
+      "anchor_front_test_conection_app_payandmintbusiness"
+    ],
+    "126": [
+      "anchor_front_test_conection_app_refreshgps"
+    ],
+    "127": [
+      "anchor_front_test_conection_app_setstatus"
+    ],
+    "128": [
+      "anchor_front_test_conection_app_showbusinessresult"
+    ],
+    "129": [
+      "anchor_front_test_conection_app_showmintresult"
+    ],
+    "130": [
+      "anchor_front_test_conection_app_showqr"
+    ],
+    "131": [
+      "anchor_front_test_conection_app_switchtab"
+    ],
+    "132": [
+      "anchor_migrations_deploy_anchor"
+    ],
+    "133": [
+      "anchor_programs_huellazo_src_error_errorcode"
+    ],
+    "134": [
+      "anchor_programs_huellazo_src_instructions_commit_commitinput"
+    ],
+    "135": [
+      "anchor_programs_huellazo_src_instructions_commit_handle_commit"
+    ],
+    "136": [
+      "anchor_programs_huellazo_src_instructions_commit_rs_context"
+    ],
+    "137": [
+      "anchor_programs_huellazo_src_instructions_commit_rs_result"
+    ],
+    "138": [
+      "anchor_programs_huellazo_src_instructions_commit_rs_signer"
+    ],
+    "139": [
+      "anchor_programs_huellazo_src_instructions_commit_rs_uncheckedaccount"
+    ],
+    "140": [
+      "anchor_programs_huellazo_src_instructions_delegate"
+    ],
+    "141": [
+      "anchor_programs_huellazo_src_instructions_delegate_delegateinput"
+    ],
+    "142": [
+      "anchor_programs_huellazo_src_instructions_delegate_handle_delegate"
+    ],
+    "143": [
+      "anchor_programs_huellazo_src_instructions_delegate_rs_context"
+    ],
+    "144": [
+      "anchor_programs_huellazo_src_instructions_delegate_rs_result"
+    ],
+    "145": [
+      "anchor_programs_huellazo_src_instructions_delegate_rs_signer"
+    ],
+    "146": [
+      "anchor_programs_huellazo_src_instructions_delegate_rs_uncheckedaccount"
+    ],
+    "147": [
+      "anchor_programs_huellazo_src_instructions_initialize_handle_initialize"
+    ],
+    "148": [
+      "anchor_programs_huellazo_src_instructions_initialize_initialize"
+    ],
+    "149": [
+      "anchor_programs_huellazo_src_instructions_initialize_rs_account"
+    ],
+    "150": [
+      "anchor_programs_huellazo_src_instructions_initialize_rs_context"
+    ],
+    "151": [
+      "anchor_programs_huellazo_src_instructions_initialize_rs_program"
+    ],
+    "152": [
+      "anchor_programs_huellazo_src_instructions_initialize_rs_result"
+    ],
+    "153": [
+      "anchor_programs_huellazo_src_instructions_initialize_rs_signer"
+    ],
+    "154": [
+      "anchor_programs_huellazo_src_instructions_initialize_rs_system"
+    ],
+    "155": [
+      "anchor_programs_huellazo_src_instructions_mint_business_handle_mint_business"
+    ],
+    "156": [
+      "anchor_programs_huellazo_src_instructions_mint_business_mintbusiness"
+    ],
+    "157": [
+      "anchor_programs_huellazo_src_instructions_mint_business_rs_account"
+    ],
+    "158": [
+      "anchor_programs_huellazo_src_instructions_mint_business_rs_context"
+    ],
+    "159": [
+      "anchor_programs_huellazo_src_instructions_mint_business_rs_program"
+    ],
+    "160": [
+      "anchor_programs_huellazo_src_instructions_mint_business_rs_result"
+    ],
+    "161": [
+      "anchor_programs_huellazo_src_instructions_mint_business_rs_signer"
+    ],
+    "162": [
+      "anchor_programs_huellazo_src_instructions_mint_business_rs_string"
+    ],
+    "163": [
+      "anchor_programs_huellazo_src_instructions_mint_business_rs_system"
+    ],
+    "164": [
+      "anchor_programs_huellazo_src_instructions_mint_business_rs_uncheckedaccount"
+    ],
+    "165": [
+      "anchor_programs_huellazo_src_instructions_mint_place_handle_mint_place"
+    ],
+    "166": [
+      "anchor_programs_huellazo_src_instructions_mint_place_mintplace"
+    ],
+    "167": [
+      "anchor_programs_huellazo_src_instructions_mint_place_rs_account"
+    ],
+    "168": [
+      "anchor_programs_huellazo_src_instructions_mint_place_rs_context"
+    ],
+    "169": [
+      "anchor_programs_huellazo_src_instructions_mint_place_rs_program"
+    ],
+    "170": [
+      "anchor_programs_huellazo_src_instructions_mint_place_rs_result"
+    ],
+    "171": [
+      "anchor_programs_huellazo_src_instructions_mint_place_rs_signer"
+    ],
+    "172": [
+      "anchor_programs_huellazo_src_instructions_mint_place_rs_string"
+    ],
+    "173": [
+      "anchor_programs_huellazo_src_instructions_mint_place_rs_system"
+    ],
+    "174": [
+      "anchor_programs_huellazo_src_instructions_mod"
+    ],
+    "175": [
+      "anchor_programs_huellazo_src_instructions_undelegate"
+    ],
+    "176": [
+      "anchor_programs_huellazo_src_instructions_undelegate_handle_undelegate"
+    ],
+    "177": [
+      "anchor_programs_huellazo_src_instructions_undelegate_rs_context"
+    ],
+    "178": [
+      "anchor_programs_huellazo_src_instructions_undelegate_rs_result"
+    ],
+    "179": [
+      "anchor_programs_huellazo_src_instructions_undelegate_rs_signer"
+    ],
+    "180": [
+      "anchor_programs_huellazo_src_instructions_undelegate_rs_uncheckedaccount"
+    ],
+    "181": [
+      "anchor_programs_huellazo_src_instructions_undelegate_undelegateinput"
+    ],
+    "182": [
+      "anchor_programs_huellazo_src_lib_commit"
+    ],
+    "183": [
+      "anchor_programs_huellazo_src_lib_delegate"
+    ],
+    "184": [
+      "anchor_programs_huellazo_src_lib_initialize"
+    ],
+    "185": [
+      "anchor_programs_huellazo_src_lib_mint_business"
+    ],
+    "186": [
+      "anchor_programs_huellazo_src_lib_mint_place"
+    ],
+    "187": [
+      "anchor_programs_huellazo_src_state"
+    ],
+    "188": [
+      "anchor_programs_huellazo_src_state_configstate"
+    ],
+    "189": [
+      "anchor_programs_huellazo_src_state_poapstate"
+    ],
+    "190": [
+      "anchor_programs_huellazo_src_state_rs_pubkey"
+    ],
+    "191": [
+      "anchor_programs_huellazo_src_state_rs_string"
+    ],
+    "192": [
+      "anchor_programs_vault_src_lib_deposit"
+    ],
+    "193": [
+      "anchor_programs_vault_src_lib_rs_context"
+    ],
+    "194": [
+      "anchor_programs_vault_src_lib_rs_program"
+    ],
+    "195": [
+      "anchor_programs_vault_src_lib_rs_result"
+    ],
+    "196": [
+      "anchor_programs_vault_src_lib_rs_signer"
+    ],
+    "197": [
+      "anchor_programs_vault_src_lib_rs_system"
+    ],
+    "198": [
+      "anchor_programs_vault_src_lib_vaultaction"
+    ],
+    "199": [
+      "anchor_programs_vault_src_lib_vaulterror"
+    ],
+    "200": [
+      "anchor_programs_vault_src_lib_withdraw"
+    ],
+    "201": [
+      "anchor_programs_vault_src_tests_create_deposit_ix"
+    ],
+    "202": [
+      "anchor_programs_vault_src_tests_create_withdraw_ix"
+    ],
+    "203": [
+      "anchor_programs_vault_src_tests_get_vault_pda"
+    ],
+    "204": [
+      "anchor_programs_vault_src_tests_rs_pubkey"
+    ],
+    "205": [
+      "anchor_programs_vault_src_tests_test_deposit_and_withdraw"
+    ],
+    "206": [
+      "anchor_programs_vault_src_tests_test_deposit_fails_if_vault_has_funds"
+    ],
+    "207": [
+      "anchor_programs_vault_src_tests_test_withdraw_fails_if_vault_empty"
+    ],
+    "208": [
+      "babel_preset_expo"
+    ],
+    "209": [
+      "backend_app_core_config_config"
+    ],
+    "210": [
+      "backend_app_core_config_settings"
+    ],
+    "211": [
+      "backend_app_db_database_base"
+    ],
+    "212": [
+      "backend_app_db_database_get_session"
+    ],
+    "213": [
+      "backend_app_db_database_py_asyncsession"
+    ],
+    "214": [
+      "backend_app_db_models"
+    ],
+    "215": [
+      "backend_app_db_models_merchant"
+    ],
+    "216": [
+      "backend_app_db_models_proposal"
+    ],
+    "217": [
+      "backend_app_db_models_user"
+    ],
+    "218": [
+      "backend_app_db_models_visit"
+    ],
+    "219": [
+      "backend_app_middleware_auth_verify_wallet_signature"
+    ],
+    "220": [
+      "backend_app_routers_merchants"
+    ],
+    "221": [
+      "backend_app_routers_merchants_create_merchant"
+    ],
+    "222": [
+      "backend_app_routers_merchants_get_merchant"
+    ],
+    "223": [
+      "backend_app_routers_merchants_list_merchants"
+    ],
+    "224": [
+      "backend_app_routers_merchants_py_asyncsession"
+    ],
+    "225": [
+      "backend_app_routers_payments"
+    ],
+    "226": [
+      "backend_app_routers_payments_create_payment_reference"
+    ],
+    "227": [
+      "backend_app_routers_payments_paymentreferenceout"
+    ],
+    "228": [
+      "backend_app_routers_payments_py_asyncsession"
+    ],
+    "229": [
+      "backend_app_routers_payments_py_basemodel"
+    ],
+    "230": [
+      "backend_app_routers_proposals"
+    ],
+    "231": [
+      "backend_app_routers_proposals_create_proposal"
+    ],
+    "232": [
+      "backend_app_routers_proposals_list_proposals"
+    ],
+    "233": [
+      "backend_app_routers_proposals_py_asyncsession"
+    ],
+    "234": [
+      "backend_app_routers_proposals_update_proposal_status"
+    ],
+    "235": [
+      "backend_app_routers_users"
+    ],
+    "236": [
+      "backend_app_routers_users_authenticate_user"
+    ],
+    "237": [
+      "backend_app_routers_users_get_me"
+    ],
+    "238": [
+      "backend_app_routers_users_py_asyncsession"
+    ],
+    "239": [
+      "backend_app_routers_visits"
+    ],
+    "240": [
+      "backend_app_routers_visits_confirm_visit_tx"
+    ],
+    "241": [
+      "backend_app_routers_visits_py_asyncsession"
+    ],
+    "242": [
+      "backend_app_routers_visits_validate_visit"
+    ],
+    "243": [
+      "backend_app_schemas_schemas"
+    ],
+    "244": [
+      "backend_app_schemas_schemas_merchantcreate"
+    ],
+    "245": [
+      "backend_app_schemas_schemas_merchantout"
+    ],
+    "246": [
+      "backend_app_schemas_schemas_proposalcreate"
+    ],
+    "247": [
+      "backend_app_schemas_schemas_proposalout"
+    ],
+    "248": [
+      "backend_app_schemas_schemas_py_basemodel"
+    ],
+    "249": [
+      "backend_app_schemas_schemas_usercreate"
+    ],
+    "250": [
+      "backend_app_schemas_schemas_userout"
+    ],
+    "251": [
+      "backend_app_schemas_schemas_visitcreate"
+    ],
+    "252": [
+      "backend_app_schemas_schemas_visitout"
+    ],
+    "253": [
+      "backend_app_services_geofence"
+    ],
+    "254": [
+      "backend_app_services_geofence_compute_distance_meters"
+    ],
+    "255": [
+      "backend_app_services_geofence_validate_geofence"
+    ],
+    "256": [
+      "backend_app_services_solana_solanarpcclient"
+    ],
+    "257": [
+      "backend_app_services_solana_solanarpcclient_confirm_transaction"
+    ],
+    "258": [
+      "backend_app_services_solana_solanarpcclient_get_account_info"
+    ],
+    "259": [
+      "backend_app_services_solana_solanarpcclient_get_transaction"
+    ],
+    "260": [
+      "basesettings"
+    ],
+    "261": [
+      "buffer"
+    ],
+    "262": [
+      "canvases_huellazo_estado_proyecto_canvas_huellazoestadoproyecto"
+    ],
+    "263": [
+      "commitinput"
+    ],
+    "264": [
+      "context"
+    ],
+    "265": [
+      "declarativebase"
+    ],
+    "266": [
+      "delegateinput"
+    ],
+    "267": [
+      "eslint"
+    ],
+    "268": [
+      "eslint_config_expo"
+    ],
+    "269": [
+      "expo_dev_client"
+    ],
+    "270": [
+      "expo_image"
+    ],
+    "271": [
+      "expo_location"
+    ],
+    "272": [
+      "expo_web_browser"
+    ],
+    "273": [
+      "instruction"
+    ],
+    "274": [
+      "mintbusiness"
+    ],
+    "275": [
+      "mintplace"
+    ],
+    "276": [
+      "mobile_api_activities_getactivitiesforpot"
+    ],
+    "277": [
+      "mobile_api_activities_getactivitiesforuser"
+    ],
+    "278": [
+      "mobile_api_activities_getallactivities"
+    ],
+    "279": [
+      "mobile_api_activities_markactivityasread"
+    ],
+    "280": [
+      "mobile_api_friends_addfriend"
+    ],
+    "281": [
+      "mobile_api_friends_getfriendbyaddress"
+    ],
+    "282": [
+      "mobile_api_friends_getfriendbyid"
+    ],
+    "283": [
+      "mobile_api_friends_getfriends"
+    ],
+    "284": [
+      "mobile_api_friends_removefriend"
+    ],
+    "285": [
+      "mobile_api_friends_updatefriend"
+    ],
+    "286": [
+      "mobile_api_huellazo_addcontribution"
+    ],
+    "287": [
+      "mobile_api_huellazo_addcontributortopot"
+    ],
+    "288": [
+      "mobile_api_huellazo_createpot"
+    ],
+    "289": [
+      "mobile_api_huellazo_deletepot"
+    ],
+    "290": [
+      "mobile_api_huellazo_getallpots"
+    ],
+    "291": [
+      "mobile_api_huellazo_getpotbyid"
+    ],
+    "292": [
+      "mobile_api_huellazo_getuserpots"
+    ],
+    "293": [
+      "mobile_api_huellazo_releasepot"
+    ],
+    "294": [
+      "mobile_api_huellazo_removecontribution"
+    ],
+    "295": [
+      "mobile_api_huellazo_removecontributorfrompot"
+    ],
+    "296": [
+      "mobile_api_huellazo_signpotrelease"
+    ],
+    "297": [
+      "mobile_api_huellazo_updatepot"
+    ],
+    "298": [
+      "mobile_api_index"
+    ],
+    "299": [
+      "mobile_api_types"
+    ],
+    "300": [
+      "mobile_api_types_activity"
+    ],
+    "301": [
+      "mobile_api_types_activitytype"
+    ],
+    "302": [
+      "mobile_api_types_addcontributionrequest"
+    ],
+    "303": [
+      "mobile_api_types_addfriendrequest"
+    ],
+    "304": [
+      "mobile_api_types_contribution"
+    ],
+    "305": [
+      "mobile_api_types_createpotrequest"
+    ],
+    "306": [
+      "mobile_api_types_friend"
+    ],
+    "307": [
+      "mobile_api_types_pot"
+    ],
+    "308": [
+      "mobile_api_types_potcategory"
+    ],
+    "309": [
+      "mobile_api_types_updatefriendrequest"
+    ],
+    "310": [
+      "mobile_api_types_updatepotrequest"
+    ],
+    "311": [
+      "mobile_api_types_updateuserrequest"
+    ],
+    "312": [
+      "mobile_api_types_user"
+    ],
+    "313": [
+      "mobile_api_users"
+    ],
+    "314": [
+      "mobile_api_users_authenticateuser"
+    ],
+    "315": [
+      "mobile_api_users_getallusers"
+    ],
+    "316": [
+      "mobile_api_users_getuserbyaddress"
+    ],
+    "317": [
+      "mobile_api_users_getuserbyid"
+    ],
+    "318": [
+      "mobile_api_users_updateuser"
+    ],
+    "319": [
+      "mobile_app_activity_detail_id_activitydetailscreen"
+    ],
+    "320": [
+      "mobile_app_activity_detail_id_styles"
+    ],
+    "321": [
+      "mobile_app_adaptiveicon_backgroundcolor"
+    ],
+    "322": [
+      "mobile_app_adaptiveicon_foregroundimage"
+    ],
+    "323": [
+      "mobile_app_android_adaptiveicon"
+    ],
+    "324": [
+      "mobile_app_android_edgetoedgeenabled"
+    ],
+    "325": [
+      "mobile_app_android_package"
+    ],
+    "326": [
+      "mobile_app_business_id"
+    ],
+    "327": [
+      "mobile_app_business_id_businessdetailscreen"
+    ],
+    "328": [
+      "mobile_app_experiments_typedroutes"
+    ],
+    "329": [
+      "mobile_app_expo"
+    ],
+    "330": [
+      "mobile_app_expo_android"
+    ],
+    "331": [
+      "mobile_app_expo_experiments"
+    ],
+    "332": [
+      "mobile_app_expo_extra"
+    ],
+    "333": [
+      "mobile_app_expo_icon"
+    ],
+    "334": [
+      "mobile_app_expo_ios"
+    ],
+    "335": [
+      "mobile_app_expo_name"
+    ],
+    "336": [
+      "mobile_app_expo_newarchenabled"
+    ],
+    "337": [
+      "mobile_app_expo_orientation"
+    ],
+    "338": [
+      "mobile_app_expo_plugins"
+    ],
+    "339": [
+      "mobile_app_expo_scheme"
+    ],
+    "340": [
+      "mobile_app_expo_slug"
+    ],
+    "341": [
+      "mobile_app_expo_userinterfacestyle"
+    ],
+    "342": [
+      "mobile_app_expo_version"
+    ],
+    "343": [
+      "mobile_app_expo_web"
+    ],
+    "344": [
+      "mobile_app_extra_eas"
+    ],
+    "345": [
+      "mobile_app_extra_router"
+    ],
+    "346": [
+      "mobile_app_index"
+    ],
+    "347": [
+      "mobile_app_index_index"
+    ],
+    "348": [
+      "mobile_app_ios_bundleidentifier"
+    ],
+    "349": [
+      "mobile_app_ios_supportstablet"
+    ],
+    "350": [
+      "mobile_app_layout_rootlayout"
+    ],
+    "351": [
+      "mobile_app_layout_rootnavigator"
+    ],
+    "352": [
+      "mobile_app_not_found_notfoundscreen"
+    ],
+    "353": [
+      "mobile_app_not_found_styles"
+    ],
+    "354": [
+      "mobile_app_tabs_business"
+    ],
+    "355": [
+      "mobile_app_tabs_business_businesstabscreen"
+    ],
+    "356": [
+      "mobile_app_tabs_layout"
+    ],
+    "357": [
+      "mobile_app_tabs_layout_tablayout"
+    ],
+    "358": [
+      "mobile_app_tabs_passport"
+    ],
+    "359": [
+      "mobile_app_tabs_passport_passportscreen"
+    ],
+    "360": [
+      "mobile_app_tabs_passport_shorthash"
+    ],
+    "361": [
+      "mobile_app_tabs_scan"
+    ],
+    "362": [
+      "mobile_app_tabs_scan_mappoi"
+    ],
+    "363": [
+      "mobile_app_tabs_scan_scanscreen"
+    ],
+    "364": [
+      "mobile_app_tabs_scan_shorthash"
+    ],
+    "365": [
+      "mobile_app_tabs_tourism"
+    ],
+    "366": [
+      "mobile_app_tabs_tourism_tourismtabscreen"
+    ],
+    "367": [
+      "mobile_app_tabs_wallet"
+    ],
+    "368": [
+      "mobile_app_tabs_wallet_avatar_options"
+    ],
+    "369": [
+      "mobile_app_tabs_wallet_formatsolbalance"
+    ],
+    "370": [
+      "mobile_app_tabs_wallet_walletscreen"
+    ],
+    "371": [
+      "mobile_app_tourism_id"
+    ],
+    "372": [
+      "mobile_app_tourism_id_tourismdetailscreen"
+    ],
+    "373": [
+      "mobile_app_web_bundler"
+    ],
+    "374": [
+      "mobile_app_web_favicon"
+    ],
+    "375": [
+      "mobile_app_web_output"
+    ],
+    "376": [
+      "mobile_components_account_account_feature_accountfeature"
+    ],
+    "377": [
+      "mobile_components_account_account_feature_airdrop_accountfeatureairdrop"
+    ],
+    "378": [
+      "mobile_components_account_account_feature_receive"
+    ],
+    "379": [
+      "mobile_components_account_account_feature_receive_accountfeaturereceive"
+    ],
+    "380": [
+      "mobile_components_account_account_feature_send"
+    ],
+    "381": [
+      "mobile_components_account_account_feature_send_accountfeaturesend"
+    ],
+    "382": [
+      "mobile_components_account_account_feature_styles"
+    ],
+    "383": [
+      "mobile_components_account_account_ui_balance"
+    ],
+    "384": [
+      "mobile_components_account_account_ui_balance_accountuibalance"
+    ],
+    "385": [
+      "mobile_components_account_account_ui_balance_formatbalance"
+    ],
+    "386": [
+      "mobile_components_account_account_ui_balance_styles"
+    ],
+    "387": [
+      "mobile_components_account_account_ui_buttons"
+    ],
+    "388": [
+      "mobile_components_account_account_ui_buttons_accountuibuttons"
+    ],
+    "389": [
+      "mobile_components_account_account_ui_buttons_actions"
+    ],
+    "390": [
+      "mobile_components_account_account_ui_buttons_styles"
+    ],
+    "391": [
+      "mobile_components_account_account_ui_token_accounts"
+    ],
+    "392": [
+      "mobile_components_account_account_ui_token_accounts_accountuitokenaccounts"
+    ],
+    "393": [
+      "mobile_components_account_account_ui_token_accounts_styles"
+    ],
+    "394": [
+      "mobile_components_account_account_ui_token_balance"
+    ],
+    "395": [
+      "mobile_components_account_account_ui_token_balance_accountuitokenbalance"
+    ],
+    "396": [
+      "mobile_components_account_create_transaction"
+    ],
+    "397": [
+      "mobile_components_account_create_transaction_createtransaction"
+    ],
+    "398": [
+      "mobile_components_account_use_get_balance"
+    ],
+    "399": [
+      "mobile_components_account_use_get_balance_usegetbalance"
+    ],
+    "400": [
+      "mobile_components_account_use_get_balance_usegetbalanceinvalidate"
+    ],
+    "401": [
+      "mobile_components_account_use_get_balance_usegetbalancequerykey"
+    ],
+    "402": [
+      "mobile_components_account_use_get_token_account_balance"
+    ],
+    "403": [
+      "mobile_components_account_use_get_token_account_balance_usegettokenaccountbalance"
+    ],
+    "404": [
+      "mobile_components_account_use_get_token_accounts"
+    ],
+    "405": [
+      "mobile_components_account_use_get_token_accounts_usegettokenaccounts"
+    ],
+    "406": [
+      "mobile_components_account_use_get_token_accounts_usegettokenaccountsinvalidate"
+    ],
+    "407": [
+      "mobile_components_account_use_get_token_accounts_usegettokenaccountsquerykey"
+    ],
+    "408": [
+      "mobile_components_account_use_request_airdrop"
+    ],
+    "409": [
+      "mobile_components_account_use_request_airdrop_userequestairdrop"
+    ],
+    "410": [
+      "mobile_components_account_use_transfer_sol"
+    ],
+    "411": [
+      "mobile_components_account_use_transfer_sol_usetransfersol"
+    ],
+    "412": [
+      "mobile_components_app_dropdown"
+    ],
+    "413": [
+      "mobile_components_app_dropdown_appdropdown"
+    ],
+    "414": [
+      "mobile_components_app_dropdown_styles"
+    ],
+    "415": [
+      "mobile_components_app_external_link"
+    ],
+    "416": [
+      "mobile_components_app_external_link_appexternallink"
+    ],
+    "417": [
+      "mobile_components_app_external_link_appexternallinkprops"
+    ],
+    "418": [
+      "mobile_components_app_page"
+    ],
+    "419": [
+      "mobile_components_app_page_apppage"
+    ],
+    "420": [
+      "mobile_components_app_providers"
+    ],
+    "421": [
+      "mobile_components_app_providers_appproviders"
+    ],
+    "422": [
+      "mobile_components_app_providers_queryclient"
+    ],
+    "423": [
+      "mobile_components_app_qr_code"
+    ],
+    "424": [
+      "mobile_components_app_qr_code_appqrcode"
+    ],
+    "425": [
+      "mobile_components_app_splash_controller"
+    ],
+    "426": [
+      "mobile_components_app_splash_controller_appsplashcontroller"
+    ],
+    "427": [
+      "mobile_components_app_text"
+    ],
+    "428": [
+      "mobile_components_app_text_apptext"
+    ],
+    "429": [
+      "mobile_components_app_text_apptextprops"
+    ],
+    "430": [
+      "mobile_components_app_text_styles"
+    ],
+    "431": [
+      "mobile_components_app_theme_apptheme"
+    ],
+    "432": [
+      "mobile_components_app_theme_useapptheme"
+    ],
+    "433": [
+      "mobile_components_app_view"
+    ],
+    "434": [
+      "mobile_components_app_view_appview"
+    ],
+    "435": [
+      "mobile_components_auth_auth_provider"
+    ],
+    "436": [
+      "mobile_components_auth_auth_provider_authcontext"
+    ],
+    "437": [
+      "mobile_components_auth_auth_provider_authprovider"
+    ],
+    "438": [
+      "mobile_components_auth_auth_provider_authproviderstate"
+    ],
+    "439": [
+      "mobile_components_auth_auth_provider_useauth"
+    ],
+    "440": [
+      "mobile_components_features_business_categorygrid"
+    ],
+    "441": [
+      "mobile_components_features_business_categorygrid_categorygrid"
+    ],
+    "442": [
+      "mobile_components_features_business_flashdealcard"
+    ],
+    "443": [
+      "mobile_components_features_business_flashdealcard_flashdealcard"
+    ],
+    "444": [
+      "mobile_components_features_business_impactmeter"
+    ],
+    "445": [
+      "mobile_components_features_business_impactmeter_impactmeter"
+    ],
+    "446": [
+      "mobile_components_features_passport_nftdetailmodal"
+    ],
+    "447": [
+      "mobile_components_features_passport_nftdetailmodal_nftdata"
+    ],
+    "448": [
+      "mobile_components_features_passport_nftdetailmodal_nftdetailmodal"
+    ],
+    "449": [
+      "mobile_components_features_passport_nftdetailmodal_props"
+    ],
+    "450": [
+      "mobile_components_features_passport_tradeacceptmodal"
+    ],
+    "451": [
+      "mobile_components_features_passport_tradeacceptmodal_props"
+    ],
+    "452": [
+      "mobile_components_features_passport_tradeacceptmodal_tradeacceptmodal"
+    ],
+    "453": [
+      "mobile_components_features_passport_tradeoffermodal"
+    ],
+    "454": [
+      "mobile_components_features_passport_tradeoffermodal_props"
+    ],
+    "455": [
+      "mobile_components_features_passport_tradeoffermodal_tradeoffermodal"
+    ],
+    "456": [
+      "mobile_components_features_scan_liveactivityfeed"
+    ],
+    "457": [
+      "mobile_components_features_scan_liveactivityfeed_liveactivityfeed"
+    ],
+    "458": [
+      "mobile_components_features_scan_liveactivityfeed_mock_events"
+    ],
+    "459": [
+      "mobile_components_features_tourism_featuredcarousel"
+    ],
+    "460": [
+      "mobile_components_features_tourism_featuredcarousel_featuredcarousel"
+    ],
+    "461": [
+      "mobile_components_features_tourism_leaderboardpreview"
+    ],
+    "462": [
+      "mobile_components_features_tourism_leaderboardpreview_leaderboardpreview"
+    ],
+    "463": [
+      "mobile_components_features_tourism_questcard"
+    ],
+    "464": [
+      "mobile_components_features_tourism_questcard_questcard"
+    ],
+    "465": [
+      "mobile_components_features_wallet_pinatamodal"
+    ],
+    "466": [
+      "mobile_components_features_wallet_pinatamodal_pinatamodal"
+    ],
+    "467": [
+      "mobile_components_features_wallet_pinatamodal_props"
+    ],
+    "468": [
+      "mobile_components_floating_action_button"
+    ],
+    "469": [
+      "mobile_components_floating_action_button_floatingactionbutton"
+    ],
+    "470": [
+      "mobile_components_floating_action_button_floatingactionbuttonprops"
+    ],
+    "471": [
+      "mobile_components_floating_action_button_styles"
+    ],
+    "472": [
+      "mobile_components_floating_action_button_usefabvisibility"
+    ],
+    "473": [
+      "mobile_components_friends_addfriendmodal"
+    ],
+    "474": [
+      "mobile_components_friends_addfriendmodal_addfriendmodal"
+    ],
+    "475": [
+      "mobile_components_friends_addfriendmodal_addfriendmodalprops"
+    ],
+    "476": [
+      "mobile_components_friends_addfriendmodal_styles"
+    ],
+    "477": [
+      "mobile_components_friends_addtopotmodal_addtopotmodal"
+    ],
+    "478": [
+      "mobile_components_friends_addtopotmodal_addtopotmodalprops"
+    ],
+    "479": [
+      "mobile_components_friends_addtopotmodal_styles"
+    ],
+    "480": [
+      "mobile_components_friends_deletefriendmodal_deletefriendmodal"
+    ],
+    "481": [
+      "mobile_components_friends_deletefriendmodal_deletefriendmodalprops"
+    ],
+    "482": [
+      "mobile_components_friends_deletefriendmodal_styles"
+    ],
+    "483": [
+      "mobile_components_friends_emptystate_emptystate"
+    ],
+    "484": [
+      "mobile_components_friends_emptystate_emptystateprops"
+    ],
+    "485": [
+      "mobile_components_friends_emptystate_styles"
+    ],
+    "486": [
+      "mobile_components_friends_friendrow"
+    ],
+    "487": [
+      "mobile_components_friends_friendrow_friendrow"
+    ],
+    "488": [
+      "mobile_components_friends_friendrow_friendrowprops"
+    ],
+    "489": [
+      "mobile_components_friends_friendrow_styles"
+    ],
+    "490": [
+      "mobile_components_huellazo_addcontributormodal"
+    ],
+    "491": [
+      "mobile_components_huellazo_addcontributormodal_addcontributormodal"
+    ],
+    "492": [
+      "mobile_components_huellazo_addcontributormodal_addcontributormodalprops"
+    ],
+    "493": [
+      "mobile_components_huellazo_addcontributormodal_styles"
+    ],
+    "494": [
+      "mobile_components_huellazo_alertmodal"
+    ],
+    "495": [
+      "mobile_components_huellazo_alertmodal_alertbutton"
+    ],
+    "496": [
+      "mobile_components_huellazo_alertmodal_alertmodal"
+    ],
+    "497": [
+      "mobile_components_huellazo_alertmodal_alertmodalprops"
+    ],
+    "498": [
+      "mobile_components_huellazo_alertmodal_styles"
+    ],
+    "499": [
+      "mobile_components_huellazo_contributemodal"
+    ],
+    "500": [
+      "mobile_components_huellazo_contributemodal_contributemodal"
+    ],
+    "501": [
+      "mobile_components_huellazo_contributemodal_contributemodalprops"
+    ],
+    "502": [
+      "mobile_components_huellazo_contributemodal_styles"
+    ],
+    "503": [
+      "mobile_components_huellazo_contributionlist"
+    ],
+    "504": [
+      "mobile_components_huellazo_contributionlist_contributionlist"
+    ],
+    "505": [
+      "mobile_components_huellazo_contributionlist_contributionlistprops"
+    ],
+    "506": [
+      "mobile_components_huellazo_contributionlist_styles"
+    ],
+    "507": [
+      "mobile_components_huellazo_contributorlist"
+    ],
+    "508": [
+      "mobile_components_huellazo_contributorlist_contributorlist"
+    ],
+    "509": [
+      "mobile_components_huellazo_contributorlist_contributorlistprops"
+    ],
+    "510": [
+      "mobile_components_huellazo_contributorlist_styles"
+    ],
+    "511": [
+      "mobile_components_huellazo_create_categoryselector"
+    ],
+    "512": [
+      "mobile_components_huellazo_create_categoryselector_categories"
+    ],
+    "513": [
+      "mobile_components_huellazo_create_categoryselector_categoryselector"
+    ],
+    "514": [
+      "mobile_components_huellazo_create_categoryselector_categoryselectorprops"
+    ],
+    "515": [
+      "mobile_components_huellazo_create_categoryselector_styles"
+    ],
+    "516": [
+      "mobile_components_huellazo_create_contributorselector"
+    ],
+    "517": [
+      "mobile_components_huellazo_create_contributorselector_contributorselector"
+    ],
+    "518": [
+      "mobile_components_huellazo_create_contributorselector_contributorselectorprops"
+    ],
+    "519": [
+      "mobile_components_huellazo_create_contributorselector_styles"
+    ],
+    "520": [
+      "mobile_components_huellazo_create_createpotheader_createpotheader"
+    ],
+    "521": [
+      "mobile_components_huellazo_create_createpotheader_createpotheaderprops"
+    ],
+    "522": [
+      "mobile_components_huellazo_create_createpotheader_styles"
+    ],
+    "523": [
+      "mobile_components_huellazo_create_datepickermodal_datepickermodal"
+    ],
+    "524": [
+      "mobile_components_huellazo_create_datepickermodal_datepickermodalprops"
+    ],
+    "525": [
+      "mobile_components_huellazo_create_datepickermodal_friendlydate"
+    ],
+    "526": [
+      "mobile_components_huellazo_create_datepickermodal_quickdates"
+    ],
+    "527": [
+      "mobile_components_huellazo_create_datepickermodal_styles"
+    ],
+    "528": [
+      "mobile_components_huellazo_create_datepickermodal_today"
+    ],
+    "529": [
+      "mobile_components_huellazo_create_datepickermodal_tomorrow"
+    ],
+    "530": [
+      "mobile_components_huellazo_create_goalsection_goalsection"
+    ],
+    "531": [
+      "mobile_components_huellazo_create_goalsection_goalsectionprops"
+    ],
+    "532": [
+      "mobile_components_huellazo_create_goalsection_styles"
+    ],
+    "533": [
+      "mobile_components_huellazo_create_overviewsection"
+    ],
+    "534": [
+      "mobile_components_huellazo_create_overviewsection_overviewsection"
+    ],
+    "535": [
+      "mobile_components_huellazo_create_overviewsection_overviewsectionprops"
+    ],
+    "536": [
+      "mobile_components_huellazo_create_overviewsection_styles"
+    ],
+    "537": [
+      "mobile_components_huellazo_editpotmodal"
+    ],
+    "538": [
+      "mobile_components_huellazo_editpotmodal_editpotmodal"
+    ],
+    "539": [
+      "mobile_components_huellazo_editpotmodal_editpotmodalprops"
+    ],
+    "540": [
+      "mobile_components_huellazo_editpotmodal_styles"
+    ],
+    "541": [
+      "mobile_components_huellazo_potactions_potactions"
+    ],
+    "542": [
+      "mobile_components_huellazo_potactions_potactionsprops"
+    ],
+    "543": [
+      "mobile_components_huellazo_potactions_styles"
+    ],
+    "544": [
+      "mobile_components_huellazo_potheader"
+    ],
+    "545": [
+      "mobile_components_huellazo_potheader_potheader"
+    ],
+    "546": [
+      "mobile_components_huellazo_potheader_potheaderprops"
+    ],
+    "547": [
+      "mobile_components_huellazo_potheader_styles"
+    ],
+    "548": [
+      "mobile_components_huellazo_potinfocard_potinfocard"
+    ],
+    "549": [
+      "mobile_components_huellazo_potinfocard_potinfocardprops"
+    ],
+    "550": [
+      "mobile_components_huellazo_potinfocard_styles"
+    ],
+    "551": [
+      "mobile_components_huellazo_potprogresscard_potprogresscard"
+    ],
+    "552": [
+      "mobile_components_huellazo_potprogresscard_potprogresscardprops"
+    ],
+    "553": [
+      "mobile_components_huellazo_potprogresscard_styles"
+    ],
+    "554": [
+      "mobile_components_huellazo_pottabs"
+    ],
+    "555": [
+      "mobile_components_huellazo_pottabs_pottabs"
+    ],
+    "556": [
+      "mobile_components_huellazo_pottabs_pottabsprops"
+    ],
+    "557": [
+      "mobile_components_huellazo_pottabs_styles"
+    ],
+    "558": [
+      "mobile_components_navigation_floatingpillbar"
+    ],
+    "559": [
+      "mobile_components_navigation_floatingpillbar_floatingpillbar"
+    ],
+    "560": [
+      "mobile_components_navigation_floatingpillbar_styles"
+    ],
+    "561": [
+      "mobile_components_navigation_floatingpillbar_tabicons"
+    ],
+    "562": [
+      "mobile_components_solana_base_button_basebutton"
+    ],
+    "563": [
+      "mobile_components_solana_base_button_styles"
+    ],
+    "564": [
+      "mobile_components_solana_use_connection"
+    ],
+    "565": [
+      "mobile_components_solana_use_connection_useconnection"
+    ],
+    "566": [
+      "mobile_components_solana_use_wallet_ui_theme"
+    ],
+    "567": [
+      "mobile_components_solana_use_wallet_ui_theme_usemobilewalletadaptertheme"
+    ],
+    "568": [
+      "mobile_components_solana_wallet_ui_button_connect"
+    ],
+    "569": [
+      "mobile_components_solana_wallet_ui_button_connect_walletuibuttonconnect"
+    ],
+    "570": [
+      "mobile_components_solana_wallet_ui_button_disconnect"
+    ],
+    "571": [
+      "mobile_components_solana_wallet_ui_button_disconnect_walletuibuttondisconnect"
+    ],
+    "572": [
+      "mobile_components_solana_wallet_ui_dropdown"
+    ],
+    "573": [
+      "mobile_components_solana_wallet_ui_dropdown_getexplorerurl"
+    ],
+    "574": [
+      "mobile_components_solana_wallet_ui_dropdown_styles"
+    ],
+    "575": [
+      "mobile_components_solana_wallet_ui_dropdown_usedropdownitems"
+    ],
+    "576": [
+      "mobile_components_solana_wallet_ui_dropdown_walletuidropdown"
+    ],
+    "577": [
+      "mobile_components_tab_bar_custom_tab_bar_button"
+    ],
+    "578": [
+      "mobile_components_tab_bar_custom_tab_bar_button_customtabbarbutton"
+    ],
+    "579": [
+      "mobile_components_tab_bar_custom_tab_bar_button_props"
+    ],
+    "580": [
+      "mobile_components_tab_bar_custom_tab_bar_button_styles"
+    ],
+    "581": [
+      "mobile_components_tab_bar_custom_tab_bar_customtabbar"
+    ],
+    "582": [
+      "mobile_components_tab_bar_custom_tab_bar_styles"
+    ],
+    "583": [
+      "mobile_components_tab_bar_custom_tab_bar_tab_items"
+    ],
+    "584": [
+      "mobile_components_tab_bar_scroll_context"
+    ],
+    "585": [
+      "mobile_components_tab_bar_scroll_context_scrollcontext"
+    ],
+    "586": [
+      "mobile_components_tab_bar_scroll_context_scrollcontexttype"
+    ],
+    "587": [
+      "mobile_components_tab_bar_scroll_context_scrollprovider"
+    ],
+    "588": [
+      "mobile_components_tab_bar_scroll_context_usescrollcontext"
+    ],
+    "589": [
+      "mobile_components_toast_toast_provider_styles"
+    ],
+    "590": [
+      "mobile_components_toast_toast_provider_toastcard"
+    ],
+    "591": [
+      "mobile_components_toast_toast_provider_toastcardprops"
+    ],
+    "592": [
+      "mobile_components_toast_toast_provider_toastcontext"
+    ],
+    "593": [
+      "mobile_components_toast_toast_provider_toastcontextvalue"
+    ],
+    "594": [
+      "mobile_components_toast_toast_provider_toastitem"
+    ],
+    "595": [
+      "mobile_components_toast_toast_provider_toastoptions"
+    ],
+    "596": [
+      "mobile_components_toast_toast_provider_toastprovider"
+    ],
+    "597": [
+      "mobile_components_toast_toast_provider_toasttype"
+    ],
+    "598": [
+      "mobile_components_toast_toast_provider_toastviewport"
+    ],
+    "599": [
+      "mobile_components_toast_toast_provider_toastviewportprops"
+    ],
+    "600": [
+      "mobile_components_toast_toast_provider_usetoast"
+    ],
+    "601": [
+      "mobile_components_ui_app_bar_appbar"
+    ],
+    "602": [
+      "mobile_components_ui_app_bar_appbaraction"
+    ],
+    "603": [
+      "mobile_components_ui_app_bar_appbarprops"
+    ],
+    "604": [
+      "mobile_components_ui_app_bar_default_actions"
+    ],
+    "605": [
+      "mobile_components_ui_app_bar_styles"
+    ],
+    "606": [
+      "mobile_components_ui_brutalist_button_bg_map"
+    ],
+    "607": [
+      "mobile_components_ui_brutalist_button_brutalistbutton"
+    ],
+    "608": [
+      "mobile_components_ui_brutalist_button_props"
+    ],
+    "609": [
+      "mobile_components_ui_brutalist_button_shadow_map"
+    ],
+    "610": [
+      "mobile_components_ui_brutalist_button_styles"
+    ],
+    "611": [
+      "mobile_components_ui_brutalist_button_text_map"
+    ],
+    "612": [
+      "mobile_components_ui_brutalist_button_variant"
+    ],
+    "613": [
+      "mobile_components_ui_brutalist_card_brutalistcard"
+    ],
+    "614": [
+      "mobile_components_ui_brutalist_card_props"
+    ],
+    "615": [
+      "mobile_components_ui_brutalist_card_styles"
+    ],
+    "616": [
+      "mobile_components_ui_brutalistbutton"
+    ],
+    "617": [
+      "mobile_components_ui_brutalistbutton_brutalistbutton"
+    ],
+    "618": [
+      "mobile_components_ui_brutalistbutton_brutalistbuttonprops"
+    ],
+    "619": [
+      "mobile_components_ui_brutalistcard"
+    ],
+    "620": [
+      "mobile_components_ui_brutalistcard_brutalistcard"
+    ],
+    "621": [
+      "mobile_components_ui_brutalistcard_brutalistcardprops"
+    ],
+    "622": [
+      "mobile_components_ui_brutalistpill"
+    ],
+    "623": [
+      "mobile_components_ui_brutalistpill_brutalistpill"
+    ],
+    "624": [
+      "mobile_components_ui_brutalistpill_brutalistpillprops"
+    ],
+    "625": [
+      "mobile_components_ui_circular_progress_circularprogress"
+    ],
+    "626": [
+      "mobile_components_ui_circular_progress_circularprogressprops"
+    ],
+    "627": [
+      "mobile_components_ui_circular_progress_styles"
+    ],
+    "628": [
+      "mobile_components_ui_glass_card"
+    ],
+    "629": [
+      "mobile_components_ui_glass_card_glasscard"
+    ],
+    "630": [
+      "mobile_components_ui_glass_card_glasscardprops"
+    ],
+    "631": [
+      "mobile_components_ui_glass_card_styles"
+    ],
+    "632": [
+      "mobile_components_ui_stat_pill_props"
+    ],
+    "633": [
+      "mobile_components_ui_stat_pill_statpill"
+    ],
+    "634": [
+      "mobile_components_ui_stat_pill_styles"
+    ],
+    "635": [
+      "mobile_components_ui_ui_icon_symbol"
+    ],
+    "636": [
+      "mobile_components_ui_ui_icon_symbol_ios"
+    ],
+    "637": [
+      "mobile_components_ui_ui_icon_symbol_ios_uiiconsymbol"
+    ],
+    "638": [
+      "mobile_components_ui_ui_icon_symbol_mapping"
+    ],
+    "639": [
+      "mobile_components_ui_ui_icon_symbol_uiiconmapping"
+    ],
+    "640": [
+      "mobile_components_ui_ui_icon_symbol_uiiconsymbol"
+    ],
+    "641": [
+      "mobile_components_ui_ui_icon_symbol_uiiconsymbolname"
+    ],
+    "642": [
+      "mobile_constants_app_config"
+    ],
+    "643": [
+      "mobile_constants_app_config_appconfig"
+    ],
+    "644": [
+      "mobile_constants_app_config_cluster"
+    ],
+    "645": [
+      "mobile_constants_colors"
+    ],
+    "646": [
+      "mobile_constants_colors_appcolortheme"
+    ],
+    "647": [
+      "mobile_constants_colors_basetheme"
+    ],
+    "648": [
+      "mobile_constants_colors_colormode"
+    ],
+    "649": [
+      "mobile_constants_colors_colors"
+    ],
+    "650": [
+      "mobile_constants_colors_themetokens"
+    ],
+    "651": [
+      "mobile_constants_fonts"
+    ],
+    "652": [
+      "mobile_constants_fonts_fontfamily"
+    ],
+    "653": [
+      "mobile_constants_fonts_fonts"
+    ],
+    "654": [
+      "mobile_constants_fonts_fontweights"
+    ],
+    "655": [
+      "mobile_constants_fonts_rationale_9"
+    ],
+    "656": [
+      "mobile_constants_styles"
+    ],
+    "657": [
+      "mobile_constants_styles_brutaliststyles"
+    ],
+    "658": [
+      "mobile_context_app_state"
+    ],
+    "659": [
+      "mobile_context_app_state_appstatecontext"
+    ],
+    "660": [
+      "mobile_context_app_state_appstateprovider"
+    ],
+    "661": [
+      "mobile_context_app_state_calculatelevel"
+    ],
+    "662": [
+      "mobile_context_app_state_createmockbase58address"
+    ],
+    "663": [
+      "mobile_context_app_state_createsolanatokenfrompoi"
+    ],
+    "664": [
+      "mobile_context_app_state_earnedsolanatoken"
+    ],
+    "665": [
+      "mobile_context_app_state_faction"
+    ],
+    "666": [
+      "mobile_context_app_state_huellazoappstate"
+    ],
+    "667": [
+      "mobile_context_app_state_inventoryitem"
+    ],
+    "668": [
+      "mobile_context_app_state_inventoryitemtype"
+    ],
+    "669": [
+      "mobile_context_app_state_lootitem"
+    ],
+    "670": [
+      "mobile_context_app_state_mintablepoi"
+    ],
+    "671": [
+      "mobile_context_app_state_nft_catalog"
+    ],
+    "672": [
+      "mobile_context_app_state_nftid"
+    ],
+    "673": [
+      "mobile_context_app_state_nftitem"
+    ],
+    "674": [
+      "mobile_context_app_state_place"
+    ],
+    "675": [
+      "mobile_context_app_state_places_catalog"
+    ],
+    "676": [
+      "mobile_context_app_state_transaction"
+    ],
+    "677": [
+      "mobile_context_app_state_useappstate"
+    ],
+    "678": [
+      "mobile_context_app_state_userstatus"
+    ],
+    "679": [
+      "mobile_eslint_config_defineconfig"
+    ],
+    "680": [
+      "mobile_eslint_config_expoconfig"
+    ],
+    "681": [
+      "mobile_hooks_use_app_theme"
+    ],
+    "682": [
+      "mobile_hooks_use_app_theme_useapptheme"
+    ],
+    "683": [
+      "mobile_hooks_use_color_scheme"
+    ],
+    "684": [
+      "mobile_hooks_use_color_scheme_web"
+    ],
+    "685": [
+      "mobile_hooks_use_color_scheme_web_usecolorscheme"
+    ],
+    "686": [
+      "mobile_hooks_use_currency_conversion_usecurrencyconversion"
+    ],
+    "687": [
+      "mobile_hooks_use_huellazo_program_usepotprogram"
+    ],
+    "688": [
+      "mobile_hooks_use_theme_color"
+    ],
+    "689": [
+      "mobile_hooks_use_theme_color_usethemecolor"
+    ],
+    "690": [
+      "mobile_hooks_use_track_locations"
+    ],
+    "691": [
+      "mobile_hooks_use_track_locations_usetracklocations"
+    ],
+    "692": [
+      "mobile_hooks_use_transaction"
+    ],
+    "693": [
+      "mobile_hooks_use_transaction_usetransaction"
+    ],
+    "694": [
+      "mobile_hooks_useinitializedata"
+    ],
+    "695": [
+      "mobile_hooks_useinitializedata_useinitializedata"
+    ],
+    "696": [
+      "mobile_hooks_useinitializedata_useinitializedata_loaddata"
+    ],
+    "697": [
+      "mobile_hooks_usewalletauth"
+    ],
+    "698": [
+      "mobile_hooks_usewalletauth_usewalletauth"
+    ],
+    "699": [
+      "mobile_idl_idl"
+    ],
+    "700": [
+      "mobile_idl_idl_contract"
+    ],
+    "701": [
+      "mobile_idl_index"
+    ],
+    "702": [
+      "mobile_metro_config_config"
+    ],
+    "703": [
+      "mobile_metro_config_getdefaultconfig"
+    ],
+    "704": [
+      "mobile_metro_config_withnativewind"
+    ],
+    "705": [
+      "mobile_mocks_db"
+    ],
+    "706": [
+      "mobile_mocks_db_mock_flash_deals"
+    ],
+    "707": [
+      "mobile_mocks_db_mock_pois"
+    ],
+    "708": [
+      "mobile_mocks_db_mock_quests"
+    ],
+    "709": [
+      "mobile_mocks_db_mock_user"
+    ],
+    "710": [
+      "mobile_nativewind_env_d_rationale_3"
+    ],
+    "711": [
+      "mobile_package"
+    ],
+    "712": [
+      "mobile_package_dependencies"
+    ],
+    "713": [
+      "mobile_package_dependencies_buffer"
+    ],
+    "714": [
+      "mobile_package_dependencies_coral_xyz_anchor"
+    ],
+    "715": [
+      "mobile_package_dependencies_expo"
+    ],
+    "716": [
+      "mobile_package_dependencies_expo_blur"
+    ],
+    "717": [
+      "mobile_package_dependencies_expo_clipboard"
+    ],
+    "718": [
+      "mobile_package_dependencies_expo_constants"
+    ],
+    "719": [
+      "mobile_package_dependencies_expo_crypto"
+    ],
+    "720": [
+      "mobile_package_dependencies_expo_dev_client"
+    ],
+    "721": [
+      "mobile_package_dependencies_expo_font"
+    ],
+    "722": [
+      "mobile_package_dependencies_expo_haptics"
+    ],
+    "723": [
+      "mobile_package_dependencies_expo_image"
+    ],
+    "724": [
+      "mobile_package_dependencies_expo_linear_gradient"
+    ],
+    "725": [
+      "mobile_package_dependencies_expo_linking"
+    ],
+    "726": [
+      "mobile_package_dependencies_expo_location"
+    ],
+    "727": [
+      "mobile_package_dependencies_expo_metro_runtime"
+    ],
+    "728": [
+      "mobile_package_dependencies_expo_router"
+    ],
+    "729": [
+      "mobile_package_dependencies_expo_splash_screen"
+    ],
+    "730": [
+      "mobile_package_dependencies_expo_status_bar"
+    ],
+    "731": [
+      "mobile_package_dependencies_expo_symbols"
+    ],
+    "732": [
+      "mobile_package_dependencies_expo_system_ui"
+    ],
+    "733": [
+      "mobile_package_dependencies_expo_vector_icons"
+    ],
+    "734": [
+      "mobile_package_dependencies_expo_web_browser"
+    ],
+    "735": [
+      "mobile_package_dependencies_js_base64"
+    ],
+    "736": [
+      "mobile_package_dependencies_react"
+    ],
+    "737": [
+      "mobile_package_dependencies_react_native"
+    ],
+    "738": [
+      "mobile_package_dependencies_react_native_async_storage_async_storage"
+    ],
+    "739": [
+      "mobile_package_dependencies_react_native_community_datetimepicker"
+    ],
+    "740": [
+      "mobile_package_dependencies_react_native_reanimated"
+    ],
+    "741": [
+      "mobile_package_dependencies_react_native_safe_area_context"
+    ],
+    "742": [
+      "mobile_package_dependencies_react_native_snackbar"
+    ],
+    "743": [
+      "mobile_package_dependencies_react_navigation_elements"
+    ],
+    "744": [
+      "mobile_package_dependencies_react_navigation_native"
+    ],
+    "745": [
+      "mobile_package_dependencies_solana_web3_js"
+    ],
+    "746": [
+      "mobile_package_dependencies_zustand"
+    ],
+    "747": [
+      "mobile_package_description"
+    ],
+    "748": [
+      "mobile_package_devdependencies"
+    ],
+    "749": [
+      "mobile_package_devdependencies_babel_core"
+    ],
+    "750": [
+      "mobile_package_devdependencies_babel_preset_expo"
+    ],
+    "751": [
+      "mobile_package_devdependencies_eslint"
+    ],
+    "752": [
+      "mobile_package_devdependencies_eslint_config_expo"
+    ],
+    "753": [
+      "mobile_package_devdependencies_prettier"
+    ],
+    "754": [
+      "mobile_package_devdependencies_tailwindcss"
+    ],
+    "755": [
+      "mobile_package_devdependencies_types_react"
+    ],
+    "756": [
+      "mobile_package_devdependencies_typescript"
+    ],
+    "757": [
+      "mobile_package_displayname"
+    ],
+    "758": [
+      "mobile_package_doctor_reactnativedirectorycheck"
+    ],
+    "759": [
+      "mobile_package_expo"
+    ],
+    "760": [
+      "mobile_package_expo_doctor"
+    ],
+    "761": [
+      "mobile_package_keywords"
+    ],
+    "762": [
+      "mobile_package_main"
+    ],
+    "763": [
+      "mobile_package_name"
+    ],
+    "764": [
+      "mobile_package_private"
+    ],
+    "765": [
+      "mobile_package_reactnativedirectorycheck_exclude"
+    ],
+    "766": [
+      "mobile_package_reactnativedirectorycheck_listunknownpackages"
+    ],
+    "767": [
+      "mobile_package_scripts"
+    ],
+    "768": [
+      "mobile_package_scripts_android"
+    ],
+    "769": [
+      "mobile_package_scripts_android_build"
+    ],
+    "770": [
+      "mobile_package_scripts_build"
+    ],
+    "771": [
+      "mobile_package_scripts_ci"
+    ],
+    "772": [
+      "mobile_package_scripts_dev"
+    ],
+    "773": [
+      "mobile_package_scripts_doctor"
+    ],
+    "774": [
+      "mobile_package_scripts_fmt"
+    ],
+    "775": [
+      "mobile_package_scripts_fmt_check"
+    ],
+    "776": [
+      "mobile_package_scripts_ios"
+    ],
+    "777": [
+      "mobile_package_scripts_lint"
+    ],
+    "778": [
+      "mobile_package_scripts_lint_check"
+    ],
+    "779": [
+      "mobile_package_scripts_reset_project"
+    ],
+    "780": [
+      "mobile_package_scripts_start"
+    ],
+    "781": [
+      "mobile_package_scripts_vercel_build"
+    ],
+    "782": [
+      "mobile_package_scripts_web"
+    ],
+    "783": [
+      "mobile_package_usecase"
+    ],
+    "784": [
+      "mobile_package_version"
+    ],
+    "785": [
+      "mobile_polyfill"
+    ],
+    "786": [
+      "mobile_polyfill_crypto"
+    ],
+    "787": [
+      "mobile_scripts_verify_idl"
+    ],
+    "788": [
+      "mobile_services_huellazo_program"
+    ],
+    "789": [
+      "mobile_services_huellazo_program_potprogramservice"
+    ],
+    "790": [
+      "mobile_services_huellazo_program_potprogramservice_buildaddcontributortx"
+    ],
+    "791": [
+      "mobile_services_huellazo_program_potprogramservice_buildcontributetx"
+    ],
+    "792": [
+      "mobile_services_huellazo_program_potprogramservice_buildcreatepottx"
+    ],
+    "793": [
+      "mobile_services_huellazo_program_potprogramservice_buildreleasefundstx"
+    ],
+    "794": [
+      "mobile_services_huellazo_program_potprogramservice_buildsignreleasetx"
+    ],
+    "795": [
+      "mobile_services_huellazo_program_potprogramservice_constructor"
+    ],
+    "796": [
+      "mobile_services_huellazo_program_potprogramservice_fetchallpots"
+    ],
+    "797": [
+      "mobile_services_huellazo_program_potprogramservice_fetchcontributor"
+    ],
+    "798": [
+      "mobile_services_huellazo_program_potprogramservice_fetchpot"
+    ],
+    "799": [
+      "mobile_services_huellazo_program_potprogramservice_fetchpotsbyauthority"
+    ],
+    "800": [
+      "mobile_services_huellazo_program_potprogramservice_getcontributorpda"
+    ],
+    "801": [
+      "mobile_services_huellazo_program_potprogramservice_getpotpda"
+    ],
+    "802": [
+      "mobile_services_huellazo_program_potprogramservice_getvaultpda"
+    ],
+    "803": [
+      "mobile_store_app_store"
+    ],
+    "804": [
+      "mobile_store_app_store_activity"
+    ],
+    "805": [
+      "mobile_store_app_store_activitytype"
+    ],
+    "806": [
+      "mobile_store_app_store_appstore"
+    ],
+    "807": [
+      "mobile_store_app_store_contribution"
+    ],
+    "808": [
+      "mobile_store_app_store_friend"
+    ],
+    "809": [
+      "mobile_store_app_store_pot"
+    ],
+    "810": [
+      "mobile_store_app_store_potcategory"
+    ],
+    "811": [
+      "mobile_store_app_store_useappstore"
+    ],
+    "812": [
+      "mobile_theme_colors"
+    ],
+    "813": [
+      "mobile_theme_colors_colors"
+    ],
+    "814": [
+      "mobile_theme_colors_colortype"
+    ],
+    "815": [
+      "mobile_tsconfig_compileroptions"
+    ],
+    "816": [
+      "mobile_tsconfig_compileroptions_esmoduleinterop"
+    ],
+    "817": [
+      "mobile_tsconfig_compileroptions_paths"
+    ],
+    "818": [
+      "mobile_tsconfig_compileroptions_resolvejsonmodule"
+    ],
+    "819": [
+      "mobile_tsconfig_compileroptions_strict"
+    ],
+    "820": [
+      "mobile_tsconfig_extends"
+    ],
+    "821": [
+      "mobile_tsconfig_include"
+    ],
+    "822": [
+      "mobile_utils_currency"
+    ],
+    "823": [
+      "mobile_utils_currency_convertsoltousd"
+    ],
+    "824": [
+      "mobile_utils_currency_convertusdtosol"
+    ],
+    "825": [
+      "mobile_utils_currency_formatcurrency"
+    ],
+    "826": [
+      "mobile_utils_currency_getsoltousdrate"
+    ],
+    "827": [
+      "mobile_utils_display_address"
+    ],
+    "828": [
+      "mobile_utils_display_address_displayaddress"
+    ],
+    "829": [
+      "mobile_utils_display_address_displayusername"
+    ],
+    "830": [
+      "mobile_utils_ellipsify"
+    ],
+    "831": [
+      "mobile_utils_ellipsify_ellipsify"
+    ],
+    "832": [
+      "mobile_utils_lamports_to_sol"
+    ],
+    "833": [
+      "mobile_utils_lamports_to_sol_lamportstosol"
+    ],
+    "834": [
+      "nativewind"
+    ],
+    "835": [
+      "package_name"
+    ],
+    "836": [
+      "package_private"
+    ],
+    "837": [
+      "package_scripts"
+    ],
+    "838": [
+      "package_scripts_anchor_build"
+    ],
+    "839": [
+      "package_scripts_anchor_deploy_devnet"
+    ],
+    "840": [
+      "package_scripts_anchor_deploy_local"
+    ],
+    "841": [
+      "package_scripts_anchor_test"
+    ],
+    "842": [
+      "package_scripts_docker_down"
+    ],
+    "843": [
+      "package_scripts_docker_logs"
+    ],
+    "844": [
+      "package_scripts_docker_logs_api"
+    ],
+    "845": [
+      "package_scripts_docker_up"
+    ],
+    "846": [
+      "package_scripts_docker_up_all"
+    ],
+    "847": [
+      "package_scripts_mobile_android"
+    ],
+    "848": [
+      "package_scripts_mobile_dev"
+    ],
+    "849": [
+      "package_scripts_mobile_prebuild"
+    ],
+    "850": [
+      "package_scripts_mobile_web"
+    ],
+    "851": [
+      "package_scripts_postinstall"
+    ],
+    "852": [
+      "package_scripts_setup"
+    ],
+    "853": [
+      "package_workspaces"
+    ],
+    "854": [
+      "prettier"
+    ],
+    "855": [
+      "react"
+    ],
+    "856": [
+      "react_dom"
+    ],
+    "857": [
+      "react_native"
+    ],
+    "858": [
+      "react_native_async_storage_async_storage"
+    ],
+    "859": [
+      "react_native_clipboard_clipboard"
+    ],
+    "860": [
+      "react_native_community_datetimepicker"
+    ],
+    "861": [
+      "react_native_gesture_handler"
+    ],
+    "862": [
+      "react_native_reanimated"
+    ],
+    "863": [
+      "react_native_safe_area_context"
+    ],
+    "864": [
+      "react_native_screens"
+    ],
+    "865": [
+      "react_native_snackbar"
+    ],
+    "866": [
+      "react_native_svg"
+    ],
+    "867": [
+      "react_native_web"
+    ],
+    "868": [
+      "react_native_webview"
+    ],
+    "869": [
+      "react_native_worklets"
+    ],
+    "870": [
+      "react_navigation_bottom_tabs"
+    ],
+    "871": [
+      "react_navigation_native"
+    ],
+    "872": [
+      "react_qr_code"
+    ],
+    "873": [
+      "ref_expo_env_d_ts"
+    ],
+    "874": [
+      "ref_expo_types_ts"
+    ],
+    "875": [
+      "ref_mobile"
+    ],
+    "876": [
+      "ref_mobile_wallet_adapter"
+    ],
+    "877": [
+      "ref_nativewind_env_d_ts"
+    ],
+    "878": [
+      "ref_node_modules_expo_tsconfig_base"
+    ],
+    "879": [
+      "ref_ts"
+    ],
+    "880": [
+      "ref_tsx"
+    ],
+    "881": [
+      "result"
+    ],
+    "882": [
+      "rn_primitives_dropdown_menu"
+    ],
+    "883": [
+      "rn_primitives_portal"
+    ],
+    "884": [
+      "rnmapbox_maps"
+    ],
+    "885": [
+      "scripts_patch_css_interop_filepath"
+    ],
+    "886": [
+      "scripts_patch_css_interop_fs"
+    ],
+    "887": [
+      "scripts_patch_css_interop_packagejsonpath"
+    ],
+    "888": [
+      "scripts_patch_css_interop_packageroot"
+    ],
+    "889": [
+      "scripts_patch_css_interop_path"
+    ],
+    "890": [
+      "scripts_patch_css_interop_replacement"
+    ],
+    "891": [
+      "scripts_patch_css_interop_source"
+    ],
+    "892": [
+      "scripts_patch_css_interop_version"
+    ],
+    "893": [
+      "scripts_sync_idl_sh__entry"
+    ],
+    "894": [
+      "solana_mobile_mobile_wallet_adapter_protocol"
+    ],
+    "895": [
+      "solana_mobile_mobile_wallet_adapter_protocol_web3js"
+    ],
+    "896": [
+      "solana_spl_token"
+    ],
+    "897": [
+      "solana_web3_js"
+    ],
+    "898": [
+      "string"
+    ],
+    "899": [
+      "systemaccount"
+    ],
+    "900": [
+      "tailwindcss"
+    ],
+    "901": [
+      "tanstack_react_query"
+    ],
+    "902": [
+      "types_react"
+    ],
+    "903": [
+      "typescript"
+    ],
+    "904": [
+      "undelegateinput"
+    ],
+    "905": [
+      "uploadfile"
+    ],
+    "906": [
+      "wallet_standard_core"
+    ],
+    "907": [
+      "wallet_ui_react_native_web3js"
+    ],
+    "908": [
+      "zustand"
+    ]
+  },
+  "cohesion": {
+    "0": 1.0,
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 0.6666666666666666,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0,
+    "87": 1.0,
+    "88": 1.0,
+    "89": 1.0,
+    "90": 1.0,
+    "91": 1.0,
+    "92": 1.0,
+    "93": 1.0,
+    "94": 1.0,
+    "95": 1.0,
+    "96": 1.0,
+    "97": 1.0,
+    "98": 1.0,
+    "99": 1.0,
+    "100": 1.0,
+    "101": 1.0,
+    "102": 1.0,
+    "103": 1.0,
+    "104": 1.0,
+    "105": 1.0,
+    "106": 1.0,
+    "107": 1.0,
+    "108": 1.0,
+    "109": 1.0,
+    "110": 1.0,
+    "111": 1.0,
+    "112": 1.0,
+    "113": 1.0,
+    "114": 1.0,
+    "115": 1.0,
+    "116": 1.0,
+    "117": 1.0,
+    "118": 1.0,
+    "119": 1.0,
+    "120": 1.0,
+    "121": 1.0,
+    "122": 1.0,
+    "123": 1.0,
+    "124": 1.0,
+    "125": 1.0,
+    "126": 1.0,
+    "127": 1.0,
+    "128": 1.0,
+    "129": 1.0,
+    "130": 1.0,
+    "131": 1.0,
+    "132": 1.0,
+    "133": 1.0,
+    "134": 1.0,
+    "135": 1.0,
+    "136": 1.0,
+    "137": 1.0,
+    "138": 1.0,
+    "139": 1.0,
+    "140": 1.0,
+    "141": 1.0,
+    "142": 1.0,
+    "143": 1.0,
+    "144": 1.0,
+    "145": 1.0,
+    "146": 1.0,
+    "147": 1.0,
+    "148": 1.0,
+    "149": 1.0,
+    "150": 1.0,
+    "151": 1.0,
+    "152": 1.0,
+    "153": 1.0,
+    "154": 1.0,
+    "155": 1.0,
+    "156": 1.0,
+    "157": 1.0,
+    "158": 1.0,
+    "159": 1.0,
+    "160": 1.0,
+    "161": 1.0,
+    "162": 1.0,
+    "163": 1.0,
+    "164": 1.0,
+    "165": 1.0,
+    "166": 1.0,
+    "167": 1.0,
+    "168": 1.0,
+    "169": 1.0,
+    "170": 1.0,
+    "171": 1.0,
+    "172": 1.0,
+    "173": 1.0,
+    "174": 1.0,
+    "175": 1.0,
+    "176": 1.0,
+    "177": 1.0,
+    "178": 1.0,
+    "179": 1.0,
+    "180": 1.0,
+    "181": 1.0,
+    "182": 1.0,
+    "183": 1.0,
+    "184": 1.0,
+    "185": 1.0,
+    "186": 1.0,
+    "187": 1.0,
+    "188": 1.0,
+    "189": 1.0,
+    "190": 1.0,
+    "191": 1.0,
+    "192": 1.0,
+    "193": 1.0,
+    "194": 1.0,
+    "195": 1.0,
+    "196": 1.0,
+    "197": 1.0,
+    "198": 1.0,
+    "199": 1.0,
+    "200": 1.0,
+    "201": 1.0,
+    "202": 1.0,
+    "203": 1.0,
+    "204": 1.0,
+    "205": 1.0,
+    "206": 1.0,
+    "207": 1.0,
+    "208": 1.0,
+    "209": 1.0,
+    "210": 1.0,
+    "211": 1.0,
+    "212": 1.0,
+    "213": 1.0,
+    "214": 1.0,
+    "215": 1.0,
+    "216": 1.0,
+    "217": 1.0,
+    "218": 1.0,
+    "219": 1.0,
+    "220": 1.0,
+    "221": 1.0,
+    "222": 1.0,
+    "223": 1.0,
+    "224": 1.0,
+    "225": 1.0,
+    "226": 1.0,
+    "227": 1.0,
+    "228": 1.0,
+    "229": 1.0,
+    "230": 1.0,
+    "231": 1.0,
+    "232": 1.0,
+    "233": 1.0,
+    "234": 1.0,
+    "235": 1.0,
+    "236": 1.0,
+    "237": 1.0,
+    "238": 1.0,
+    "239": 1.0,
+    "240": 1.0,
+    "241": 1.0,
+    "242": 1.0,
+    "243": 1.0,
+    "244": 1.0,
+    "245": 1.0,
+    "246": 1.0,
+    "247": 1.0,
+    "248": 1.0,
+    "249": 1.0,
+    "250": 1.0,
+    "251": 1.0,
+    "252": 1.0,
+    "253": 1.0,
+    "254": 1.0,
+    "255": 1.0,
+    "256": 1.0,
+    "257": 1.0,
+    "258": 1.0,
+    "259": 1.0,
+    "260": 1.0,
+    "261": 1.0,
+    "262": 1.0,
+    "263": 1.0,
+    "264": 1.0,
+    "265": 1.0,
+    "266": 1.0,
+    "267": 1.0,
+    "268": 1.0,
+    "269": 1.0,
+    "270": 1.0,
+    "271": 1.0,
+    "272": 1.0,
+    "273": 1.0,
+    "274": 1.0,
+    "275": 1.0,
+    "276": 1.0,
+    "277": 1.0,
+    "278": 1.0,
+    "279": 1.0,
+    "280": 1.0,
+    "281": 1.0,
+    "282": 1.0,
+    "283": 1.0,
+    "284": 1.0,
+    "285": 1.0,
+    "286": 1.0,
+    "287": 1.0,
+    "288": 1.0,
+    "289": 1.0,
+    "290": 1.0,
+    "291": 1.0,
+    "292": 1.0,
+    "293": 1.0,
+    "294": 1.0,
+    "295": 1.0,
+    "296": 1.0,
+    "297": 1.0,
+    "298": 1.0,
+    "299": 1.0,
+    "300": 1.0,
+    "301": 1.0,
+    "302": 1.0,
+    "303": 1.0,
+    "304": 1.0,
+    "305": 1.0,
+    "306": 1.0,
+    "307": 1.0,
+    "308": 1.0,
+    "309": 1.0,
+    "310": 1.0,
+    "311": 1.0,
+    "312": 1.0,
+    "313": 1.0,
+    "314": 1.0,
+    "315": 1.0,
+    "316": 1.0,
+    "317": 1.0,
+    "318": 1.0,
+    "319": 1.0,
+    "320": 1.0,
+    "321": 1.0,
+    "322": 1.0,
+    "323": 1.0,
+    "324": 1.0,
+    "325": 1.0,
+    "326": 1.0,
+    "327": 1.0,
+    "328": 1.0,
+    "329": 1.0,
+    "330": 1.0,
+    "331": 1.0,
+    "332": 1.0,
+    "333": 1.0,
+    "334": 1.0,
+    "335": 1.0,
+    "336": 1.0,
+    "337": 1.0,
+    "338": 1.0,
+    "339": 1.0,
+    "340": 1.0,
+    "341": 1.0,
+    "342": 1.0,
+    "343": 1.0,
+    "344": 1.0,
+    "345": 1.0,
+    "346": 1.0,
+    "347": 1.0,
+    "348": 1.0,
+    "349": 1.0,
+    "350": 1.0,
+    "351": 1.0,
+    "352": 1.0,
+    "353": 1.0,
+    "354": 1.0,
+    "355": 1.0,
+    "356": 1.0,
+    "357": 1.0,
+    "358": 1.0,
+    "359": 1.0,
+    "360": 1.0,
+    "361": 1.0,
+    "362": 1.0,
+    "363": 1.0,
+    "364": 1.0,
+    "365": 1.0,
+    "366": 1.0,
+    "367": 1.0,
+    "368": 1.0,
+    "369": 1.0,
+    "370": 1.0,
+    "371": 1.0,
+    "372": 1.0,
+    "373": 1.0,
+    "374": 1.0,
+    "375": 1.0,
+    "376": 1.0,
+    "377": 1.0,
+    "378": 1.0,
+    "379": 1.0,
+    "380": 1.0,
+    "381": 1.0,
+    "382": 1.0,
+    "383": 1.0,
+    "384": 1.0,
+    "385": 1.0,
+    "386": 1.0,
+    "387": 1.0,
+    "388": 1.0,
+    "389": 1.0,
+    "390": 1.0,
+    "391": 1.0,
+    "392": 1.0,
+    "393": 1.0,
+    "394": 1.0,
+    "395": 1.0,
+    "396": 1.0,
+    "397": 1.0,
+    "398": 1.0,
+    "399": 1.0,
+    "400": 1.0,
+    "401": 1.0,
+    "402": 1.0,
+    "403": 1.0,
+    "404": 1.0,
+    "405": 1.0,
+    "406": 1.0,
+    "407": 1.0,
+    "408": 1.0,
+    "409": 1.0,
+    "410": 1.0,
+    "411": 1.0,
+    "412": 1.0,
+    "413": 1.0,
+    "414": 1.0,
+    "415": 1.0,
+    "416": 1.0,
+    "417": 1.0,
+    "418": 1.0,
+    "419": 1.0,
+    "420": 1.0,
+    "421": 1.0,
+    "422": 1.0,
+    "423": 1.0,
+    "424": 1.0,
+    "425": 1.0,
+    "426": 1.0,
+    "427": 1.0,
+    "428": 1.0,
+    "429": 1.0,
+    "430": 1.0,
+    "431": 1.0,
+    "432": 1.0,
+    "433": 1.0,
+    "434": 1.0,
+    "435": 1.0,
+    "436": 1.0,
+    "437": 1.0,
+    "438": 1.0,
+    "439": 1.0,
+    "440": 1.0,
+    "441": 1.0,
+    "442": 1.0,
+    "443": 1.0,
+    "444": 1.0,
+    "445": 1.0,
+    "446": 1.0,
+    "447": 1.0,
+    "448": 1.0,
+    "449": 1.0,
+    "450": 1.0,
+    "451": 1.0,
+    "452": 1.0,
+    "453": 1.0,
+    "454": 1.0,
+    "455": 1.0,
+    "456": 1.0,
+    "457": 1.0,
+    "458": 1.0,
+    "459": 1.0,
+    "460": 1.0,
+    "461": 1.0,
+    "462": 1.0,
+    "463": 1.0,
+    "464": 1.0,
+    "465": 1.0,
+    "466": 1.0,
+    "467": 1.0,
+    "468": 1.0,
+    "469": 1.0,
+    "470": 1.0,
+    "471": 1.0,
+    "472": 1.0,
+    "473": 1.0,
+    "474": 1.0,
+    "475": 1.0,
+    "476": 1.0,
+    "477": 1.0,
+    "478": 1.0,
+    "479": 1.0,
+    "480": 1.0,
+    "481": 1.0,
+    "482": 1.0,
+    "483": 1.0,
+    "484": 1.0,
+    "485": 1.0,
+    "486": 1.0,
+    "487": 1.0,
+    "488": 1.0,
+    "489": 1.0,
+    "490": 1.0,
+    "491": 1.0,
+    "492": 1.0,
+    "493": 1.0,
+    "494": 1.0,
+    "495": 1.0,
+    "496": 1.0,
+    "497": 1.0,
+    "498": 1.0,
+    "499": 1.0,
+    "500": 1.0,
+    "501": 1.0,
+    "502": 1.0,
+    "503": 1.0,
+    "504": 1.0,
+    "505": 1.0,
+    "506": 1.0,
+    "507": 1.0,
+    "508": 1.0,
+    "509": 1.0,
+    "510": 1.0,
+    "511": 1.0,
+    "512": 1.0,
+    "513": 1.0,
+    "514": 1.0,
+    "515": 1.0,
+    "516": 1.0,
+    "517": 1.0,
+    "518": 1.0,
+    "519": 1.0,
+    "520": 1.0,
+    "521": 1.0,
+    "522": 1.0,
+    "523": 1.0,
+    "524": 1.0,
+    "525": 1.0,
+    "526": 1.0,
+    "527": 1.0,
+    "528": 1.0,
+    "529": 1.0,
+    "530": 1.0,
+    "531": 1.0,
+    "532": 1.0,
+    "533": 1.0,
+    "534": 1.0,
+    "535": 1.0,
+    "536": 1.0,
+    "537": 1.0,
+    "538": 1.0,
+    "539": 1.0,
+    "540": 1.0,
+    "541": 1.0,
+    "542": 1.0,
+    "543": 1.0,
+    "544": 1.0,
+    "545": 1.0,
+    "546": 1.0,
+    "547": 1.0,
+    "548": 1.0,
+    "549": 1.0,
+    "550": 1.0,
+    "551": 1.0,
+    "552": 1.0,
+    "553": 1.0,
+    "554": 1.0,
+    "555": 1.0,
+    "556": 1.0,
+    "557": 1.0,
+    "558": 1.0,
+    "559": 1.0,
+    "560": 1.0,
+    "561": 1.0,
+    "562": 1.0,
+    "563": 1.0,
+    "564": 1.0,
+    "565": 1.0,
+    "566": 1.0,
+    "567": 1.0,
+    "568": 1.0,
+    "569": 1.0,
+    "570": 1.0,
+    "571": 1.0,
+    "572": 1.0,
+    "573": 1.0,
+    "574": 1.0,
+    "575": 1.0,
+    "576": 1.0,
+    "577": 1.0,
+    "578": 1.0,
+    "579": 1.0,
+    "580": 1.0,
+    "581": 1.0,
+    "582": 1.0,
+    "583": 1.0,
+    "584": 1.0,
+    "585": 1.0,
+    "586": 1.0,
+    "587": 1.0,
+    "588": 1.0,
+    "589": 1.0,
+    "590": 1.0,
+    "591": 1.0,
+    "592": 1.0,
+    "593": 1.0,
+    "594": 1.0,
+    "595": 1.0,
+    "596": 1.0,
+    "597": 1.0,
+    "598": 1.0,
+    "599": 1.0,
+    "600": 1.0,
+    "601": 1.0,
+    "602": 1.0,
+    "603": 1.0,
+    "604": 1.0,
+    "605": 1.0,
+    "606": 1.0,
+    "607": 1.0,
+    "608": 1.0,
+    "609": 1.0,
+    "610": 1.0,
+    "611": 1.0,
+    "612": 1.0,
+    "613": 1.0,
+    "614": 1.0,
+    "615": 1.0,
+    "616": 1.0,
+    "617": 1.0,
+    "618": 1.0,
+    "619": 1.0,
+    "620": 1.0,
+    "621": 1.0,
+    "622": 1.0,
+    "623": 1.0,
+    "624": 1.0,
+    "625": 1.0,
+    "626": 1.0,
+    "627": 1.0,
+    "628": 1.0,
+    "629": 1.0,
+    "630": 1.0,
+    "631": 1.0,
+    "632": 1.0,
+    "633": 1.0,
+    "634": 1.0,
+    "635": 1.0,
+    "636": 1.0,
+    "637": 1.0,
+    "638": 1.0,
+    "639": 1.0,
+    "640": 1.0,
+    "641": 1.0,
+    "642": 1.0,
+    "643": 1.0,
+    "644": 1.0,
+    "645": 1.0,
+    "646": 1.0,
+    "647": 1.0,
+    "648": 1.0,
+    "649": 1.0,
+    "650": 1.0,
+    "651": 1.0,
+    "652": 1.0,
+    "653": 1.0,
+    "654": 1.0,
+    "655": 1.0,
+    "656": 1.0,
+    "657": 1.0,
+    "658": 1.0,
+    "659": 1.0,
+    "660": 1.0,
+    "661": 1.0,
+    "662": 1.0,
+    "663": 1.0,
+    "664": 1.0,
+    "665": 1.0,
+    "666": 1.0,
+    "667": 1.0,
+    "668": 1.0,
+    "669": 1.0,
+    "670": 1.0,
+    "671": 1.0,
+    "672": 1.0,
+    "673": 1.0,
+    "674": 1.0,
+    "675": 1.0,
+    "676": 1.0,
+    "677": 1.0,
+    "678": 1.0,
+    "679": 1.0,
+    "680": 1.0,
+    "681": 1.0,
+    "682": 1.0,
+    "683": 1.0,
+    "684": 1.0,
+    "685": 1.0,
+    "686": 1.0,
+    "687": 1.0,
+    "688": 1.0,
+    "689": 1.0,
+    "690": 1.0,
+    "691": 1.0,
+    "692": 1.0,
+    "693": 1.0,
+    "694": 1.0,
+    "695": 1.0,
+    "696": 1.0,
+    "697": 1.0,
+    "698": 1.0,
+    "699": 1.0,
+    "700": 1.0,
+    "701": 1.0,
+    "702": 1.0,
+    "703": 1.0,
+    "704": 1.0,
+    "705": 1.0,
+    "706": 1.0,
+    "707": 1.0,
+    "708": 1.0,
+    "709": 1.0,
+    "710": 1.0,
+    "711": 1.0,
+    "712": 1.0,
+    "713": 1.0,
+    "714": 1.0,
+    "715": 1.0,
+    "716": 1.0,
+    "717": 1.0,
+    "718": 1.0,
+    "719": 1.0,
+    "720": 1.0,
+    "721": 1.0,
+    "722": 1.0,
+    "723": 1.0,
+    "724": 1.0,
+    "725": 1.0,
+    "726": 1.0,
+    "727": 1.0,
+    "728": 1.0,
+    "729": 1.0,
+    "730": 1.0,
+    "731": 1.0,
+    "732": 1.0,
+    "733": 1.0,
+    "734": 1.0,
+    "735": 1.0,
+    "736": 1.0,
+    "737": 1.0,
+    "738": 1.0,
+    "739": 1.0,
+    "740": 1.0,
+    "741": 1.0,
+    "742": 1.0,
+    "743": 1.0,
+    "744": 1.0,
+    "745": 1.0,
+    "746": 1.0,
+    "747": 1.0,
+    "748": 1.0,
+    "749": 1.0,
+    "750": 1.0,
+    "751": 1.0,
+    "752": 1.0,
+    "753": 1.0,
+    "754": 1.0,
+    "755": 1.0,
+    "756": 1.0,
+    "757": 1.0,
+    "758": 1.0,
+    "759": 1.0,
+    "760": 1.0,
+    "761": 1.0,
+    "762": 1.0,
+    "763": 1.0,
+    "764": 1.0,
+    "765": 1.0,
+    "766": 1.0,
+    "767": 1.0,
+    "768": 1.0,
+    "769": 1.0,
+    "770": 1.0,
+    "771": 1.0,
+    "772": 1.0,
+    "773": 1.0,
+    "774": 1.0,
+    "775": 1.0,
+    "776": 1.0,
+    "777": 1.0,
+    "778": 1.0,
+    "779": 1.0,
+    "780": 1.0,
+    "781": 1.0,
+    "782": 1.0,
+    "783": 1.0,
+    "784": 1.0,
+    "785": 1.0,
+    "786": 1.0,
+    "787": 1.0,
+    "788": 1.0,
+    "789": 1.0,
+    "790": 1.0,
+    "791": 1.0,
+    "792": 1.0,
+    "793": 1.0,
+    "794": 1.0,
+    "795": 1.0,
+    "796": 1.0,
+    "797": 1.0,
+    "798": 1.0,
+    "799": 1.0,
+    "800": 1.0,
+    "801": 1.0,
+    "802": 1.0,
+    "803": 1.0,
+    "804": 1.0,
+    "805": 1.0,
+    "806": 1.0,
+    "807": 1.0,
+    "808": 1.0,
+    "809": 1.0,
+    "810": 1.0,
+    "811": 1.0,
+    "812": 1.0,
+    "813": 1.0,
+    "814": 1.0,
+    "815": 1.0,
+    "816": 1.0,
+    "817": 1.0,
+    "818": 1.0,
+    "819": 1.0,
+    "820": 1.0,
+    "821": 1.0,
+    "822": 1.0,
+    "823": 1.0,
+    "824": 1.0,
+    "825": 1.0,
+    "826": 1.0,
+    "827": 1.0,
+    "828": 1.0,
+    "829": 1.0,
+    "830": 1.0,
+    "831": 1.0,
+    "832": 1.0,
+    "833": 1.0,
+    "834": 1.0,
+    "835": 1.0,
+    "836": 1.0,
+    "837": 1.0,
+    "838": 1.0,
+    "839": 1.0,
+    "840": 1.0,
+    "841": 1.0,
+    "842": 1.0,
+    "843": 1.0,
+    "844": 1.0,
+    "845": 1.0,
+    "846": 1.0,
+    "847": 1.0,
+    "848": 1.0,
+    "849": 1.0,
+    "850": 1.0,
+    "851": 1.0,
+    "852": 1.0,
+    "853": 1.0,
+    "854": 1.0,
+    "855": 1.0,
+    "856": 1.0,
+    "857": 1.0,
+    "858": 1.0,
+    "859": 1.0,
+    "860": 1.0,
+    "861": 1.0,
+    "862": 1.0,
+    "863": 1.0,
+    "864": 1.0,
+    "865": 1.0,
+    "866": 1.0,
+    "867": 1.0,
+    "868": 1.0,
+    "869": 1.0,
+    "870": 1.0,
+    "871": 1.0,
+    "872": 1.0,
+    "873": 1.0,
+    "874": 1.0,
+    "875": 1.0,
+    "876": 1.0,
+    "877": 1.0,
+    "878": 1.0,
+    "879": 1.0,
+    "880": 1.0,
+    "881": 1.0,
+    "882": 1.0,
+    "883": 1.0,
+    "884": 1.0,
+    "885": 1.0,
+    "886": 1.0,
+    "887": 1.0,
+    "888": 1.0,
+    "889": 1.0,
+    "890": 1.0,
+    "891": 1.0,
+    "892": 1.0,
+    "893": 1.0,
+    "894": 1.0,
+    "895": 1.0,
+    "896": 1.0,
+    "897": 1.0,
+    "898": 1.0,
+    "899": 1.0,
+    "900": 1.0,
+    "901": 1.0,
+    "902": 1.0,
+    "903": 1.0,
+    "904": 1.0,
+    "905": 1.0,
+    "906": 1.0,
+    "907": 1.0,
+    "908": 1.0
+  },
+  "gods": [
+    {
+      "id": "anchor_programs_huellazo_src_lib_undelegate",
+      "label": "undelegate()",
+      "degree": 2
+    },
+    {
+      "id": "mobile_components_huellazo_contributionlist_contributionlistprops",
+      "label": "ContributionListProps",
+      "degree": 0
+    },
+    {
+      "id": "mobile_store_app_store_contribution",
+      "label": "Contribution",
+      "degree": 0
+    },
+    {
+      "id": "mobile_constants_colors_appcolortheme",
+      "label": "AppColorTheme",
+      "degree": 0
+    },
+    {
+      "id": "mobile_constants_colors_colormode",
+      "label": "ColorMode",
+      "degree": 0
+    },
+    {
+      "id": "mobile_constants_colors_themetokens",
+      "label": "ThemeTokens",
+      "degree": 0
+    },
+    {
+      "id": "mobile_store_app_store_activitytype",
+      "label": "ActivityType",
+      "degree": 0
+    },
+    {
+      "id": "mobile_components_huellazo_potinfocard_potinfocardprops",
+      "label": "PotInfoCardProps",
+      "degree": 0
+    },
+    {
+      "id": "mobile_components_huellazo_create_categoryselector_categoryselectorprops",
+      "label": "CategorySelectorProps",
+      "degree": 0
+    },
+    {
+      "id": "mobile_store_app_store_potcategory",
+      "label": "PotCategory",
+      "degree": 0
+    }
+  ],
+  "surprises": [],
+  "questions": [
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `ContributionListProps`, `Contribution`, `AppColorTheme` to the rest of the system?",
+      "why": "432 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}

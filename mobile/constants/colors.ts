@@ -20,6 +20,11 @@ type ThemeTokens = {
   success: string
   warning: string
   danger: string
+  borderMuted: string
+  surfaceMuted: string
+  accentGreen: string
+  accentPurple: string
+  gradientMint: string[]
 }
 
 const baseTheme: ThemeTokens = {
@@ -45,8 +50,12 @@ const baseTheme: ThemeTokens = {
   warning: '#F2CC8F',
   danger: '#E07A5F',
 
-  // Legacy compatibility for cause-pots components (Account, Welcome, SignIn)
+  // Legacy compatibility for huellazo components (Account, Welcome, SignIn)
   gradientMint: ['#E07A5F', '#F2CC8F'], // Replaced with Terracotta to Mustard Brutalist gradient
+  borderMuted: '#3D405B', // Fallback to border
+  surfaceMuted: '#FAF9F6', // Fallback to background
+  accentGreen: '#81B29A', // Fallback to success
+  accentPurple: '#F2CC8F', // Fallback to accent/warning
 }
 
 // In brutalism we usually avoid a traditional "dark mode" to

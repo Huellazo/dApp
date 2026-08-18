@@ -12,7 +12,7 @@ export function BaseButton({ label, onPress }: { label: string; onPress?: () => 
       style={[BrutalistStyles.buttonSecondary, { flexDirection: 'row', alignItems: 'center', gap: 8 }]}
       onPress={onPress}
     >
-      <UiIconSymbol name="wallet.pass.fill" color={BrutalistStyles.buttonTextDark.color} />
+      <UiIconSymbol name="wallet.pass.fill" color={BrutalistStyles.buttonTextDark.color as string} />
       <AppText style={BrutalistStyles.buttonTextDark}>{label}</AppText>
     </TouchableOpacity>
   )

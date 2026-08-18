@@ -36,9 +36,9 @@ export function OverviewSection({
 
       <View style={styles.twoColumn}>
         <View style={styles.flex1}>
-          <AppText style={[styles.overviewFieldLabel, { color: palette.label }]}>Pot name *</AppText>
+          <AppText style={[styles.overviewFieldLabel, { color: palette.label }]}>Nombre del huellazo *</AppText>
           <TextInput
-            placeholder="Family trip"
+            placeholder="Visita al museo"
             placeholderTextColor={palette.label}
             value={name}
             onChangeText={onNameChange}
@@ -63,9 +63,9 @@ export function OverviewSection({
         </View>
       </View>
 
-      <AppText style={[styles.overviewFieldLabel, { color: palette.label }]}>Description</AppText>
+      <AppText style={[styles.overviewFieldLabel, { color: palette.label }]}>Descripción de la misión</AppText>
       <TextInput
-        placeholder="Why you're saving together"
+        placeholder="Razón por la que exploras"
         placeholderTextColor={palette.label}
         multiline
         value={description}

@@ -1,5 +1,5 @@
 export * from './types'
 export * from './users'
-export * from './pots'
+export * from './huellazo'
 export * from './friends'
 export * from './activities'

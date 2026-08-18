@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     # -- Solana --
     solana_rpc_url: str = "http://localhost:8899"
-    huellazo_program_id: str = "CB2sVYQ48i3rTdM51zKxipweoFpxEEmJVC1NgxLeT5Xj"
+    huellazo_program_id: str = "4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk"
     vault_program_id: str = "HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU"
 
     # -- CORS --

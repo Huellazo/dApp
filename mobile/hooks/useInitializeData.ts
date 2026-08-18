@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PublicKey } from '@solana/web3.js'
-import { getAllPots } from '@/api/pots'
+import { getAllPots } from '@/api/huellazo'
 import { getFriends } from '@/api/friends'
 import { getActivitiesForUser } from '@/api/activities'
 import { useAppStore } from '@/store/app-store'

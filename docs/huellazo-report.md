@@ -1,3 +1,7 @@
+> [!WARNING]
+> **STALE DOCUMENT**
+> This document describes an older layout/architecture and is kept for historical purposes. Please véase [estado-proyecto-2026-08-17.md](file:///home/m4r10/Documents/projects/dApp/docs/estado-proyecto-2026-08-17.md) for the current status.
+
 # CodeFlow Analysis Report
 
 **Repository:** p3p3p3k4z/huellazo-solana

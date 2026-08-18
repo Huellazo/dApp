@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Colors } from '@/constants/colors'
 import { useAppTheme } from '@/hooks/use-app-theme'
 import * as Clipboard from 'expo-clipboard'
 import { useToast } from '@/components/toast/toast-provider'
@@ -116,7 +117,7 @@ export default function ActivityDetailScreen() {
   if (!activity) {
     return (
       <SafeAreaView
-        style={[styles.container, { backgroundColor: palette.background }]}
+        style={[styles.container, { backgroundColor: Colors[isDark ? 'dark' : 'light'].background }]}
         edges={['top']}
       >
         <View style={[styles.header, { borderBottomColor: palette.border }]}>
@@ -135,7 +136,7 @@ export default function ActivityDetailScreen() {
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: palette.background }]}
+      style={[styles.container, { backgroundColor: Colors[isDark ? 'dark' : 'light'].background }]}
       edges={['top']}
     >
       <View style={[styles.header, { borderBottomColor: palette.border }]}>

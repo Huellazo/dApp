@@ -6,11 +6,11 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-huellazo = "CB2sVYQ48i3rTdM51zKxipweoFpxEEmJVC1NgxLeT5Xj"
+huellazo = "4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk"
 vault = "HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU"
 
 [programs.devnet]
-huellazo = "CB2sVYQ48i3rTdM51zKxipweoFpxEEmJVC1NgxLeT5Xj"
+huellazo = "4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk"
 vault = "HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU"
 
 [registry]

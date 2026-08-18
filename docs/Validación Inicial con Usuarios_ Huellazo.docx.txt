@@ -1,0 +1,121 @@
+﻿Validación Inicial con Usuarios: Huellazo
+1. A quiénes entrevistamos
+Se realizaron pruebas de usabilidad y entrevistas a 6 usuarios potenciales (turistas jóvenes, estudiantes y exploradores urbanos). Se les mostró el prototipo funcional de la aplicación en dispositivo móvil y se les asignaron tareas específicas de descubrimiento y canje de recompensas sin darles contexto previo sobre la tecnología Web3.
+2. Qué aprendimos (Síntesis del Feedback de 6 Usuarios)
+Usuario 1. Estudiante, 21 años
+Observación: El usuario se sintió inmediatamente abrumado por la saturación de colores y cuadros. Indicó: Imágenes muy grandes, textos pequeños, no se ven.
+Padeció la falta de pistas visuales de qué es interactivo. Al no distinguir qué era un botón y qué un adorno, comenzó a picar aleatoriamente la pantalla sin que nada sucediera, causando una rápida frustración.
+No comprendió el objetivo general, la sección Impacto local la interpretó como cafeterías genéricas. Al entrar a su perfil, no entendió que la barra de pasaporte era su identidad turística, viéndola solo como una barra de XP de videojuego y al buscar la piñata, abandonó la tarea tras 5 minutos por estrés visual.
+Al salir el mensaje: El mint del NFT, no supo que se hacía, ni dónde picar para salir ni para que servía.
+Usuario 2 . 26 años
+Observación: Criticó duramente la paleta de colores donde mencionó: "Los colores fosforescentes cansan la vista, te saturan, se pierden las letras", pensó inicialmente que era una app tipo Pinterest para coleccionar imágenes.
+El menú inferior de iconos funcionó mejor para él, pero en la pantalla principal seguía sin entender cómo interactuar con los cuadros y respecto al Radar, le pareció bonito pero agregó que le gustaria un mapa satelital para ubicarse mejor ademas solo logró interactuar con los puntos de interés (POI) en el radar tras recibir indicaciones del moderador.
+Comprendió que servía para ver negocios cercanos, pero falló en ver el incentivo. No le encontró utilidad a coleccionar imágenes si no entendía qué era la "meta NFT".
+
+
+
+
+
+
+Usuario 3 .24 años
+Observación: Reaccionó de forma muy positiva al ranking de Top Exploradores y dijo que la idea de competir por descubrir la ciudad lo motivaría a caminar más.
+Al llegar a la pantalla de perfil, el texto enorme Conecte la billetera le causó desconfianza. Mencionó: "Si yo quiero ver solo lugares me cobrarán por eso?".
+Usuario 4 22 años
+Observación: Ubicó rápidamente el banner de "50% de Descuento en Café Don Porfirio", lo cual demuestra que el color de acento funciona para captar atención.
+Aunque encontró el cupón, no supo cuál era el siguiente paso. si se tenia que mostar al mesero o que hacer.
+Usuario 5 22 años.
+Observación: Pasó casi un minuto viendo el pop-up de HUELLA ENCONTRADA. El término LA MENTA NFT le causó tanta confusión, no entendio por si solo a que se podria referir.
+No supo que en la pantalla de Mi Billetera podía hacer scroll para ver más acciones, lo que indica que el diseño de las tarjetas no sugiere continuidad vertical.
+Usuario 6 25 años
+Observación: Elogió ampliamente las ilustraciones (como las calaveras), considerándose lindas, además dijo que le entusiastaria conseguir imagenes coleccionables de cada lugar que visiste .
+Señaló que los banners gráficos son tan anchos y dominantes que ocultan los datos cruciales como nombre del lugar, distancia, calificación, obligando al usuario a deslizar constantemente para leer fragmentos de texto muy pequeños empujados a los márgenes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3. Qué problema confirmamos o descartamos
+La hipótesis sobre la gamificación es correcta. A los usuarios les entusiasma el ranking competitivo, la progresión por niveles (XP) y la obtención de descuentos reales. El concepto base tiene tracción.
+Asumimos que ocultar la complejidad del código sería suficiente para hacer la app amigable, pero estábamos equivocados. Identificamos dos fricciones principales:
+* Fricción visual: El estilo brutalista mexicano, aunque estéticamente atractivo y llamativo para los usuarios, está rompiendo las reglas de usabilidad. La saturación de colores y el uso indiscriminado de sombras hacen que todo parezca un botón, confundiendo al usuario sobre dónde puede interactuar.
+* Fricción de lenguaje: El uso de jerga Web3 traducida de forma literal genera desconfianza y ahuyenta al turista tradicional, rompiendo la inmersión de la experiencia.
+4. Qué cambios haremos al producto con base en este feedback
+Para garantizar que el MVP sea utilizable por turistas reales, haremos los siguientes pivotes urgentes: Haremos un rediseño y bajaremos la saturación visual. Haremos que solo los elementos interactivos tengan sombreado grueso o colores llamativos (como el botón fucsia), y los contenedores de información tendrán fondos más neutros para que no parezcan botones. Aumentaremos el tamaño de las fuentes descriptivas. Tendremos que implementar nuevos diseños a las interfaz, para que se entienda como una experiencia de turismo y no como algo no entendible. Como también renombrar el NFT como un producto: sticker, estampa, medalla, comúnmente vista como tazos
+Eliminación de Jerga Cripto a Producto o Analogias
+Cambiaremos el botón LA MENTA NFT
+Cambiaremos Conecte la billetera(Regístrate)
+Ventajas de blockhain (seguro, rapido) (apartado de tokenasnwares o faq)
+                Intercambio de ntfs
+convertir ntfs a huellazos
+                
+
+
+
+
+Mejora del Radar: Añadiremos una capa base de mapa real (calles o vectores minimalistas) debajo del radar para que el usuario pueda orientarse geográficamente.
+
+
+
+
+5. Evidencia Simple
+
+
+  
+  
+
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Agregamos evidencias sobre los resultados a nuestros encuestados 
+
+
+ Gráfico de las respuestas de Formularios. Título de la pregunta: Viendo esta pantalla, para que crees que sirve principalmente esta aplicacion?. Número de respuestas: 9 respuestas. 
+
+ Gráfico de las respuestas de Formularios. Título de la pregunta: Imagina que quieres aprovechar la promocion del 50% DE DESCUENTO. Segun lo que ves en la pantalla, que harias a continuacion?. Número de respuestas: 10 respuestas. 
+
+ Gráfico de las respuestas de Formularios. Título de la pregunta: Llegas a un lugar y te aparece esta ventana que dice HUELLA ENCONTRADA. Que crees que significa el boton rojo que dice LA MENTA NFT?. Número de respuestas: 10 respuestas. 
+
+ Gráfico de las respuestas de Formularios. Título de la pregunta: En esta pantalla, si quisieras ver que otras acciones has hecho en el pasado, que harias?. Número de respuestas: 10 respuestas. 
+
+ Gráfico de las respuestas de Formularios. Título de la pregunta: Al ver todas estas pantallas, que opinas sobre los colores y el estilo visual de la aplicacion?. Número de respuestas: 10 respuestas. 
+
+ Gráfico de las respuestas de Formularios. Título de la pregunta: En una escala del 1 al 5, ¿qué tan intuitivo te resultó navegar por los flujos presentados en estas pantallas?. Número de respuestas: 10 respuestas. 
+
+ Gráfico de las respuestas de Formularios. Título de la pregunta: ¿Cuál es la probabilidad de que instales esta aplicación en tu teléfono personal una vez que esté disponible?. Número de respuestas: 10 respuestas.

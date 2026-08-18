@@ -141,7 +141,7 @@ export function AccountFeature() {
           </View>
           <View style={[styles.heroCard, { backgroundColor: colors.gradientMint[0] }]}>
             <LinearGradient
-              colors={colors.gradientMint}
+              colors={colors.gradientMint as unknown as readonly [string, string, ...string[]]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.heroGradient}

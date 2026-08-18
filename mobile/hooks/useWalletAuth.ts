@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { authenticateUser } from '@/api/users'
 import type { User } from '@/api/types'
 
-const USER_STORAGE_KEY = '@cause_pots:user'
-const USER_ID_STORAGE_KEY = '@cause_pots:user_id'
+const USER_STORAGE_KEY = '@huellazo:user'
+const USER_ID_STORAGE_KEY = '@huellazo:user_id'
 
 /**
  * Hook to handle wallet-based user authentication

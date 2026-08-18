@@ -189,7 +189,7 @@ export default function ScanScreen() {
                <>
                  <View className={`${mintedToken ? 'bg-accent2' : 'bg-primary'} p-4 border-b-4 border-border flex-row justify-between items-center`}>
                     <Text className="text-border font-black text-xl uppercase">
-                      {mintedToken ? 'Token Earned!' : 'Footprint Found!'}
+                      {mintedToken ? 'Visita Simulada!' : '¡Lugar Encontrado!'}
                     </Text>
                     <FontAwesome5 name={mintedToken ? 'certificate' : 'qrcode'} size={24} color={colors.border} />
                  </View>
@@ -207,11 +207,11 @@ export default function ScanScreen() {
                           You received this token:
                         </Text>
                         <Text className="text-border text-base mb-4 font-bold">
-                          {mintedToken.name} for validating your visit at {mintedToken.location}. It is saved in your passport as a Huellazo NFT on Simulated Solana Devnet.
+                          {mintedToken.name} para validar tu visita a {mintedToken.location}. Esta es una simulación visual y se guardará en tu historial localmente.
                         </Text>
 
                         <View className="bg-secondary p-3 border-4 border-border shadow-brutal-sm mb-3">
-                          <Text className="text-border font-black uppercase text-xs mb-1">Mint address</Text>
+                          <Text className="text-border font-black uppercase text-xs mb-1">Firma simulada</Text>
                           <Text className="text-border font-bold text-sm">{shortHash(mintedToken.mintAddress)}</Text>
                         </View>
 
@@ -230,7 +230,7 @@ export default function ScanScreen() {
                       <>
                         <Text className="text-border text-base mb-6 font-bold">
                           {selectedPoi 
-                            ? `You arrived at ${selectedPoi.name}. Simulating the scan will mint a visit token related to this project milestone.`
+                            ? `Has llegado a ${selectedPoi.name}. Simular el escaneo agregará una visita a tu historial.`
                             : 'Point the camera at the physical QR of the monument or allied business to validate your visit.'}
                         </Text>
                         
@@ -242,7 +242,7 @@ export default function ScanScreen() {
                     )}
                     
                     <BrutalistButton 
-                      title={mintedToken ? 'VIEW IN PROFILE' : 'MINT NFT'} 
+                      title={mintedToken ? 'VER EN PERFIL' : 'SIMULAR ESCANEO'} 
                       colorClass="bg-accent1" 
                       onPress={mintedToken ? handleGoToPassport : handleSimulateMint} 
                     />

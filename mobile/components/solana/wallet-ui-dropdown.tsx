@@ -8,7 +8,7 @@ import { AppConfig } from '@/constants/app-config'
 import { AppText } from '@/components/app-text'
 import * as Dropdown from '@rn-primitives/dropdown-menu'
 import { WalletUiButtonConnect } from './wallet-ui-button-connect'
-import { useMobileWalletTheme } from '@/components/solana/use-wallet-ui-theme'
+import { useMobileWalletAdapterTheme } from '@/components/solana/use-wallet-ui-theme'
 
 function getExplorerUrl(path: string): string {
   const cluster = AppConfig.clusters[0]
@@ -39,7 +39,7 @@ function useDropdownItems() {
 
 export function WalletUiDropdown() {
   const { account } = useMobileWallet()
-  const { backgroundColor, borderColor, textColor } = useMobileWalletTheme()
+  const { backgroundColor, borderColor, textColor } = useMobileWalletAdapterTheme()
 
   const items = useDropdownItems()
 

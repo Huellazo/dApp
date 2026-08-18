@@ -71,7 +71,7 @@ export default function PassportScreen() {
         <BrutalistCard colorClass="bg-accent1 mb-8">
           <Text className="text-border font-black text-lg uppercase mb-2">Aun no tienes tokens nuevos</Text>
           <Text className="text-border font-bold text-sm">
-            Entra a Huellazo Radar, simula un escaneo y se agregara aqui tu token de visita como mint simulado en Solana.
+            Entra a Huellazo Radar, simula un escaneo y se agregará aquí tu token de visita como mint simulado en Solana.
           </Text>
         </BrutalistCard>
       ) : (
@@ -93,7 +93,7 @@ export default function PassportScreen() {
                     <Text className="text-border font-black text-sm uppercase" numberOfLines={2}>{token.name}</Text>
                     <Text className="text-border text-xs font-bold mt-1 opacity-80" numberOfLines={1}>{token.location}</Text>
                     <View className="bg-background border-2 border-border p-2 mt-3">
-                      <Text className="text-border font-black text-[10px] uppercase">Mint</Text>
+                      <Text className="text-border font-black text-[10px] uppercase">Firma</Text>
                       <Text className="text-border font-bold text-xs">{shortHash(token.mintAddress)}</Text>
                       <Text className="text-border font-black text-[10px] uppercase mt-2">Reward</Text>
                       <Text className="text-border font-bold text-xs">+{token.reward} $HUELLAZOS</Text>

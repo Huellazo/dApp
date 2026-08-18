@@ -1,0 +1,547 @@
+# Graph Report - dApp  (2026-08-17)
+
+## Corpus Check
+- cluster-only mode — file stats not available
+
+## Summary
+- 912 nodes · 3 edges · 909 communities (409 shown, 500 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `b6c5ea08`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
+
+## Community Hubs (Navigation)
+- expo-router
+- @babel/core
+- undelegate
+- expo-clipboard
+- AuthUserRequest
+- expo-font
+- expo
+- @coral-xyz/anchor
+- expo-blur
+- expo-constants
+- expo-crypto
+- expo-haptics
+- expo-linear-gradient
+- expo-linking
+- @expo/metro-runtime
+- expo-splash-screen
+- expo-status-bar
+- expo-symbols
+- expo-system-ui
+- @expo/vector-icons
+- js-base64
+- nativewind
+- react-dom
+- @react-native-clipboard/clipboard
+- react-native-gesture-handler
+- react-native-screens
+- react-native-svg
+- react-native-web
+- react-native-webview
+- react-native-worklets
+- @react-navigation/bottom-tabs
+- react-qr-code
+- @rn-primitives/dropdown-menu
+- @rn-primitives/portal
+- @rnmapbox/maps
+- @solana-mobile/mobile-wallet-adapter-protocol
+- @solana-mobile/mobile-wallet-adapter-protocol-web3js
+- @solana/spl-token
+- @tanstack/react-query
+- @wallet-standard/core
+- @wallet-ui/react-native-web3js
+- Context
+- Result
+- String
+- huellazo
+- vault
+- BN
+- anchor
+- ErrorCode
+- CommitInput
+- Context
+- Result
+- Signer
+- UncheckedAccount
+- DelegateInput
+- Context
+- Result
+- Signer
+- UncheckedAccount
+- Initialize
+- Account
+- Context
+- Program
+- Result
+- Signer
+- System
+- MintBusiness
+- Account
+- Context
+- Program
+- Result
+- Signer
+- String
+- System
+- UncheckedAccount
+- MintPlace
+- Account
+- Context
+- Program
+- Result
+- Signer
+- String
+- System
+- Context
+- Result
+- Signer
+- UncheckedAccount
+- UndelegateInput
+- ConfigState
+- PoapState
+- Pubkey
+- String
+- Context
+- Program
+- Result
+- Signer
+- System
+- VaultAction
+- VaultError
+- Pubkey
+- babel-preset-expo
+- Config
+- Settings
+- Base
+- AsyncSession
+- Merchant
+- Proposal
+- User
+- Visit
+- AsyncSession
+- PaymentReferenceOut
+- AsyncSession
+- BaseModel
+- AsyncSession
+- AsyncSession
+- AsyncSession
+- MerchantCreate
+- MerchantOut
+- ProposalCreate
+- ProposalOut
+- BaseModel
+- UserCreate
+- UserOut
+- VisitCreate
+- VisitOut
+- SolanaRPCClient
+- BaseSettings
+- buffer
+- CommitInput
+- Context
+- DeclarativeBase
+- DelegateInput
+- eslint
+- eslint-config-expo
+- expo-dev-client
+- expo-image
+- expo-location
+- expo-web-browser
+- Instruction
+- MintBusiness
+- MintPlace
+- Activity
+- ActivityType
+- AddContributionRequest
+- AddFriendRequest
+- Contribution
+- CreatePotRequest
+- Friend
+- Pot
+- PotCategory
+- UpdateFriendRequest
+- UpdatePotRequest
+- UpdateUserRequest
+- User
+- styles
+- backgroundColor
+- foregroundImage
+- adaptiveIcon
+- edgeToEdgeEnabled
+- package
+- typedRoutes
+- expo
+- android
+- experiments
+- extra
+- icon
+- ios
+- name
+- newArchEnabled
+- orientation
+- plugins
+- scheme
+- slug
+- userInterfaceStyle
+- version
+- web
+- eas
+- router
+- bundleIdentifier
+- supportsTablet
+- styles
+- MapPoi
+- AVATAR_OPTIONS
+- bundler
+- favicon
+- output
+- styles
+- styles
+- ACTIONS
+- styles
+- styles
+- styles
+- AppExternalLinkProps
+- queryClient
+- AppTextProps
+- styles
+- AuthContext
+- AuthProviderState
+- NftData
+- Props
+- Props
+- Props
+- MOCK_EVENTS
+- Props
+- FloatingActionButtonProps
+- styles
+- AddFriendModalProps
+- styles
+- AddToPotModalProps
+- styles
+- DeleteFriendModalProps
+- styles
+- EmptyStateProps
+- styles
+- FriendRowProps
+- styles
+- AddContributorModalProps
+- styles
+- AlertButton
+- AlertModalProps
+- styles
+- ContributeModalProps
+- styles
+- ContributionListProps
+- styles
+- ContributorListProps
+- styles
+- CATEGORIES
+- CategorySelectorProps
+- styles
+- ContributorSelectorProps
+- styles
+- CreatePotHeaderProps
+- styles
+- DatePickerModalProps
+- quickDates
+- styles
+- GoalSectionProps
+- styles
+- OverviewSectionProps
+- styles
+- EditPotModalProps
+- styles
+- PotActionsProps
+- styles
+- PotHeaderProps
+- styles
+- PotInfoCardProps
+- styles
+- PotProgressCardProps
+- styles
+- PotTabsProps
+- styles
+- styles
+- tabIcons
+- styles
+- styles
+- Props
+- styles
+- styles
+- TAB_ITEMS
+- ScrollContext
+- ScrollContextType
+- styles
+- ToastCardProps
+- ToastContext
+- ToastContextValue
+- ToastItem
+- ToastOptions
+- ToastType
+- ToastViewportProps
+- AppBarAction
+- AppBarProps
+- DEFAULT_ACTIONS
+- styles
+- BG_MAP
+- Props
+- SHADOW_MAP
+- styles
+- TEXT_MAP
+- Variant
+- Props
+- styles
+- BrutalistButtonProps
+- BrutalistCardProps
+- BrutalistPillProps
+- CircularProgressProps
+- styles
+- GlassCardProps
+- styles
+- Props
+- styles
+- MAPPING
+- UiIconMapping
+- UiIconSymbolName
+- AppConfig
+- Cluster
+- AppColorTheme
+- baseTheme
+- ColorMode
+- Colors
+- ThemeTokens
+- FontFamily
+- Fonts
+- FontWeights
+- NOTE: Once IBM Plex font files are added to assets/fonts/, uncomment the font lo
+- BrutalistStyles
+- AppStateContext
+- EarnedSolanaToken
+- Faction
+- HuellazoAppState
+- InventoryItem
+- InventoryItemType
+- LootItem
+- MintablePoi
+- NFT_CATALOG
+- NftId
+- NftItem
+- Place
+- PLACES_CATALOG
+- Transaction
+- UserStatus
+- { defineConfig }
+- expoConfig
+- Contract
+- config
+- { getDefaultConfig }
+- { withNativeWind }
+- MOCK_FLASH_DEALS
+- MOCK_POIS
+- MOCK_QUESTS
+- MOCK_USER
+- NOTE: This file should not be edited and should be committed with your source co
+- dependencies
+- buffer
+- @coral-xyz/anchor
+- expo
+- expo-blur
+- expo-clipboard
+- expo-constants
+- expo-crypto
+- expo-dev-client
+- expo-font
+- expo-haptics
+- expo-image
+- expo-linear-gradient
+- expo-linking
+- expo-location
+- @expo/metro-runtime
+- expo-router
+- expo-splash-screen
+- expo-status-bar
+- expo-symbols
+- expo-system-ui
+- @expo/vector-icons
+- expo-web-browser
+- js-base64
+- react
+- react-native
+- @react-native-async-storage/async-storage
+- @react-native-community/datetimepicker
+- react-native-reanimated
+- react-native-safe-area-context
+- react-native-snackbar
+- @react-navigation/elements
+- @react-navigation/native
+- @solana/web3.js
+- zustand
+- description
+- devDependencies
+- @babel/core
+- babel-preset-expo
+- eslint
+- eslint-config-expo
+- prettier
+- tailwindcss
+- @types/react
+- typescript
+- displayName
+- reactNativeDirectoryCheck
+- expo
+- doctor
+- keywords
+- main
+- name
+- private
+- exclude
+- listUnknownPackages
+- scripts
+- android
+- android:build
+- build
+- ci
+- dev
+- doctor
+- fmt
+- fmt:check
+- ios
+- lint
+- lint:check
+- reset-project
+- start
+- vercel-build
+- web
+- usecase
+- version
+- Crypto
+- PotProgramService
+- Activity
+- ActivityType
+- AppStore
+- Contribution
+- Friend
+- Pot
+- PotCategory
+- useAppStore
+- colors
+- ColorType
+- compilerOptions
+- esModuleInterop
+- paths
+- resolveJsonModule
+- strict
+- extends
+- include
+- nativewind
+- name
+- private
+- scripts
+- anchor:build
+- anchor:deploy:devnet
+- anchor:deploy:local
+- anchor:test
+- docker:down
+- docker:logs
+- docker:logs:api
+- docker:up
+- docker:up:all
+- mobile:android
+- mobile:dev
+- mobile:prebuild
+- mobile:web
+- postinstall
+- setup
+- workspaces
+- prettier
+- react
+- react-dom
+- react-native
+- @react-native-async-storage/async-storage
+- @react-native-clipboard/clipboard
+- @react-native-community/datetimepicker
+- react-native-gesture-handler
+- react-native-reanimated
+- react-native-safe-area-context
+- react-native-screens
+- react-native-snackbar
+- react-native-svg
+- react-native-web
+- react-native-webview
+- react-native-worklets
+- @react-navigation/bottom-tabs
+- @react-navigation/native
+- react-qr-code
+- expo-env.d.ts
+- .expo/types/**/*.ts
+- mobile
+- mobile-wallet-adapter
+- nativewind-env.d.ts
+- ../node_modules/expo/tsconfig.base
+- **/*.ts
+- **/*.tsx
+- Result
+- @rn-primitives/dropdown-menu
+- @rn-primitives/portal
+- @rnmapbox/maps
+- filePath
+- fs
+- packageJsonPath
+- packageRoot
+- path
+- replacement
+- source
+- { version }
+- sync-idl.sh script
+- @solana-mobile/mobile-wallet-adapter-protocol
+- @solana-mobile/mobile-wallet-adapter-protocol-web3js
+- @solana/spl-token
+- @solana/web3.js
+- String
+- SystemAccount
+- tailwindcss
+- @tanstack/react-query
+- @types/react
+- typescript
+- UndelegateInput
+- UploadFile
+- @wallet-standard/core
+- @wallet-ui/react-native-web3js
+- zustand
+
+## God Nodes (most connected - your core abstractions)
+1. `undelegate()` - 2 edges
+2. `ContributionListProps` - 0 edges
+3. `Contribution` - 0 edges
+4. `AppColorTheme` - 0 edges
+5. `ColorMode` - 0 edges
+6. `ThemeTokens` - 0 edges
+7. `ActivityType` - 0 edges
+8. `PotInfoCardProps` - 0 edges
+9. `CategorySelectorProps` - 0 edges
+10. `PotCategory` - 0 edges
+
+## Surprising Connections (you probably didn't know these)
+- None detected - all connections are within the same source files.
+
+## Import Cycles
+- None detected.
+
+## Communities (909 total, 500 thin omitted)
+
+## Knowledge Gaps
+- **432 isolated node(s):** `ContributionListProps`, `Contribution`, `AppColorTheme`, `ColorMode`, `ThemeTokens` (+427 more)
+  These have ≤1 connection - possible missing edges or undocumented components.
+- **500 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+
+## Suggested Questions
+_Questions this graph is uniquely positioned to answer:_
+
+- **What connects `ContributionListProps`, `Contribution`, `AppColorTheme` to the rest of the system?**
+  _432 weakly-connected nodes found - possible documentation gaps or missing edges._

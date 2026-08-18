@@ -4,7 +4,7 @@ import { SymbolViewProps } from 'expo-symbols'
 import { ComponentProps } from 'react'
 import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native'
 
-type UiIconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>
+type UiIconMapping = Partial<Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>>
 export type UiIconSymbolName = keyof typeof MAPPING
 
 /**
