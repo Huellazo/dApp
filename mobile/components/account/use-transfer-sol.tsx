@@ -1,13 +1,16 @@
 import { PublicKey, TransactionSignature } from '@solana/web3.js'
 import { useConnection } from '@/components/solana/use-connection'
 import { useMutation } from '@tanstack/react-query'
-import { useMobileWallet } from '@wallet-ui/react-native-web3js'
+import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js'
 import { createTransaction } from '@/components/account/create-transaction'
 import { useGetBalanceInvalidate } from './use-get-balance'
+import { useAuthorization } from '@/components/auth/useAuthorization'
+import { AppConfig } from '@/constants/app-config'
+import { Platform } from 'react-native'
 
 export function useTransferSol({ address }: { address: PublicKey }) {
   const connection = useConnection()
-  const { signAndSendTransaction } = useMobileWallet()
+  const { authorization } = useAuthorization()
   const invalidateBalance = useGetBalanceInvalidate({ address })
 
   return useMutation({
@@ -21,9 +24,50 @@ export function useTransferSol({ address }: { address: PublicKey }) {
           amount: input.amount,
           connection,
         })
+        
+        let signatures: any;
+        let webSignature: string | undefined;
 
-        // Send transaction and await for signature
-        signature = await signAndSendTransaction(transaction, minContextSlot)
+        if (Platform.OS === 'web') {
+          const provider = (window as any).solana;
+          if (!provider?.isPhantom) {
+            throw new Error('Phantom wallet not found');
+          }
+          
+          const { signature: txSig } = await provider.signAndSendTransaction(transaction);
+          webSignature = txSig;
+        } else {
+          if (!authorization?.auth_token) {
+            throw new Error('Wallet not authorized')
+          }
+          // Send transaction and await for signature via MWA
+          signatures = await transact(async (wallet) => {
+            await wallet.reauthorize({
+              auth_token: authorization.auth_token,
+              identity: { name: AppConfig.name, uri: AppConfig.uri },
+            });
+
+            return await wallet.signAndSendTransactions({
+              transactions: [transaction],
+              minContextSlot,
+            });
+          });
+        }
+
+        if (webSignature) {
+          signature = webSignature;
+        } else if (signatures && signatures.length > 0) {
+          if (typeof signatures[0] === 'string') {
+            signature = signatures[0];
+          } else {
+            const bs58 = require('bs58')
+            signature = bs58.default.encode(signatures[0]);
+          }
+        }
+
+        if (!signature) {
+          throw new Error('No signature returned from wallet');
+        }
 
         // Send transaction and await for signature
         await connection.confirmTransaction({ signature, ...latestBlockhash }, 'confirmed')
@@ -45,3 +89,4 @@ export function useTransferSol({ address }: { address: PublicKey }) {
     },
   })
 }
+

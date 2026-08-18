@@ -1,11 +1,13 @@
 import { useMemo } from 'react'
 import { PublicKey } from '@solana/web3.js'
-import { useMobileWallet } from '@wallet-ui/react-native-web3js'
 import { HuellazoProgramService } from '@/services/huellazo-program'
 import { useTransaction } from './use-transaction'
+import { useConnection } from '@/components/solana/use-connection'
+import { useAuth } from '@/components/auth/auth-provider'
 
 export function useHuellazoProgram() {
-  const { connection, account } = useMobileWallet()
+  const connection = useConnection()
+  const { walletAddress } = useAuth()
   const { executeTransaction, isLoading, error } = useTransaction()
 
   const programService = useMemo(() => {
@@ -13,10 +15,10 @@ export function useHuellazoProgram() {
   }, [connection])
 
   const getAccountPublicKey = () => {
-    if (!account) {
+    if (!walletAddress) {
       throw new Error('Wallet not connected')
     }
-    return account.address
+    return new PublicKey(walletAddress)
   }
 
   const initializeConfig = async () => {
@@ -66,3 +68,4 @@ export function useHuellazoProgram() {
     error,
   }
 }
+

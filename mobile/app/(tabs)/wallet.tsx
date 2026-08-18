@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView, Image, Pressable, Modal } from 'react-native';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
@@ -6,13 +6,13 @@ import { MOCK_USER } from '@/mocks/db';
 import { useAuth } from '@/components/auth/auth-provider';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
-import { useMobileWallet } from '@wallet-ui/react-native-web3js';
 import { PinataModal } from '@/components/features/wallet/PinataModal';
 import { AppConfig } from '@/constants/app-config';
 import { ellipsify } from '@/utils/ellipsify';
 import { useGetBalance } from '@/components/account/use-get-balance';
 import { lamportsToSol } from '@/utils/lamports-to-sol';
 import { useAppState } from '@/context/app-state';
+import { PublicKey } from '@solana/web3.js';
 
 const AVATAR_OPTIONS = [
   require('@/assets/images/profile_wallet.png'),
@@ -30,11 +30,14 @@ function formatSolBalance(balance: number) {
 }
 
 export default function WalletScreen() {
-  const { isLoading, signIn, signOut } = useAuth();
-  const { account } = useMobileWallet();
-  const walletAddress = account?.address.toString();
+  const { isLoading, signIn, signOut, walletAddress } = useAuth();
   const isWalletConnected = !!walletAddress;
-  const balanceQuery = useGetBalance({ address: account?.address });
+  
+  const pubkey = useMemo(() => {
+    return walletAddress ? new PublicKey(walletAddress) : undefined;
+  }, [walletAddress]);
+
+  const balanceQuery = useGetBalance({ address: pubkey });
   const solBalance = balanceQuery.data == null ? null : lamportsToSol(balanceQuery.data);
   const [connectionError, setConnectionError] = useState<string | null>(null);
   

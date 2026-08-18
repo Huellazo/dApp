@@ -1,16 +1,17 @@
 import { AppView } from '@/components/app-view'
 import { AppText } from '@/components/app-text'
 import { PublicKey } from '@solana/web3.js'
-import { useMobileWallet } from '@wallet-ui/react-native-web3js'
+import { useAuth } from '@/components/auth/auth-provider'
 import { Button } from '@react-navigation/elements'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { ActivityIndicator } from 'react-native'
 import { useRequestAirdrop } from '@/components/account/use-request-airdrop'
 
 export function AccountFeatureAirdrop({ back }: { back: () => void }) {
-  const { account } = useMobileWallet()
+  const { walletAddress } = useAuth()
+  const pubkey = useMemo(() => walletAddress ? new PublicKey(walletAddress) : undefined, [walletAddress])
   const amount = 1
-  const requestAirdrop = useRequestAirdrop({ address: account?.address as PublicKey })
+  const requestAirdrop = useRequestAirdrop({ address: pubkey as PublicKey })
 
   return (
     <AppView>
@@ -24,7 +25,7 @@ export function AccountFeatureAirdrop({ back }: { back: () => void }) {
             requestAirdrop
               .mutateAsync(amount)
               .then(() => {
-                console.log(`Requested airdrop of ${amount} SOL to ${account?.address}`)
+                console.log(`Requested airdrop of ${amount} SOL to ${pubkey}`)
                 back()
               })
               .catch((err) => console.log(`Error requesting airdrop: ${err}`, err))

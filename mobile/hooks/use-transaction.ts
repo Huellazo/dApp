@@ -1,9 +1,13 @@
 import { useState, useCallback } from 'react'
 import { Transaction, TransactionMessage, VersionedTransaction } from '@solana/web3.js'
-import { useMobileWallet } from '@wallet-ui/react-native-web3js'
+import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js'
+import { Platform } from 'react-native'
+import { useAuthorization } from '@/components/auth/useAuthorization'
+import { AppConfig } from '@/constants/app-config'
+import { Connection } from '@solana/web3.js'
 
 export function useTransaction() {
-  const { connection, signAndSendTransaction } = useMobileWallet()
+  const { authorization } = useAuthorization()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
@@ -13,9 +17,7 @@ export function useTransaction() {
       setError(null)
 
       try {
-        if (!signAndSendTransaction) {
-          throw new Error('Wallet not connected')
-        }
+        const connection = new Connection(AppConfig.clusters[0].endpoint, 'confirmed');
 
         // Get latest blockhash and context slot
         const {
@@ -31,10 +33,58 @@ export function useTransaction() {
         }).compileToLegacyMessage()
 
         const versionedTransaction = new VersionedTransaction(messageV0)
+        
+        let signature = '';
+        let signatures: any;
+        let webSignature: string | undefined;
 
-        // Sign and send transaction via MWA
-        const signature = await signAndSendTransaction(versionedTransaction, minContextSlot)
+        if (Platform.OS === 'web') {
+          const provider = (window as any).solana;
+          if (!provider?.isPhantom) {
+            throw new Error('Phantom wallet not found');
+          }
+          
+          const { signature: txSig } = await provider.signAndSendTransaction(versionedTransaction);
+          webSignature = txSig;
+        } else {
+          if (!authorization?.auth_token) {
+            throw new Error('Wallet not authorized')
+          }
+          // Sign and send transaction via MWA
+          signatures = await transact(async (wallet) => {
+            await wallet.reauthorize({
+              auth_token: authorization.auth_token,
+              identity: { name: AppConfig.name, uri: AppConfig.uri },
+            });
+
+            // Mobile wallet adapter signature requests
+            const signedTransactions = await wallet.signAndSendTransactions({
+              transactions: [versionedTransaction],
+              minContextSlot,
+            });
+            
+            return signedTransactions;
+          });
+        }
+
+        if (webSignature) {
+          signature = webSignature;
+        } else if (signatures && signatures.length > 0) {
+          if (typeof signatures[0] === 'string') {
+            signature = signatures[0];
+          } else {
+            // signatures is Uint8Array[] representing the 64-byte signature
+            const bs58 = require('bs58')
+            signature = bs58.default.encode(signatures[0]);
+          }
+        }
+
+        if (!signature) {
+          throw new Error('No signature returned from wallet');
+        }
+
         console.log("SIGNATURE IS:" , signature);
+        
         // Confirm transaction
         await connection.confirmTransaction(
           { signature, ...latestBlockhash },
@@ -50,7 +100,7 @@ export function useTransaction() {
         throw error
       }
     },
-    [connection, signAndSendTransaction]
+    [authorization]
   )
 
   return {
@@ -59,3 +109,4 @@ export function useTransaction() {
     error,
   }
 }
+

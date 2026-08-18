@@ -1,9 +1,9 @@
-import { useMobileWallet } from '@wallet-ui/react-native-web3js'
+import { useAuth } from '@/components/auth/auth-provider'
 import { BaseButton } from '@/components/solana/base-button'
 import React from 'react'
 
 export function WalletUiButtonDisconnect({ label = 'Disconnect' }: { label?: string }) {
-  const { disconnect } = useMobileWallet()
+  const { signOut } = useAuth()
 
-  return <BaseButton label={label} onPress={() => disconnect()} />
+  return <BaseButton label={label} onPress={() => signOut()} />
 }

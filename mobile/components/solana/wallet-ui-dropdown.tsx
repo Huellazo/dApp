@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Linking, StyleSheet } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
-import { useMobileWallet } from '@wallet-ui/react-native-web3js'
+import { useAuth } from '@/components/auth/auth-provider'
 import { ellipsify } from '@/utils/ellipsify'
 import { UiIconSymbol } from '@/components/ui/ui-icon-symbol'
 import { AppConfig } from '@/constants/app-config'
@@ -17,33 +17,33 @@ function getExplorerUrl(path: string): string {
 }
 
 function useDropdownItems() {
-  const { account, disconnect } = useMobileWallet()
-  if (!account) {
+  const { walletAddress, signOut } = useAuth()
+  if (!walletAddress) {
     return []
   }
   return [
     {
       label: 'Copy Address',
-      onPress: () => Clipboard.setString(account.address.toString()),
+      onPress: () => Clipboard.setString(walletAddress.toString()),
     },
     {
       label: 'View in Explorer',
-      onPress: async () => await Linking.openURL(getExplorerUrl(`account/${account.address.toString()}`)),
+      onPress: async () => await Linking.openURL(getExplorerUrl(`account/${walletAddress.toString()}`)),
     },
     {
       label: 'Disconnect',
-      onPress: async () => await disconnect(),
+      onPress: async () => await signOut(),
     },
   ]
 }
 
 export function WalletUiDropdown() {
-  const { account } = useMobileWallet()
+  const { walletAddress } = useAuth()
   const { backgroundColor, borderColor, textColor } = useMobileWalletAdapterTheme()
 
   const items = useDropdownItems()
 
-  if (!account || !items.length) {
+  if (!walletAddress || !items.length) {
     return <WalletUiButtonConnect />
   }
 
@@ -51,7 +51,7 @@ export function WalletUiDropdown() {
     <Dropdown.Root>
       <Dropdown.Trigger style={[styles.trigger, { backgroundColor, borderColor }]}>
         <UiIconSymbol name="wallet.pass.fill" color={textColor} />
-        <AppText>{ellipsify(account.address.toString())}</AppText>
+        <AppText>{ellipsify(walletAddress.toString())}</AppText>
       </Dropdown.Trigger>
       <Dropdown.Portal>
         <Dropdown.Overlay style={StyleSheet.absoluteFill}>

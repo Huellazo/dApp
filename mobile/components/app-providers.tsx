@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { PropsWithChildren } from 'react'
-import { MobileWalletProvider } from '@wallet-ui/react-native-web3js'
 import { AppTheme } from '@/components/app-theme'
 import { AuthProvider } from '@/components/auth/auth-provider'
 import { ToastProvider } from '@/components/toast/toast-provider'
@@ -15,16 +14,11 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <AppTheme>
       <QueryClientProvider client={queryClient}>
-        <MobileWalletProvider
-          chain={defaultCluster.id}
-          endpoint={defaultCluster.endpoint}
-          identity={{ name: AppConfig.name, uri: AppConfig.uri }}
-        >
-          <AuthProvider>
-            <ToastProvider>{children}</ToastProvider>
-          </AuthProvider>
-        </MobileWalletProvider>
+        <AuthProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </AppTheme>
   )
 }
+

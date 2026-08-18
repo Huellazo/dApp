@@ -18,7 +18,7 @@ export function FloatingActionButton({ scrollY }: FloatingActionButtonProps = {}
   const translateY = useRef(new Animated.Value(0)).current
 
   const handlePress = () => {
-    router.push('/(tabs)/pots/create')
+    router.push('/(tabs)/pots/create' as any)
   }
 
   useEffect(() => {

@@ -5,12 +5,14 @@ import { NftDetailModal } from '@/components/features/passport/NftDetailModal';
 import { TradeOfferModal } from '@/components/features/passport/TradeOfferModal';
 import { useAppState } from '@/context/app-state';
 import { MOCK_POIS, MOCK_USER } from '@/mocks/db';
+import { useAuth } from '@/components/auth/auth-provider';
 
 function shortHash(value: string) {
   return `${value.slice(0, 6)}...${value.slice(-6)}`;
 }
 
 export default function PassportScreen() {
+  const { walletAddress } = useAuth();
   const { earnedTokens, xp, points, inventory, ownedNfts } = useAppState();
   const [selectedNft, setSelectedNft] = useState<any>(null);
   const [isTradeOfferVisible, setTradeOfferVisible] = useState(false);
@@ -42,7 +44,7 @@ export default function PassportScreen() {
         <View className="p-4 bg-background">
           <Text className="text-border font-bold text-xs uppercase opacity-70 mb-1">Identity (PDA)</Text>
           <Text className="text-border text-sm font-bold mb-4 bg-secondary/30 p-2 border-2 border-border" numberOfLines={1} ellipsizeMode="middle">
-            {MOCK_USER.publicKey}
+            {walletAddress || 'Not Connected'}
           </Text>
           
           <View className="flex-row justify-between mb-1">

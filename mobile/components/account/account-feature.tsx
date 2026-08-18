@@ -1,4 +1,3 @@
-import { useMobileWallet } from '@wallet-ui/react-native-web3js'
 import { AppText } from '@/components/app-text'
 import { useScrollContext } from '@/components/tab-bar/scroll-context'
 import { ellipsify } from '@/utils/ellipsify'
@@ -23,8 +22,8 @@ import { AppConfig } from '@/constants/app-config'
 import { useAuth } from '@/components/auth/auth-provider'
 
 export function AccountFeature() {
-  const { account } = useMobileWallet()
-  const { signOut, user } = useAuth()
+  const { signOut, user, walletAddress } = useAuth()
+  const pubkey = useMemo(() => walletAddress ? new PublicKey(walletAddress) : undefined, [walletAddress])
   const router = useRouter()
   const colorScheme = useColorScheme()
   const isDark = colorScheme === 'dark'
@@ -35,18 +34,18 @@ export function AccountFeature() {
   const [lastSynced, setLastSynced] = useState<Date | null>(null)
   const [copied, setCopied] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
-  const invalidateBalance = useGetBalanceInvalidate({ address: account?.address as PublicKey })
-  const invalidateTokenAccounts = useGetTokenAccountsInvalidate({ address: account?.address as PublicKey })
-  const tokenAccountsQuery = useGetTokenAccounts({ address: account?.address })
-  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const invalidateBalance = useGetBalanceInvalidate({ address: pubkey })
+  const invalidateTokenAccounts = useGetTokenAccountsInvalidate({ address: pubkey })
+  const tokenAccountsQuery = useGetTokenAccounts({ address: pubkey })
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    if (account) {
+    if (pubkey) {
       setLastSynced(new Date())
     } else {
       setLastSynced(null)
     }
-  }, [account])
+  }, [pubkey])
 
   useEffect(() => {
     return () => {
@@ -88,14 +87,14 @@ export function AccountFeature() {
   )
 
   const handleCopyAddress = useCallback(() => {
-    if (!account) return
-    Clipboard.setString(account.address.toString())
+    if (!pubkey) return
+    Clipboard.setString(pubkey.toString())
     setCopied(true)
     if (copyTimeoutRef.current) {
       clearTimeout(copyTimeoutRef.current)
     }
     copyTimeoutRef.current = setTimeout(() => setCopied(false), 1600)
-  }, [account])
+  }, [pubkey])
 
   const handleLogout = useCallback(async () => {
     setLoggingOut(true)
@@ -111,7 +110,7 @@ export function AccountFeature() {
 
   return (
     <AppPage>
-      {account ? (
+      {pubkey ? (
         <Animated.ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -149,7 +148,7 @@ export function AccountFeature() {
               <View style={styles.heroHeader}>
                 <View style={styles.heroLabelBlock}>
                   <AppText style={styles.heroLabel} numberOfLines={1}>Portfolio balance</AppText>
-                  <AccountUiBalance address={account.address} textColor='#041015' />
+                  <AccountUiBalance address={pubkey} textColor='#041015' />
                 </View>
                 <TouchableOpacity
                   onPress={handleCopyAddress}
@@ -168,7 +167,7 @@ export function AccountFeature() {
               </View>
               <View style={styles.addressPill}>
                 <MaterialIcons name='key' size={16} color='#041015' />
-                <AppText style={styles.addressPillText} numberOfLines={1}>{ellipsify(account.address.toString(), 12)}</AppText>
+                <AppText style={styles.addressPillText} numberOfLines={1}>{ellipsify(pubkey.toString(), 12)}</AppText>
               </View>
               <View style={styles.heroStatsRow}>
                 {stats.map((stat) => (
