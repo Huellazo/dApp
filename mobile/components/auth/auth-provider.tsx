@@ -2,14 +2,16 @@ import React, { createContext, PropsWithChildren, useContext, useState, useCallb
 import { useWalletAuth } from '@/hooks/useWalletAuth'
 import { useAppStore } from '@/store/app-store'
 import type { User } from '@/api/types'
-import { useAuthorization } from './useAuthorization'
+import { useAuthorization, WebWalletProvider } from './useAuthorization'
 import { PublicKey } from '@solana/web3.js'
+import { Platform } from 'react-native'
+import { WalletSelectionModal } from '@/components/solana/wallet-selection-modal'
 
 export interface AuthProviderState {
   isAuthenticated: boolean
   isLoading: boolean
   user: User | null
-  signIn: () => Promise<void>
+  signIn: (walletId?: string) => Promise<void>
   signOut: () => Promise<void>
   updateUserState: (user: User) => Promise<void>
   walletAddress: string | null
@@ -20,7 +22,9 @@ const AuthContext = createContext<AuthProviderState>({} as AuthProviderState)
 export function AuthProvider({ children }: PropsWithChildren) {
   const [isLoading, setIsLoading] = useState(false)
   const [hasAuthenticated, setHasAuthenticated] = useState(false)
-  const { authorize, deauthorize, selectedAccount, authorization } = useAuthorization()
+  const [isWalletModalVisible, setIsWalletModalVisible] = useState(false)
+  
+  const { authorize, deauthorize, selectedAccount, authorization, availableWebWallets, activeWebWallet } = useAuthorization()
   const { user, authenticate, restoreUser, logout, updateUserState } = useWalletAuth()
   const { clearAll } = useAppStore()
 
@@ -54,17 +58,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   }, [selectedAccount, hasAuthenticated, user, authenticate])
 
-  const signIn = useCallback(async () => {
+  const signIn = useCallback(async (walletId?: string) => {
+    // If on web and no specific wallet selected yet, and we have multiple options or no active wallet
+    if (Platform.OS === 'web' && !walletId && !activeWebWallet) {
+      setIsWalletModalVisible(true)
+      return
+    }
+
     setIsLoading(true)
     try {
-      await authorize()
+      await authorize(walletId)
+      setIsWalletModalVisible(false)
     } catch (error) {
       console.error('Sign in error:', error)
       throw error // Re-throw so parent can handle it
     } finally {
       setIsLoading(false)
     }
-  }, [authorize])
+  }, [authorize, activeWebWallet])
 
   const signOut = useCallback(async () => {
     setIsLoading(true)
@@ -102,6 +113,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }}
     >
       {children}
+      
+      {Platform.OS === 'web' && (
+        <WalletSelectionModal
+          visible={isWalletModalVisible}
+          wallets={availableWebWallets}
+          onSelect={signIn}
+          onClose={() => setIsWalletModalVisible(false)}
+        />
+      )}
     </AuthContext.Provider>
   )
 }

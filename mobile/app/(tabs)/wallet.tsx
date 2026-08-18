@@ -155,32 +155,54 @@ export default function WalletScreen() {
                   {ellipsify(walletAddress, 6)}
                 </Text>
               </View>
-              <View className="bg-accent2 border-4 border-border p-4 mb-4 shadow-brutal-sm">
-                <View className="flex-row items-center justify-between mb-2">
-                  <Text className="text-border font-black text-xs uppercase">Solana Balance</Text>
-                  <Pressable onPress={() => balanceQuery.refetch()} disabled={balanceQuery.isFetching}>
-                    <FontAwesome5
-                      name="sync-alt"
-                      size={14}
-                      color={colors.border}
-                      style={{ opacity: balanceQuery.isFetching ? 0.45 : 1 }}
-                    />
-                  </Pressable>
-                </View>
-                <Text className="text-border font-black text-4xl">
-                  {balanceQuery.isLoading
-                    ? '...'
-                    : solBalance == null
-                      ? '0.0000'
-                      : formatSolBalance(solBalance)}
-                </Text>
-                <Text className="text-border font-black text-sm uppercase">SOL</Text>
-                {balanceQuery.isError && (
-                  <Text className="text-primary font-black text-xs uppercase mt-2">
-                    Could not load balance. Tap refresh.
+              <View className="flex-row justify-between mb-4">
+                {/* SOL Balance Card - Left */}
+                <View className="bg-accent2 border-4 border-border p-3 shadow-brutal-sm w-[48%]">
+                  <View className="flex-row items-center justify-between mb-1">
+                    <Text className="text-border font-black text-[10px] uppercase">Solana</Text>
+                    <Pressable onPress={() => balanceQuery.refetch()} disabled={balanceQuery.isFetching}>
+                      <FontAwesome5
+                        name="sync-alt"
+                        size={12}
+                        color={colors.border}
+                        style={{ opacity: balanceQuery.isFetching ? 0.45 : 1 }}
+                      />
+                    </Pressable>
+                  </View>
+                  <Text className="text-border font-black text-xl" numberOfLines={1} adjustsFontSizeToFit>
+                    {balanceQuery.isLoading
+                      ? '...'
+                      : solBalance == null
+                        ? '0.0000'
+                        : formatSolBalance(solBalance)}
                   </Text>
-                )}
+                  <Text className="text-border font-black text-[10px] uppercase">SOL</Text>
+                  {balanceQuery.isError && (
+                    <Text className="text-primary font-black text-[8px] uppercase mt-1">
+                      Error
+                    </Text>
+                  )}
+                </View>
+
+                {/* Explorer Fund Card - Right */}
+                <View className="bg-accent1 border-4 border-border p-3 shadow-brutal-sm w-[48%]">
+                  <View className="flex-row items-center justify-between mb-1">
+                    <Text className="text-border font-black text-[10px] uppercase">Explorer Fund</Text>
+                    <FontAwesome5 name="coins" size={12} color={colors.border} />
+                  </View>
+                  <Text className="text-border font-black text-xl" numberOfLines={1} adjustsFontSizeToFit>
+                    {points}
+                  </Text>
+                  <Text className="text-background font-black text-[10px] uppercase">$HUELLAZOS</Text>
+                </View>
               </View>
+
+              <View className="mb-4">
+                <Text className="text-border text-[10px] text-center font-bold bg-background/50 py-1">
+                  * Points redeemable for discounts. Real payments are processed in SOL.
+                </Text>
+              </View>
+
               <BrutalistButton
                 title={isLoading ? 'Disconnecting...' : 'Disconnect'}
                 colorClass="bg-primary"
@@ -209,24 +231,13 @@ export default function WalletScreen() {
         </View>
       </BrutalistCard>
 
-      <BrutalistCard colorClass="bg-accent1 mb-6 items-center py-8">
-        <Text className="text-border font-bold uppercase mb-2 text-center">Explorer Fund</Text>
-        <View className="flex-row items-center bg-background border-4 border-border px-6 py-2 shadow-brutal">
-           <Text className="text-5xl font-black text-border">{points}</Text>
-        </View>
-        <Text className="text-background font-black uppercase tracking-widest mt-3 text-xl">$HUELLAZOS</Text>
-        <Text className="text-border text-xs text-center mt-4 px-4 font-bold bg-background/50 py-2 mb-4">
-          * Points redeemable for discounts. Real payments are processed in SOL.
-        </Text>
-        
-        <View className="w-full px-6">
-          <BrutalistButton 
-            title="Break Digital Piñata (100 HZ)" 
-            colorClass="bg-primary" 
-            onPress={() => setPinataModalVisible(true)} 
-          />
-        </View>
-      </BrutalistCard>
+      <View className="w-full mb-6">
+        <BrutalistButton 
+          title="Break Digital Piñata (100 HZ)" 
+          colorClass="bg-primary" 
+          onPress={() => setPinataModalVisible(true)} 
+        />
+      </View>
 
       <Text className="text-xl font-bold text-border mb-4 uppercase">Quick Actions</Text>
       <View className="flex-row justify-between mb-8">

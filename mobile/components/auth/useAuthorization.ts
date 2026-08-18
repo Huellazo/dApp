@@ -9,7 +9,16 @@ import { AppConfig } from '@/constants/app-config';
 declare global {
   interface Window {
     solana?: any;
+    phantom?: { solana?: any };
+    solflare?: any;
   }
+}
+
+export interface WebWalletProvider {
+  id: string;
+  name: string;
+  icon: string;
+  provider: any;
 }
 
 export function useAuthorization() {
@@ -18,14 +27,55 @@ export function useAuthorization() {
   
   // For Web
   const [webWalletAddress, setWebWalletAddress] = useState<string | null>(null);
+  const [activeWebWallet, setActiveWebWallet] = useState<any>(null);
+  const [availableWebWallets, setAvailableWebWallets] = useState<WebWalletProvider[]>([]);
 
   useEffect(() => {
-    if (Platform.OS === 'web' && window.solana?.isPhantom) {
-      window.solana.connect({ onlyIfTrusted: true }).then((res: { publicKey: PublicKey }) => {
-        setWebWalletAddress(res.publicKey.toString());
-      }).catch(() => {
-        // Not trusted yet
-      });
+    if (Platform.OS === 'web') {
+      const wallets: WebWalletProvider[] = [];
+      
+      // Check for Phantom
+      const phantomProvider = window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
+      if (phantomProvider) {
+        wallets.push({
+          id: 'phantom',
+          name: 'Phantom',
+          icon: 'phantom-icon', // Just an identifier, UI will render appropriate icon
+          provider: phantomProvider,
+        });
+      }
+      
+      // Check for Solflare
+      if (window.solflare) {
+        wallets.push({
+          id: 'solflare',
+          name: 'Solflare',
+          icon: 'solflare-icon',
+          provider: window.solflare,
+        });
+      }
+      
+      setAvailableWebWallets(wallets);
+
+      // Auto-connect if trusted (we just check phantom for auto-connect for now, 
+      // or we can iterate available wallets. Let's just do phantom if available)
+      if (phantomProvider) {
+        phantomProvider.connect({ onlyIfTrusted: true }).then((res: { publicKey: PublicKey }) => {
+          setWebWalletAddress(res.publicKey.toString());
+          setActiveWebWallet(phantomProvider);
+        }).catch(() => {
+          // Not trusted yet
+        });
+      } else if (window.solflare) {
+        window.solflare.connect({ onlyIfTrusted: true }).then(() => {
+          if (window.solflare.publicKey) {
+            setWebWalletAddress(window.solflare.publicKey.toString());
+            setActiveWebWallet(window.solflare);
+          }
+        }).catch(() => {
+          // Not trusted yet
+        });
+      }
     }
   }, []);
 
@@ -52,21 +102,42 @@ export function useAuthorization() {
     return handleAuthorizationResult(authResult);
   }, [handleAuthorizationResult]);
 
-  const authorize = useCallback(async () => {
+  const authorize = useCallback(async (walletId?: string) => {
     if (Platform.OS === 'web') {
-      if (window.solana?.isPhantom) {
-        setIsAuthorizing(true);
-        try {
-          const resp = await window.solana.connect();
-          setWebWalletAddress(resp.publicKey.toString());
-          return resp.publicKey.toString();
-        } catch (err) {
-          console.error('Phantom connect error:', err);
-        } finally {
-          setIsAuthorizing(false);
+      setIsAuthorizing(true);
+      try {
+        let provider = activeWebWallet;
+        
+        // If a specific walletId is requested, find it
+        if (walletId) {
+          const found = availableWebWallets.find(w => w.id === walletId);
+          if (found) {
+            provider = found.provider;
+          } else {
+            throw new Error(`Wallet ${walletId} is not installed`);
+          }
         }
-      } else {
-        alert('Phantom wallet is not installed in your browser.');
+        
+        // If no provider is active and no walletId specified, default to Phantom if available
+        if (!provider && availableWebWallets.length > 0) {
+          provider = availableWebWallets.find(w => w.id === 'phantom')?.provider || availableWebWallets[0].provider;
+        }
+
+        if (provider) {
+          const resp = await provider.connect();
+          const pubKey = resp.publicKey ? resp.publicKey.toString() : provider.publicKey?.toString();
+          if (pubKey) {
+            setWebWalletAddress(pubKey);
+            setActiveWebWallet(provider);
+            return pubKey;
+          }
+        } else {
+          alert('No supported Solana wallet is installed in your browser.');
+        }
+      } catch (err) {
+        console.error('Wallet connect error:', err);
+      } finally {
+        setIsAuthorizing(false);
       }
       return;
     }
@@ -83,7 +154,7 @@ export function useAuthorization() {
     } finally {
       setIsAuthorizing(false);
     }
-  }, [authorizeSession]);
+  }, [authorizeSession, activeWebWallet, availableWebWallets]);
 
   const deauthorizeSession = useCallback(async (wallet: any) => {
     if (authorization?.auth_token) {
@@ -94,10 +165,11 @@ export function useAuthorization() {
 
   const deauthorize = useCallback(async () => {
     if (Platform.OS === 'web') {
-      if (window.solana?.isPhantom) {
-        await window.solana.disconnect();
+      if (activeWebWallet) {
+        await activeWebWallet.disconnect();
       }
       setWebWalletAddress(null);
+      setActiveWebWallet(null);
       setAuthorization(null);
       return;
     }
@@ -113,14 +185,14 @@ export function useAuthorization() {
       setAuthorization(null);
       setIsAuthorizing(false);
     }
-  }, [authorization, deauthorizeSession]);
+  }, [authorization, deauthorizeSession, activeWebWallet]);
   
   // Expose an account object that looks like MWA's account, so our codebase works
   // transparently for web and mobile.
   const selectedAccount = Platform.OS === 'web' && webWalletAddress ? {
     address: webWalletAddress,
     publicKey: webWalletAddress, // for auth-provider web3.js parsing
-    label: 'Phantom Web',
+    label: activeWebWallet?.isPhantom ? 'Phantom' : (activeWebWallet?.isSolflare ? 'Solflare' : 'Web Wallet'),
   } as any : authorization?.accounts[0] ?? null;
 
   return {
@@ -130,6 +202,8 @@ export function useAuthorization() {
     isAuthorizing,
     selectedAccount,
     webWalletAddress,
+    activeWebWallet,
+    availableWebWallets,
   };
 }
 
