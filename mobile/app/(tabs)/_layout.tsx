@@ -35,9 +35,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="wallet"
+        name="collections"
         options={{
-          title: 'Wallet',
+          title: 'Collect',
         }}
       />
     </Tabs>

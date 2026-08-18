@@ -7,8 +7,8 @@ import { colors } from '@/theme/colors';
 const tabIcons: Record<string, React.ComponentProps<typeof FontAwesome5>['name']> = {
   tourism: 'map-marked-alt',
   business: 'store',
-  passport: 'passport',
-  wallet: 'wallet',
+  passport: 'id-card',
+  collections: 'box-open',
   scan: 'qrcode',
 };
 
