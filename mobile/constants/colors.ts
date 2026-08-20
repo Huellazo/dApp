@@ -1,6 +1,6 @@
 /**
  * Mexican Neo-Brutalist Palette for Huellazo
- * Inspired by minimalist architecture and organic textures.
+ * Inspired by minimalist architecture and organic textures ("Brutalismo Manchones").
  */
 
 type ThemeTokens = {
@@ -17,6 +17,8 @@ type ThemeTokens = {
   tint: string
   primary: string // Terracota
   accent: string  // Mostaza
+  accent1: string // Fucsia Festivo
+  accent2: string // Turquesa Orgánico
   success: string
   warning: string
   danger: string
@@ -45,22 +47,20 @@ const baseTheme: ThemeTokens = {
   
   primary: '#E07A5F', // Terracotta (Action Buttons, Headers)
   accent: '#F2CC8F',  // Mustard (Highlights, Alerts)
+  accent1: '#D81B60', // Soft Festive Magenta
+  accent2: '#00A896', // Organic Turquoise
   
-  success: '#81B29A', // Pale Green (complementary)
+  success: '#00A896', // Organic Turquoise
   warning: '#F2CC8F',
   danger: '#E07A5F',
 
-  // Legacy compatibility for huellazo components (Account, Welcome, SignIn)
-  gradientMint: ['#E07A5F', '#F2CC8F'], // Replaced with Terracotta to Mustard Brutalist gradient
-  borderMuted: '#3D405B', // Fallback to border
-  surfaceMuted: '#FAF9F6', // Fallback to background
-  accentGreen: '#81B29A', // Fallback to success
-  accentPurple: '#F2CC8F', // Fallback to accent/warning
+  gradientMint: ['#E07A5F', '#F2CC8F'],
+  borderMuted: '#3D405B',
+  surfaceMuted: '#FAF9F6',
+  accentGreen: '#00A896',
+  accentPurple: '#D81B60',
 }
 
-// In brutalism we usually avoid a traditional "dark mode" to
-// maintain the integrity of the light "paper/cardboard" design, but we map
-// both configurations to the same theme to avoid black flashes.
 export const Colors = {
   light: {
     ...baseTheme,

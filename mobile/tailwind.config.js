@@ -12,8 +12,8 @@ module.exports = {
         border: '#3D405B', // Azul Talavera Oscuro
         primary: '#E07A5F', // Terracota
         secondary: '#F2CC8F', // Amarillo Mostaza
-        accent1: '#FF007F', // Fucsia
-        accent2: '#40E0D0', // Turquesa
+        accent1: '#D81B60', // Fucsia Festivo Suave
+        accent2: '#00A896', // Turquesa Orgánico
       },
       borderWidth: {
         '4': '4px',
