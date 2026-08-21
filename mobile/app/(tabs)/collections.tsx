@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Image, Pressable } from 'react-native';
+import { View, Text, ScrollView, Image, Pressable, Modal } from 'react-native';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { NftDetailModal } from '@/components/features/passport/NftDetailModal';
@@ -7,22 +7,25 @@ import { TradeOfferModal } from '@/components/features/passport/TradeOfferModal'
 import { PinataModal } from '@/components/features/wallet/PinataModal';
 import { useAppState } from '@/context/app-state';
 import { useLanguage } from '@/context/language-context';
-import { MOCK_POIS } from '@/mocks/db';
+import { MOCK_POIS, MOCK_LOCKED_STAMPS, LockedStamp } from '@/mocks/db';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
+import { useRouter } from 'expo-router';
 
 function shortHash(value: string) {
   return `${value.slice(0, 6)}...${value.slice(-6)}`;
 }
 
-type FilterCategory = 'all' | 'stickers' | 'trophies' | 'inventory';
+type FilterCategory = 'all' | 'stickers' | 'trophies' | 'inventory' | 'locked';
 
 export default function CollectionsScreen() {
   const { t } = useLanguage();
+  const router = useRouter();
   const { earnedTokens, inventory, ownedNfts } = useAppState();
   
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
   const [selectedNft, setSelectedNft] = useState<any>(null);
+  const [selectedLockedStamp, setSelectedLockedStamp] = useState<LockedStamp | null>(null);
   const [isTradeOfferVisible, setTradeOfferVisible] = useState(false);
   const [isPinataModalVisible, setPinataModalVisible] = useState(false);
   const [showTechDetails, setShowTechDetails] = useState<Record<string, boolean>>({});
@@ -43,10 +46,27 @@ export default function CollectionsScreen() {
   const nonNftInventory = inventory.filter(item => item.type !== 'nft');
   const allNfts = [...ownedNfts, ...inventoryNfts];
 
+  // Set of all obtained names and titles (lowercase for comparison)
+  const obtainedNames = [
+    ...allNfts.map(nft => (nft.title || '').toLowerCase().trim()),
+    ...earnedTokens.map(tok => (tok.name || '').toLowerCase().trim()),
+    ...earnedTokens.map(tok => (tok.location || '').toLowerCase().trim())
+  ];
+
+  // Filter MOCK_LOCKED_STAMPS so that ONLY stamps NOT YET obtained appear in "Por Desbloquear"
+  const lockedStamps = MOCK_LOCKED_STAMPS.filter(stamp => {
+    const titleLower = stamp.title.toLowerCase().trim();
+    const isObtained = obtainedNames.some(name => {
+      if (!name) return false;
+      return name.includes(titleLower) || titleLower.includes(name);
+    });
+    return !isObtained;
+  });
+
   // Album progress metrics
   const totalCollectedStickers = earnedTokens.length + allNfts.length;
-  const totalTargetStickers = 12; // Total album capacity for CDMX
-  const albumProgressPercent = Math.min(Math.round((totalCollectedStickers / totalTargetStickers) * 100), 100);
+  const totalAvailableTarget = totalCollectedStickers + lockedStamps.length;
+  const albumProgressPercent = Math.min(Math.round((totalCollectedStickers / Math.max(totalAvailableTarget, 1)) * 100), 100);
 
   return (
     <ScrollView className="flex-1 bg-background pt-12 px-4 pb-24" showsVerticalScrollIndicator={false}>
@@ -72,7 +92,7 @@ export default function CollectionsScreen() {
           {/* Progress Bar */}
           <View className="flex-row justify-between items-center mb-2">
             <Text className="text-border font-bold text-xs uppercase">
-              {t('collections.album_progress', { collected: totalCollectedStickers, total: totalTargetStickers })}
+              {t('collections.album_progress', { collected: totalCollectedStickers, total: totalAvailableTarget })}
             </Text>
             <FontAwesome5 name="stamp" size={14} color={colors.primary} />
           </View>
@@ -123,11 +143,11 @@ export default function CollectionsScreen() {
         />
       </BrutalistCard>
 
-      {/* 🗂️ CATEGORY FILTERS (TAB CONTROLLER TO AVOID OVERCROWDING) */}
-      <View className="flex-row mb-6 bg-background border-2 border-border shadow-brutal-sm overflow-hidden p-1 justify-between">
+      {/* 🗂️ CATEGORY FILTERS */}
+      <View className="flex-row mb-6 bg-background border-2 border-border shadow-brutal-sm overflow-hidden p-1 justify-between flex-wrap">
         <Pressable 
           onPress={() => setActiveFilter('all')}
-          className={`flex-1 py-2 items-center border-r border-border/20 ${activeFilter === 'all' ? 'bg-primary' : 'bg-background'}`}
+          className={`px-3 py-2 items-center rounded-sm mb-1 ${activeFilter === 'all' ? 'bg-primary' : 'bg-background'}`}
         >
           <Text className={`font-black text-xs uppercase ${activeFilter === 'all' ? 'text-background' : 'text-border'}`}>
             {t('collections.filter_all')}
@@ -136,7 +156,7 @@ export default function CollectionsScreen() {
 
         <Pressable 
           onPress={() => setActiveFilter('stickers')}
-          className={`flex-1 py-2 items-center border-r border-border/20 ${activeFilter === 'stickers' ? 'bg-accent2' : 'bg-background'}`}
+          className={`px-3 py-2 items-center rounded-sm mb-1 ${activeFilter === 'stickers' ? 'bg-accent2' : 'bg-background'}`}
         >
           <Text className={`font-black text-xs uppercase ${activeFilter === 'stickers' ? 'text-background' : 'text-border'}`}>
             {t('collections.filter_stickers')} ({earnedTokens.length})
@@ -145,7 +165,7 @@ export default function CollectionsScreen() {
 
         <Pressable 
           onPress={() => setActiveFilter('trophies')}
-          className={`flex-1 py-2 items-center border-r border-border/20 ${activeFilter === 'trophies' ? 'bg-accent1' : 'bg-background'}`}
+          className={`px-3 py-2 items-center rounded-sm mb-1 ${activeFilter === 'trophies' ? 'bg-accent1' : 'bg-background'}`}
         >
           <Text className={`font-black text-xs uppercase ${activeFilter === 'trophies' ? 'text-background' : 'text-border'}`}>
             {t('collections.filter_trophies')} ({allNfts.length})
@@ -153,11 +173,11 @@ export default function CollectionsScreen() {
         </Pressable>
 
         <Pressable 
-          onPress={() => setActiveFilter('inventory')}
-          className={`flex-1 py-2 items-center ${activeFilter === 'inventory' ? 'bg-secondary' : 'bg-background'}`}
+          onPress={() => setActiveFilter('locked')}
+          className={`px-3 py-2 items-center rounded-sm mb-1 ${activeFilter === 'locked' ? 'bg-secondary' : 'bg-background'}`}
         >
-          <Text className={`font-black text-xs uppercase ${activeFilter === 'inventory' ? 'text-border' : 'text-border'}`}>
-            {t('collections.filter_inventory')} ({nonNftInventory.length})
+          <Text className={`font-black text-xs uppercase ${activeFilter === 'locked' ? 'text-border font-bold' : 'text-border'}`}>
+            {t('collections.filter_locked')} ({lockedStamps.length})
           </Text>
         </Pressable>
       </View>
@@ -265,6 +285,70 @@ export default function CollectionsScreen() {
         </View>
       )}
 
+      {/* 🔒 SECTION 4: STAMPAS POR DESBLOQUEAR CERCA DE TU ZONA (ONLY UNCLAIMED ONES!) */}
+      {(activeFilter === 'all' || activeFilter === 'locked') && (
+        <View className="mb-8">
+          <View className="mb-3">
+            <View className="flex-row items-center">
+              <FontAwesome5 name="lock" size={18} color={colors.primary} className="mr-2" />
+              <Text className="text-xl font-black text-border uppercase">{t('collections.locked_section_title')}</Text>
+            </View>
+            <Text className="text-border text-xs font-bold opacity-70 mt-1">
+              {t('collections.locked_section_desc')}
+            </Text>
+          </View>
+
+          {lockedStamps.length === 0 ? (
+            <BrutalistCard colorClass="bg-accent2/20 mb-4 p-6 items-center" variant="info">
+              <FontAwesome5 name="check-circle" size={32} color={colors.accent2} className="mb-2" />
+              <Text className="text-border font-black text-lg uppercase mb-2 text-center">¡Álbum de Zona Completado!</Text>
+              <Text className="text-border font-bold text-sm text-center">
+                ¡Felicidades! Has obtenido todas las estampas disponibles en esta zona.
+              </Text>
+            </BrutalistCard>
+          ) : (
+            <View className="flex-row flex-wrap justify-between">
+              {lockedStamps.map((stamp) => (
+                <View key={stamp.id} className="w-[48%] mb-4">
+                  <Pressable onPress={() => setSelectedLockedStamp(stamp)} className="active:scale-95 transition-transform">
+                    <BrutalistCard colorClass="bg-background p-0 overflow-hidden opacity-95">
+                      
+                      {/* Locked Image Container */}
+                      <View style={{ aspectRatio: 1 }} className="w-full bg-secondary/60 border-b-4 border-border justify-center items-center relative overflow-hidden">
+                        <Image source={stamp.image} className="w-11/12 h-11/12 opacity-35" resizeMode="contain" />
+                        
+                        {/* Lock Overlay Badge */}
+                        <View className="absolute inset-0 bg-black/40 justify-center items-center">
+                          <View className="w-12 h-12 bg-primary border-2 border-border shadow-brutal-sm rounded-full justify-center items-center">
+                            <FontAwesome5 name="lock" size={20} color="#FAF9F6" />
+                          </View>
+                        </View>
+
+                        {/* Zone Badge */}
+                        <View className="absolute top-2 left-2 bg-accent2 border border-border px-2 py-0.5 shadow-brutal-sm">
+                          <Text className="text-border font-black text-[9px] uppercase">{stamp.zone}</Text>
+                        </View>
+                      </View>
+
+                      {/* Info */}
+                      <View className="p-3 bg-background">
+                        <Text className="text-border font-black text-sm uppercase" numberOfLines={1}>{stamp.title}</Text>
+                        <Text className="text-border text-[10px] font-bold opacity-70 mt-0.5" numberOfLines={1}>{stamp.location}</Text>
+                        
+                        <View className="mt-2 bg-secondary/30 p-2 border border-border flex-row justify-between items-center">
+                          <Text className="text-primary font-black text-[9px] uppercase">Puntos:</Text>
+                          <Text className="text-border font-black text-xs">+{stamp.rewardPoints} HZ</Text>
+                        </View>
+                      </View>
+                    </BrutalistCard>
+                  </Pressable>
+                </View>
+              ))}
+            </View>
+          )}
+        </View>
+      )}
+
       {/* 🎒 SECTION 3: INVENTORY LOOT */}
       {(activeFilter === 'all' || activeFilter === 'inventory') && (
         <View className="mb-12">
@@ -302,6 +386,67 @@ export default function CollectionsScreen() {
           )}
         </View>
       )}
+
+      {/* Locked Stamp Unlock Instructions Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={!!selectedLockedStamp}
+        onRequestClose={() => setSelectedLockedStamp(null)}
+      >
+        <View className="flex-1 justify-center items-center bg-black/80 px-4">
+          {selectedLockedStamp && (
+            <BrutalistCard colorClass="bg-background w-full max-w-sm p-0 overflow-hidden">
+              <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
+                 <Text className="text-background font-black text-xl uppercase">{t('collections.locked_modal_title')}</Text>
+                 <FontAwesome5 name="lock" size={24} color="#FAF9F6" />
+              </View>
+
+              <View className="p-4 items-center">
+                <View className="w-40 h-40 bg-secondary/50 border-4 border-border shadow-brutal-sm justify-center items-center mb-4 relative overflow-hidden">
+                  <Image source={selectedLockedStamp.image} style={{ width: 130, height: 130, resizeMode: 'contain', opacity: 0.6 }} />
+                  <View className="absolute inset-0 bg-black/30 justify-center items-center">
+                    <FontAwesome5 name="lock" size={36} color="#FAF9F6" />
+                  </View>
+                </View>
+
+                <Text className="text-border font-black text-xl uppercase mb-1 text-center">{selectedLockedStamp.title}</Text>
+                <Text className="text-border font-bold text-xs opacity-70 mb-4 text-center">{selectedLockedStamp.location}</Text>
+
+                <View className="bg-secondary/30 p-4 border-2 border-border w-full mb-6">
+                  <Text className="text-primary font-black text-xs uppercase mb-1">{t('collections.locked_hint_prefix')}</Text>
+                  <Text className="text-border font-bold text-sm leading-relaxed">{selectedLockedStamp.hint}</Text>
+                  
+                  <View className="mt-3 pt-2 border-t border-border/20 flex-row justify-between items-center">
+                    <Text className="text-border font-black text-xs uppercase">Recompensa al desbloquear:</Text>
+                    <Text className="text-accent2 font-black text-sm">+{selectedLockedStamp.rewardPoints} HZ</Text>
+                  </View>
+                </View>
+
+                <View className="w-full flex-row justify-between">
+                  <View className="flex-1 mr-2">
+                    <BrutalistButton 
+                      title={t('collections.locked_modal_action')} 
+                      colorClass="bg-accent2" 
+                      onPress={() => {
+                        setSelectedLockedStamp(null);
+                        router.push('/(tabs)/scan');
+                      }} 
+                    />
+                  </View>
+                  <View className="w-24">
+                    <BrutalistButton 
+                      title={t('common.close')} 
+                      colorClass="bg-primary" 
+                      onPress={() => setSelectedLockedStamp(null)} 
+                    />
+                  </View>
+                </View>
+              </View>
+            </BrutalistCard>
+          )}
+        </View>
+      </Modal>
 
       {/* Modals */}
       <NftDetailModal 

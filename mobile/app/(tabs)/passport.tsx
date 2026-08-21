@@ -16,10 +16,10 @@ import { PublicKey } from '@solana/web3.js';
 
 const AVATAR_OPTIONS = [
   require('@/assets/images/profile_wallet.png'),
-  require('@/assets/images/nft_eagle.png'),
-  require('@/assets/images/nft_xochimilco.png'),
-  require('@/assets/images/nft_luchador.png'),
-  require('@/assets/images/nft_alebrije.png'),
+  require('@/assets/images/huajuapan/nft_jaguarcito_nuiñe.png'),
+  require('@/assets/images/huajuapan/nft_sol_mixteca.png'),
+  require('@/assets/images/huajuapan/nft_jarabe_mixteco.png'),
+  require('@/assets/images/huajuapan/nft_guaje_oro.png'),
 ];
 
 function formatSolBalance(balance: number) {
@@ -82,7 +82,7 @@ export default function PassportScreen() {
       setConnectionError(
         isCancelled
           ? (language === 'es' ? 'Conexión cancelada.' : 'Connection cancelled.')
-          : (language === 'es' ? 'No se pudo conectar. Verifica que Phantom o Solflare estén instalados.' : 'Could not connect. Ensure Phantom or Solflare is installed.'),
+          : (language === 'es' ? 'No se pudo conectar. Revisa tu aplicación de monedero.' : 'Could not connect. Check your wallet app.'),
       );
     }
   };
@@ -93,7 +93,7 @@ export default function PassportScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-background pt-12 px-4 pb-24">
+    <ScrollView className="flex-1 bg-background pt-12 px-4 pb-24" showsVerticalScrollIndicator={false}>
       {/* Header with Title and Language Toggle */}
       <View className="flex-row justify-between items-center mb-6">
         <Text className="text-3xl font-black text-border uppercase tracking-tight">{t('passport.title')}</Text>
@@ -128,7 +128,7 @@ export default function PassportScreen() {
                <FontAwesome5 name="user" size={24} color={colors.border} className="m-auto" />
              )}
              <View className="absolute bottom-0 w-full bg-border/80 items-center py-0.5">
-                <Text className="text-background font-black text-[8px] uppercase">Edit</Text>
+                <Text className="text-background font-black text-[8px] uppercase">{language === 'es' ? 'Cambiar' : 'Edit'}</Text>
              </View>
           </Pressable>
           <View className="flex-1">
@@ -150,8 +150,8 @@ export default function PassportScreen() {
                 <View style={{ width: `${xpProgress}%` }} className={`h-full ${status === 'wanted' ? 'bg-primary' : 'bg-accent2'}`} />
              </View>
              <View className="flex-row justify-between mt-1">
-               <Text className="text-background text-[9px] font-black uppercase">XP: {xp}</Text>
-               <Text className="text-background text-[9px] font-black uppercase">{xp >= 5000 ? 'MAX LVL' : `NEXT: ${nextLevelXp}`}</Text>
+               <Text className="text-background text-[9px] font-black uppercase">PUNTOS XP: {xp}</Text>
+               <Text className="text-background text-[9px] font-black uppercase">{xp >= 5000 ? (language === 'es' ? 'NIVEL MÁXIMO' : 'MAX LVL') : `${language === 'es' ? 'SIG. NIVEL:' : 'NEXT:'} ${nextLevelXp}`}</Text>
              </View>
           </View>
         </View>
@@ -212,7 +212,7 @@ export default function PassportScreen() {
                   <Text className="text-border font-black text-2xl" numberOfLines={1} adjustsFontSizeToFit>
                     {points}
                   </Text>
-                  <Text className="text-border font-black text-[10px] uppercase">$HUELLAZOS</Text>
+                  <Text className="text-border font-black text-[10px] uppercase">HZ</Text>
                 </View>
               </View>
 
@@ -253,7 +253,7 @@ export default function PassportScreen() {
       <View className="mb-4">
         <Text className="text-xl font-black text-border uppercase">{t('passport.quick_actions')}</Text>
         <Text className="text-border text-xs font-bold opacity-80 mt-0.5">
-          {language === 'es' ? 'Transferencia directa de Stickers y Medallas entre exploradores' : 'Direct Sticker & Achievement transfer between explorers'}
+          {language === 'es' ? 'Regala o pide estampas de recuerdo entre amigos exploradores' : 'Direct Sticker & Achievement transfer between explorers'}
         </Text>
       </View>
       <View className="flex-row justify-between mb-8">
@@ -287,7 +287,7 @@ export default function PassportScreen() {
                 </Text>
               </View>
               <Text className={`${tx.type === 'earn' ? 'text-accent2' : 'text-primary'} font-black text-lg`}>
-                {tx.type === 'earn' ? '+' : '-'}{tx.amount}
+                {tx.type === 'earn' ? '+' : '-'}{tx.amount} HZ
               </Text>
             </View>
           </View>
@@ -362,17 +362,21 @@ export default function PassportScreen() {
                   {t('passport.join_faction_desc')}
                 </Text>
                 
-                {['Ajolotes', 'Eagles', 'Jaguars'].map((f) => (
+                {[
+                  { id: 'Ajolotes', label: 'Ajolotes de la Mixteca' },
+                  { id: 'Eagles', label: 'Águilas Mixtecas' },
+                  { id: 'Jaguars', label: 'Jaguares Ñuiñe' }
+                ].map((item) => (
                   <Pressable
-                    key={f}
+                    key={item.id}
                     onPress={() => {
-                      joinFaction(f as any);
+                      joinFaction(item.id as any);
                       setFactionModalVisible(false);
                     }}
-                    className={`mb-3 p-4 border-4 shadow-brutal-sm flex-row justify-between items-center ${faction === f ? 'border-accent2 bg-accent2/30' : 'border-border bg-background'}`}
+                    className={`mb-3 p-4 border-4 shadow-brutal-sm flex-row justify-between items-center ${faction === item.id ? 'border-accent2 bg-accent2/30' : 'border-border bg-background'}`}
                   >
-                    <Text className="text-border font-black uppercase text-lg">{f}</Text>
-                    {faction === f && <FontAwesome5 name="check-circle" solid size={20} color={colors.border} />}
+                    <Text className="text-border font-black uppercase text-base">{item.label}</Text>
+                    {faction === item.id && <FontAwesome5 name="check-circle" solid size={20} color={colors.border} />}
                   </Pressable>
                 ))}
 

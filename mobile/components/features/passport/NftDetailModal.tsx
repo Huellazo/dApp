@@ -34,17 +34,17 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
             
             {/* Header */}
             <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
-               <Text className="text-border font-black text-xl uppercase truncate" numberOfLines={1}>
+               <Text className="text-background font-black text-xl uppercase truncate" numberOfLines={1}>
                  {nft.title}
                </Text>
-               <FontAwesome5 name="times" size={24} color={colors.border} onPress={onClose} style={{ padding: 4 }} />
+               <FontAwesome5 name="times" size={24} color="#FAF9F6" onPress={onClose} style={{ padding: 4 }} />
             </View>
 
             {/* Image Container */}
             <View className={`w-full aspect-square ${bgStyle} border-b-4 border-border justify-center items-center relative overflow-hidden`}>
               {nft.style && (
                 <View className="absolute top-4 left-[-16px] bg-primary border-y-4 border-r-4 border-border px-4 py-2 shadow-brutal-sm z-10">
-                  <Text className="text-border font-black text-xs uppercase tracking-widest">{nft.style}</Text>
+                  <Text className="text-background font-black text-xs uppercase tracking-widest">{nft.style}</Text>
                 </View>
               )}
               {nft.image ? (
@@ -58,24 +58,24 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
             <View className="p-6 bg-secondary">
                
                <View className="bg-background border-4 border-border p-4 shadow-brutal-sm mb-6">
-                 <Text className="text-border font-black text-xs uppercase opacity-70 mb-1">Origin / Location</Text>
+                 <Text className="text-border font-black text-xs uppercase opacity-70 mb-1">Lugar de Origen</Text>
                  <Text className="text-border font-bold text-lg mb-4">{nft.location}</Text>
                  
-                 <Text className="text-border font-black text-xs uppercase opacity-70 mb-1">Acquired</Text>
+                 <Text className="text-border font-black text-xs uppercase opacity-70 mb-1">Fecha de Colección</Text>
                  <Text className="text-border font-bold text-base">
-                   {nft.date ? new Date(nft.date).toLocaleDateString() : 'Unknown Date'}
+                   {nft.date ? new Date(nft.date).toLocaleDateString() : 'Fecha no registrada'}
                  </Text>
                </View>
 
                <Text className="text-border font-bold text-xs text-center opacity-80 mb-4 px-2">
-                 This is a unique digital collectible tied to your Huellazo Passport.
+                 Esta estampa es un recuerdo digital único guardado en tu Pasaporte de Huellazo.
                </Text>
 
                {/* Action Buttons */}
                <View className="w-full flex-row justify-between">
                  <View className="flex-1 mr-2">
                    <BrutalistButton 
-                     title="Trade" 
+                     title="Intercambiar" 
                      colorClass="bg-accent2" 
                      disabled={false}
                      onPress={onTradePress} 
@@ -83,7 +83,7 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
                  </View>
                  <View className="flex-1 ml-2">
                    <BrutalistButton 
-                     title="Close" 
+                     title="Volver" 
                      colorClass="bg-primary" 
                      onPress={onClose} 
                    />
