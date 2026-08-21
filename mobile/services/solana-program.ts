@@ -117,4 +117,26 @@ export function createMintBusinessInstructionData(
   return Buffer.concat([discriminator, tokenIdBuf, uriLenBuf, uriBytes, latBuf, lngBuf, amountBuf]);
 }
 
+/**
+ * Builds a complete Solana Pay Transaction for commercial payments on Solana Devnet
+ */
+export function buildSolanaPayTransaction(
+  senderPubkey: PublicKey,
+  recipientPubkey: PublicKey,
+  amountLamports: number
+): Transaction {
+  const transaction = new Transaction();
+
+  if (amountLamports > 0) {
+    const transferInstruction = SystemProgram.transfer({
+      fromPubkey: senderPubkey,
+      toPubkey: recipientPubkey,
+      lamports: BigInt(amountLamports),
+    });
+    transaction.add(transferInstruction);
+  }
+
+  return transaction;
+}
+
 export { idlHuellazo };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Image, Pressable, Modal } from 'react-native';
+import { View, Text, ScrollView, Image, Pressable, Modal, Platform } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MOCK_POIS } from '@/mocks/db';
@@ -9,6 +9,7 @@ import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { useLanguage } from '@/context/language-context';
 import { useAppState } from '@/context/app-state';
 import { useHuellazoWeb3 } from '@/hooks/useHuellazoWeb3';
+import { QrPaymentPanelModal } from '@/components/features/scan/QrPaymentPanelModal';
 
 export default function BusinessDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -29,6 +30,9 @@ export default function BusinessDetailScreen() {
   const [guestCount, setGuestCount] = useState(2);
   const [reservationModalVisible, setReservationModalVisible] = useState(false);
   const [reservationLoading, setReservationLoading] = useState(false);
+
+  // Dedicated QR Bill Payment Panel Modal
+  const [qrPanelVisible, setQrPanelVisible] = useState(false);
 
   if (!place) {
     return (
@@ -164,7 +168,7 @@ export default function BusinessDetailScreen() {
 
           {/* Features horizontal scroll */}
           {place.features && place.features.length > 0 && (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6">
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
               {place.features.map((feature, idx) => (
                 <View key={idx} className="bg-accent2/30 border-2 border-border px-3 py-1 mr-2 shadow-brutal-sm">
                   <Text className="text-border font-bold text-xs uppercase">✓ {feature}</Text>
@@ -172,6 +176,36 @@ export default function BusinessDetailScreen() {
               ))}
             </ScrollView>
           )}
+
+          {/* ⚡ DEDICATED SOLANA PAY QR BILL PAYMENT PANEL TRIGGER */}
+          <BrutalistCard colorClass="bg-accent2/30 p-4 mb-6" variant="info">
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center flex-1 mr-2">
+                <FontAwesome5 name="qrcode" size={20} color={colors.border} className="mr-2" />
+                <Text className="text-border font-black text-lg uppercase">
+                  {language === 'es' ? 'Pagar Cuenta con QR' : 'Pay Bill with QR'}
+                </Text>
+              </View>
+              <View className="bg-primary px-2 py-0.5 border border-border">
+                <Text className="text-background font-black text-[9px] uppercase">+20 HZ</Text>
+              </View>
+            </View>
+            <Text className="text-border text-xs font-bold opacity-80 mb-4">
+              {language === 'es' 
+                ? `Escanea con tu cámara o adjunta desde tus archivos el código QR de Solana Pay de ${place.name}.`
+                : `Scan with camera or attach QR file from disk for ${place.name}.`}
+            </Text>
+
+            <Pressable
+              onPress={() => setQrPanelVisible(true)}
+              className="bg-primary p-3.5 border-4 border-border shadow-brutal-sm active:scale-95 flex-row items-center justify-center"
+            >
+              <FontAwesome5 name="qrcode" size={16} color="#FAF9F6" className="mr-2" />
+              <Text className="text-background font-black text-sm uppercase">
+                {language === 'es' ? 'ABRIR PANEL DE PAGO CON QR' : 'OPEN QR BILL PAYMENT PANEL'}
+              </Text>
+            </Pressable>
+          </BrutalistCard>
 
           {/* Description Card */}
           <Text className="text-xl font-black text-border mb-2 uppercase">
@@ -330,6 +364,14 @@ export default function BusinessDetailScreen() {
 
         </View>
       </ScrollView>
+
+      {/* Multi-Step Dedicated QR Bill Payment Panel Modal */}
+      <QrPaymentPanelModal
+        visible={qrPanelVisible}
+        businessName={place.name}
+        defaultAmountSol={0.035}
+        onClose={() => setQrPanelVisible(false)}
+      />
 
       {/* No Wallet Connected Modal */}
       <Modal visible={noWalletModalVisible} transparent animationType="slide" onRequestClose={() => setNoWalletModalVisible(false)}>

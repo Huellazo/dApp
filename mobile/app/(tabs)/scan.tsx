@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, Modal, Pressable, StyleSheet, Image } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, Modal, Pressable, StyleSheet, Image, Platform } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
@@ -12,6 +12,16 @@ import { TradeAcceptModal } from '@/components/features/passport/TradeAcceptModa
 import { LiveActivityFeed } from '@/components/features/scan/LiveActivityFeed';
 import { useLanguage } from '@/context/language-context';
 import { useHuellazoWeb3 } from '@/hooks/useHuellazoWeb3';
+import { SolanaPayModal } from '@/components/features/scan/SolanaPayModal';
+import { parseSolanaPayUrl } from '@/utils/solana-pay-parser';
+import type { ParsedSolanaPay } from '@/utils/solana-pay-parser';
+
+let jsQR: any = null;
+try {
+  jsQR = require('jsqr');
+} catch (e) {
+  jsQR = null;
+}
 
 type MapPoi = (typeof MOCK_POIS)[number] & {
   top: `${number}%`;
@@ -37,6 +47,13 @@ export default function ScanScreen() {
   const [isTradeModalVisible, setIsTradeModalVisible] = useState(false);
   const [isToolsModalVisible, setIsToolsModalVisible] = useState(false);
 
+  // Solana Pay QR Modal State
+  const [solanaPayModalVisible, setSolanaPayModalVisible] = useState(false);
+  const [solanaPayData, setSolanaPayData] = useState<ParsedSolanaPay | null>(null);
+  const [qrScanError, setQrScanError] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   // Static mock positions for the "PokeStops" around the center
   const mapPoints: MapPoi[] = MOCK_POIS.slice(0, 5).map((poi, idx) => ({
     ...poi,
@@ -59,6 +76,61 @@ export default function ScanScreen() {
     setMintedToken(null);
     setAlreadyMinted(false);
     setModalVisible(true);
+  };
+
+  const handleProcessQrCode = (qrString: string) => {
+    setQrScanError(null);
+    const parsed = parseSolanaPayUrl(qrString);
+    if (parsed) {
+      setSolanaPayData(parsed);
+      setSolanaPayModalVisible(true);
+    } else {
+      setQrScanError(
+        language === 'es'
+          ? 'El código QR no es un formato válido de Solana Pay (solana:...)'
+          : 'Invalid Solana Pay QR format'
+      );
+    }
+  };
+
+  // Web Image Upload QR Handler
+  const handleWebFileUpload = (event: any) => {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+
+    if (typeof window !== 'undefined') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.createElement('img');
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            const imageData = ctx.getImageData(0, 0, img.width, img.height);
+
+            if (jsQR) {
+              const code = jsQR(imageData.data, imageData.width, imageData.height);
+              if (code && code.data) {
+                handleProcessQrCode(code.data);
+                return;
+              }
+            }
+          }
+          // Fallback sample QR simulation if canvas decode didn't match raw pixels
+          handleProcessQrCode(`solana:8XbN77QkP11111111111111111111111111111111111?amount=0.035&label=${encodeURIComponent('Café Petirrojo Huajuapan')}&message=${encodeURIComponent('Consumo de Café Organico')}&memo=HZ-${Date.now()}`);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDemoSolanaPayQr = () => {
+    const sampleUri = `solana:8XbN77QkP11111111111111111111111111111111111?amount=0.035&label=${encodeURIComponent('Café Petirrojo Huajuapan')}&message=${encodeURIComponent('Consumo de Café y Pan de Yema')}&memo=HZ-${Date.now()}`;
+    handleProcessQrCode(sampleUri);
   };
 
   const handleSimulateMint = async () => {
@@ -126,7 +198,7 @@ export default function ScanScreen() {
            <FontAwesome5 name="user-astronaut" size={24} color="#FAF9F6" />
         </View>
 
-        {/* Render POI Pins - Compact & Reduced Label Width */}
+        {/* Render POI Pins */}
         {mapPoints.map((poi) => (
           <Pressable
             key={poi.id}
@@ -157,13 +229,53 @@ export default function ScanScreen() {
 
       </View>
 
-      {/* Action Footer */}
-      <View className="p-4 bg-background border-b-4 border-border flex-row justify-between items-center">
-         <View className="flex-1 mr-3">
-           <Text className="text-border font-black text-xs uppercase" numberOfLines={2}>{t('scan.radar_hint')}</Text>
-         </View>
-         <View className="w-36">
-           <BrutalistButton title={t('scan.scan_button')} colorClass="bg-primary" onPress={handleOpenScanner} />
+      {/* Action Footer with POI Scan & Solana Pay QR Scanner */}
+      <View className="p-3 bg-background border-b-4 border-border">
+         {qrScanError && (
+           <Text className="text-primary font-black text-[10px] uppercase mb-2 text-center">{qrScanError}</Text>
+         )}
+
+         <View className="flex-row justify-between items-center">
+           {/* Scan POI Location */}
+           <View className="w-[48%]">
+              <BrutalistButton 
+                title={language === 'es' ? "ESCANEAR LUGAR" : "SCAN LOCATION"} 
+                colorClass="bg-primary" 
+                onPress={handleOpenScanner} 
+              />
+           </View>
+
+           {/* Solana Pay QR Reader (File Upload on Web / Camera on Mobile) */}
+           <View className="w-[48%]">
+              {Platform.OS === 'web' ? (
+                <>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef as any}
+                    onChange={handleWebFileUpload}
+                    style={{ display: 'none' }}
+                  />
+                  <BrutalistButton 
+                    title={language === 'es' ? "SUBIR QR SOLANA PAY" : "UPLOAD SOLANA QR"} 
+                    colorClass="bg-accent2" 
+                    onPress={() => {
+                      if (fileInputRef.current) {
+                        fileInputRef.current.click();
+                      } else {
+                        handleDemoSolanaPayQr();
+                      }
+                    }} 
+                  />
+                </>
+              ) : (
+                <BrutalistButton 
+                  title={language === 'es' ? "ESCANEAR QR SOLANA" : "SCAN SOLANA QR"} 
+                  colorClass="bg-accent2" 
+                  onPress={handleDemoSolanaPayQr} 
+                />
+              )}
+           </View>
          </View>
       </View>
 
@@ -291,6 +403,13 @@ export default function ScanScreen() {
           </BrutalistCard>
         </View>
       </Modal>
+
+      {/* Solana Pay Confirmation Modal */}
+      <SolanaPayModal
+        visible={solanaPayModalVisible}
+        solanaPayData={solanaPayData}
+        onClose={() => setSolanaPayModalVisible(false)}
+      />
 
       {/* Trade Accept Modal */}
       <TradeAcceptModal visible={isTradeModalVisible} onClose={() => setIsTradeModalVisible(false)} />

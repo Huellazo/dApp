@@ -12,6 +12,7 @@ import {
   getPoapPda,
   getAssociatedTokenAddress,
   createMintPlaceInstructionData,
+  buildSolanaPayTransaction,
 } from '@/services/solana-program';
 
 export interface OnChainMintResult {
@@ -149,7 +150,7 @@ export function useHuellazoWeb3() {
   );
 
   /**
-   * Mints a Business POAP & processes SOL payment on Solana Devnet
+   * Processes SOL commercial payment via buildSolanaPayTransaction on Solana Devnet
    */
   const mintBusinessOnChain = useCallback(
     async (params: {
@@ -179,17 +180,12 @@ export function useHuellazoWeb3() {
         const [poapPda] = getPoapPda(activePubkey, tokenId);
         const userAta = getAssociatedTokenAddress(activePubkey, HUELLAZO_TOKEN_MINT);
 
-        const transaction = new Transaction();
-
-        // Add native SOL transfer instruction for payments and topups
-        if (params.amountLamports > 0 && userPubkey) {
-          const transferInstruction = SystemProgram.transfer({
-            fromPubkey: activePubkey,
-            toPubkey: recipientPubkey,
-            lamports: BigInt(params.amountLamports),
-          });
-          transaction.add(transferInstruction);
-        }
+        // Build Solana Pay Transfer transaction using buildSolanaPayTransaction
+        const transaction = buildSolanaPayTransaction(
+          activePubkey,
+          recipientPubkey,
+          params.amountLamports
+        );
 
         const signature = userPubkey
           ? await executeWalletTransaction(transaction, activePubkey)
