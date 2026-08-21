@@ -4,8 +4,11 @@ import { createUmi as createBaseUmi, generateSigner, publicKey as toUmiPublicKey
 import { defaultPlugins } from '@metaplex-foundation/umi-bundle-defaults';
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import {
+  createTree,
   createTreeV2,
+  mintV1,
   mintV2,
+  parseLeafFromMintV1Transaction,
   parseLeafFromMintV2Transaction,
 } from '@metaplex-foundation/mpl-bubblegum';
 import { mplBubblegum } from '@metaplex-foundation/mpl-bubblegum';
@@ -16,7 +19,7 @@ import type { DasApiInterface } from '@metaplex-foundation/digital-asset-standar
 export const HELIUS_DEVNET_DAS_RPC =
   process.env.EXPO_PUBLIC_HELIUS_DAS_RPC || 'https://api.devnet.solana.com';
 
-export const MERKLE_TREE_STORAGE_KEY = 'huellazo:merkle-tree:devnet:v1';
+export const MERKLE_TREE_STORAGE_KEY = 'huellazo:merkle-tree:devnet:v2';
 
 export type UmiDas = Umi & { rpc: Umi['rpc'] & DasApiInterface };
 
@@ -70,19 +73,30 @@ export async function crearArbolMerkle(
 ): Promise<CreateTreeResult> {
   const merkleTreeSigner = generateSigner(umi);
 
-  const builder = await createTreeV2(umi, {
-    merkleTree: merkleTreeSigner,
-    maxDepth,
-    maxBufferSize,
-  });
-
-  const res = await builder.sendAndConfirm(umi);
-  const signature = sigToString(res.signature);
-
-  return {
-    merkleTree: merkleTreeSigner.publicKey,
-    signature,
-  };
+  try {
+    const builder = await createTreeV2(umi, {
+      merkleTree: merkleTreeSigner,
+      maxDepth,
+      maxBufferSize,
+    });
+    const res = await builder.sendAndConfirm(umi);
+    return {
+      merkleTree: merkleTreeSigner.publicKey,
+      signature: sigToString(res.signature),
+    };
+  } catch (errV2) {
+    console.warn('createTreeV2 notice, trying V1 fallback:', errV2);
+    const builder = await createTree(umi, {
+      merkleTree: merkleTreeSigner,
+      maxDepth,
+      maxBufferSize,
+    });
+    const res = await builder.sendAndConfirm(umi);
+    return {
+      merkleTree: merkleTreeSigner.publicKey,
+      signature: sigToString(res.signature),
+    };
+  }
 }
 
 /**
@@ -122,36 +136,66 @@ export async function mintearCnftEstampa(
 ): Promise<MintCnftResult> {
   const leafOwner = targetOwnerAddress ? toUmiPublicKey(targetOwnerAddress) : umi.identity.publicKey;
 
-  const builder = await mintV2(umi, {
-    merkleTree,
-    leafOwner,
-    metadata: {
-      name: input.name,
-      uri: input.uri,
-      sellerFeeBasisPoints: input.sellerFeeBasisPoints ?? 0,
-      collection: none(),
-      creators: [
-        {
-          address: umi.identity.publicKey,
-          verified: true,
-          share: 100,
-        },
-      ],
-    },
-  });
+  try {
+    const builder = await mintV2(umi, {
+      merkleTree,
+      leafOwner,
+      metadata: {
+        name: input.name,
+        uri: input.uri,
+        sellerFeeBasisPoints: input.sellerFeeBasisPoints ?? 0,
+        collection: none(),
+        creators: [
+          {
+            address: umi.identity.publicKey,
+            verified: true,
+            share: 100,
+          },
+        ],
+      },
+    });
 
-  const res = await builder.sendAndConfirm(umi);
-  const signature = sigToString(res.signature);
+    const res = await builder.sendAndConfirm(umi);
+    const signature = sigToString(res.signature);
+    const leaf = await parseLeafFromMintV2Transaction(umi, res.signature);
 
-  // Extract assetId and leafIndex directly from mintV2 transaction
-  const leaf = await parseLeafFromMintV2Transaction(umi, res.signature);
+    return {
+      assetId: leaf.id,
+      leafIndex: Number(leaf.nonce),
+      signature,
+      merkleTree,
+    };
+  } catch (errV2) {
+    console.warn('mintV2 notice, executing mintV1 compatibility:', errV2);
+    const builder = await mintV1(umi, {
+      merkleTree,
+      leafOwner,
+      metadata: {
+        name: input.name,
+        uri: input.uri,
+        sellerFeeBasisPoints: input.sellerFeeBasisPoints ?? 0,
+        collection: none(),
+        creators: [
+          {
+            address: umi.identity.publicKey,
+            verified: true,
+            share: 100,
+          },
+        ],
+      },
+    });
 
-  return {
-    assetId: leaf.id,
-    leafIndex: Number(leaf.nonce),
-    signature,
-    merkleTree,
-  };
+    const res = await builder.sendAndConfirm(umi);
+    const signature = sigToString(res.signature);
+    const leaf = await parseLeafFromMintV1Transaction(umi, res.signature);
+
+    return {
+      assetId: leaf.id,
+      leafIndex: Number(leaf.nonce),
+      signature,
+      merkleTree,
+    };
+  }
 }
 
 /**

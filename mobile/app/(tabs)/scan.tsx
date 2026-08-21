@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, Modal, Pressable, StyleSheet, Image, Platform } from 'react-native';
+import { View, Text, Modal, Pressable, StyleSheet, Image, Platform, ScrollView } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
@@ -16,6 +16,8 @@ import { SolanaPayModal } from '@/components/features/scan/SolanaPayModal';
 import { parseSolanaPayUrl } from '@/utils/solana-pay-parser';
 import type { ParsedSolanaPay } from '@/utils/solana-pay-parser';
 import { getMetadataJsonUrl } from '@/services/metadata-service';
+
+import { StickerClaimAnimation } from '@/components/features/scan/StickerClaimAnimation';
 
 let jsQR: any = null;
 try {
@@ -43,6 +45,14 @@ export default function ScanScreen() {
   const [mintedToken, setMintedToken] = useState<EarnedSolanaToken | null>(null);
   const [alreadyMinted, setAlreadyMinted] = useState(false);
   
+  // Full Map View Modal State
+  const [isFullMapModalVisible, setIsFullMapModalVisible] = useState(false);
+
+  // Lightweight Claim Celebration Animation State
+  const [claimAnimationVisible, setClaimAnimationVisible] = useState(false);
+  const [claimedPoi, setClaimedPoi] = useState<MintablePoi | null>(null);
+  const [claimedReward, setClaimedReward] = useState(50);
+
   // Penalty state
   const [isPenaltyFlagged, setIsPenaltyFlagged] = useState(false);
   const [isTradeModalVisible, setIsTradeModalVisible] = useState(false);
@@ -70,19 +80,49 @@ export default function ScanScreen() {
   };
 
   const handleOpenScanner = () => {
-    const nearestPoi = mapPoints[0];
-    if (!nearestPoi) return;
-
-    setSelectedPoi(nearestPoi);
-    setMintedToken(null);
-    setAlreadyMinted(false);
-    setModalVisible(true);
+    // Open scanner demo with place check-in QR
+    const samplePlaceQr = `huellazo:place?id=poi1&name=${encodeURIComponent('Palacio Municipal Huajuapan')}&reward=50`;
+    handleProcessQrCode(samplePlaceQr);
   };
 
   const handleProcessQrCode = (qrString: string) => {
     setQrScanError(null);
 
-    // 1. P2P Stamp Trade QR Code
+    // 1. POI Place Check-in QR Code (huellazo:place or id=poi)
+    if (qrString.includes('huellazo:place') || qrString.includes('solana:place') || qrString.includes('id=poi')) {
+      try {
+        const urlStr = qrString.replace('huellazo:', 'https://huellazo.app/').replace('solana:', 'https://huellazo.app/');
+        const urlObj = new URL(urlStr);
+        const poiId = urlObj.searchParams.get('id') || 'poi1';
+        const poiName = urlObj.searchParams.get('name') ? decodeURIComponent(urlObj.searchParams.get('name')!) : 'Lugar Reclamado';
+        const reward = Number(urlObj.searchParams.get('reward')) || 50;
+
+        const matchedPoi = MOCK_POIS.find(p => p.id === poiId) || MOCK_POIS[0];
+
+        // Trigger Solana Devnet cNFT mint in background
+        const metadataUri = getMetadataJsonUrl(matchedPoi.id);
+        mintPlaceOnChain({
+          tokenId: Number(matchedPoi.id.replace(/\D/g, '')) || 101,
+          tokenUri: metadataUri,
+          latitude: (matchedPoi as any).coordinates?.latitude || 17.807,
+          longitude: (matchedPoi as any).coordinates?.longitude || -97.776,
+          placeName: poiName,
+          allowSimulationFallback: true,
+        }).catch(err => console.log('Web3 Devnet place mint notice:', err));
+
+        const result = mintPoiToken(matchedPoi);
+        setClaimedPoi(matchedPoi);
+        setClaimedReward(reward);
+        setMintedToken(result.token);
+        setModalVisible(false);
+        setClaimAnimationVisible(true);
+        return;
+      } catch (err) {
+        console.warn('Place QR parse notice:', err);
+      }
+    }
+
+    // 2. P2P Stamp Trade QR Code
     if (qrString.includes('huellazo:trade') || qrString.includes('solana:trade') || qrString.includes('stampId=')) {
       try {
         const urlStr = qrString.replace('huellazo:', 'https://huellazo.app/').replace('solana:', 'https://huellazo.app/');
@@ -92,18 +132,21 @@ export default function ScanScreen() {
         
         const matchedPoi = MOCK_POIS.find(p => p.id === stampId) || MOCK_POIS[0];
         
-        mintPoiToken(matchedPoi);
+        const result = mintPoiToken(matchedPoi);
         earnPoints(50, `Intercambio P2P: Estampa ${stampTitle}`);
         
-        setSelectedPoi(matchedPoi);
-        setModalVisible(true);
+        setClaimedPoi(matchedPoi);
+        setClaimedReward(50);
+        setMintedToken(result.token);
+        setModalVisible(false);
+        setClaimAnimationVisible(true);
         return;
       } catch (err) {
         console.warn('Trade QR parse notice:', err);
       }
     }
 
-    // 2. Solana Pay Payment QR Code
+    // 3. Solana Pay Payment QR Code
     const parsed = parseSolanaPayUrl(qrString);
     if (parsed) {
       setSolanaPayData(parsed);
@@ -111,8 +154,8 @@ export default function ScanScreen() {
     } else {
       setQrScanError(
         language === 'es'
-          ? 'El código QR no es un formato válido de Solana Pay o Intercambio P2P'
-          : 'Invalid Solana Pay or Trade QR format'
+          ? 'El código QR no es un formato válido de Lugar, Solana Pay o Intercambio P2P'
+          : 'Invalid Place, Solana Pay or Trade QR format'
       );
     }
   };
@@ -185,13 +228,18 @@ export default function ScanScreen() {
 
     const result = mintPoiToken(poiToMint);
     setSelectedPoi(poiToMint);
+    setClaimedPoi(poiToMint);
+    setClaimedReward(poiToMint.reward || 50);
     setMintedToken(result.token);
     setAlreadyMinted(result.alreadyMinted);
     setIsPenaltyFlagged(false);
+    setModalVisible(false);
+    setClaimAnimationVisible(true);
   };
 
   const handleGoToPassport = () => {
     setModalVisible(false);
+    setClaimAnimationVisible(false);
     router.push('/(tabs)/passport');
   };
 
@@ -200,53 +248,111 @@ export default function ScanScreen() {
       <Text className="text-3xl font-black text-border px-4 mb-1 uppercase tracking-tight">{t('scan.title')}</Text>
       <Text className="text-border px-4 mb-3 font-bold text-sm">{t('scan.subtitle')}</Text>
 
-      {/* Static Map Area */}
-      <View className={`flex-1 border-y-4 border-border ${isRadarBoosted ? 'bg-accent2/30' : 'bg-secondary/40'} relative overflow-hidden justify-center items-center`}>
+      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
         
-        {/* Background Grid Pattern */}
-        <View style={StyleSheet.absoluteFillObject} className="opacity-20">
-           <View className="absolute top-1/4 w-full h-1 bg-border" />
-           <View className="absolute top-2/4 w-full h-1 bg-border" />
-           <View className="absolute top-3/4 w-full h-1 bg-border" />
-           <View className="absolute left-1/4 h-full w-1 bg-border" />
-           <View className="absolute left-2/4 h-full w-1 bg-border" />
-           <View className="absolute left-3/4 h-full w-1 bg-border" />
-        </View>
-
-        {/* User Radar Radius */}
-        <View className={`w-64 h-64 rounded-full border-4 ${isRadarBoosted ? 'border-primary border-dashed bg-accent2/20' : 'border-border bg-background/50'} absolute justify-center items-center`}>
-           <View className={`w-48 h-48 rounded-full border-2 ${isRadarBoosted ? 'border-primary' : 'border-border'} border-dashed opacity-50 absolute`} />
-           {isRadarBoosted && (
-             <Text className="absolute top-4 text-primary font-black text-[10px] uppercase tracking-widest">{t('scan.boosted')}</Text>
-           )}
-        </View>
-
-        {/* User Center Avatar */}
-        <View className="w-16 h-16 bg-primary border-4 border-border rounded-full justify-center items-center z-20 shadow-brutal-sm">
-           <FontAwesome5 name="user-astronaut" size={24} color="#FAF9F6" />
-        </View>
-
-        {/* Render POI Pins */}
-        {mapPoints.map((poi) => (
-          <Pressable
-            key={poi.id}
-            onPress={() => handlePoiClick(poi)}
-            style={{ top: poi.top, left: poi.left }}
-            className="absolute z-30 items-center active:scale-110"
-          >
-            <View className="bg-accent1 p-2.5 border-4 border-border shadow-brutal-sm rounded-full justify-center items-center">
-              <FontAwesome5 name={poi.category === 'business' ? 'store' : 'landmark'} size={15} color="#FAF9F6" />
+        {/* Interactive Minimap Preview Card */}
+        <Pressable 
+          onPress={() => setIsFullMapModalVisible(true)} 
+          className="mb-4 border-4 border-border rounded-xl shadow-brutal-md overflow-hidden active:scale-98 transition-transform"
+        >
+          <View className={`w-full h-56 ${isRadarBoosted ? 'bg-accent2/30' : 'bg-secondary/40'} relative justify-center items-center`}>
+            
+            {/* Background Grid Pattern */}
+            <View style={StyleSheet.absoluteFillObject} className="opacity-25">
+               <View className="absolute top-1/4 w-full h-1 bg-border" />
+               <View className="absolute top-2/4 w-full h-1 bg-border" />
+               <View className="absolute top-3/4 w-full h-1 bg-border" />
+               <View className="absolute left-1/4 h-full w-1 bg-border" />
+               <View className="absolute left-2/4 h-full w-1 bg-border" />
+               <View className="absolute left-3/4 h-full w-1 bg-border" />
             </View>
-            <View className="bg-background border-2 border-border px-1.5 py-0.5 mt-1 shadow-brutal-sm max-w-[80px]">
-              <Text className="text-border font-black text-[8px] uppercase text-center" numberOfLines={1} ellipsizeMode="tail">
-                {poi.name}
-              </Text>
-            </View>
-          </Pressable>
-        ))}
 
-        {/* Map Controls */}
-        <View className="absolute bottom-4 left-4 right-4 flex-row justify-between z-20">
+            {/* User Radar Radius */}
+            <View className={`w-44 h-44 rounded-full border-4 ${isRadarBoosted ? 'border-primary border-dashed bg-accent2/20' : 'border-border bg-background/50'} absolute justify-center items-center`}>
+               <View className={`w-32 h-32 rounded-full border-2 ${isRadarBoosted ? 'border-primary' : 'border-border'} border-dashed opacity-50 absolute`} />
+            </View>
+
+            {/* User Center Avatar */}
+            <View className="w-12 h-12 bg-primary border-4 border-border rounded-full justify-center items-center z-20 shadow-brutal-sm">
+               <FontAwesome5 name="user-astronaut" size={18} color="#FAF9F6" />
+            </View>
+
+            {/* Render POI Pins */}
+            {mapPoints.map((poi) => (
+              <View
+                key={poi.id}
+                style={{ top: poi.top, left: poi.left }}
+                className="absolute z-30 items-center"
+              >
+                <View className="bg-accent1 p-2 border-2 border-border shadow-brutal-sm rounded-full justify-center items-center">
+                  <FontAwesome5 name={poi.category === 'business' ? 'store' : 'landmark'} size={12} color="#FAF9F6" />
+                </View>
+              </View>
+            ))}
+
+            {/* Expand Map Badge */}
+            <View className="absolute bottom-3 bg-background border-2 border-border px-3 py-1 shadow-brutal-sm rounded-full flex-row items-center z-40">
+               <FontAwesome5 name="expand-arrows-alt" size={10} color={colors.border} style={{ marginRight: 6 }} />
+               <Text className="text-border font-black text-[10px] uppercase">
+                 {language === 'es' ? 'TOCA PARA ABRIR MAPA COMPLETO' : 'TAP TO OPEN FULL MAP'}
+               </Text>
+            </View>
+
+          </View>
+        </Pressable>
+
+        {/* Section 1: Main Scanning Actions */}
+        <View className="mb-4">
+          {qrScanError && (
+            <Text className="text-primary font-black text-[10px] uppercase mb-2 text-center">{qrScanError}</Text>
+          )}
+
+          <View className="flex-row justify-between items-center">
+            {/* Scan POI Location */}
+            <View className="w-[48%]">
+               <BrutalistButton 
+                 title={language === 'es' ? "ESCANEAR LUGAR" : "SCAN LOCATION"} 
+                 colorClass="bg-primary" 
+                 onPress={handleOpenScanner} 
+               />
+            </View>
+
+            {/* Solana Pay QR Reader */}
+            <View className="w-[48%]">
+               {Platform.OS === 'web' ? (
+                 <>
+                   <input
+                     type="file"
+                     accept="image/*"
+                     ref={fileInputRef as any}
+                     onChange={handleWebFileUpload}
+                     style={{ display: 'none' }}
+                   />
+                   <BrutalistButton 
+                     title={language === 'es' ? "SUBIR QR SOLANA PAY" : "UPLOAD SOLANA QR"} 
+                     colorClass="bg-accent2" 
+                     onPress={() => {
+                       if (fileInputRef.current) {
+                         fileInputRef.current.click();
+                       } else {
+                         handleDemoSolanaPayQr();
+                       }
+                     }} 
+                   />
+                 </>
+               ) : (
+                 <BrutalistButton 
+                   title={language === 'es' ? "ESCANEAR QR SOLANA" : "SCAN SOLANA QR"} 
+                   colorClass="bg-accent2" 
+                   onPress={handleDemoSolanaPayQr} 
+                 />
+               )}
+            </View>
+          </View>
+        </View>
+
+        {/* Section 2: Secondary Tools & P2P Trade */}
+        <View className="flex-row justify-between items-center mb-6">
            <View className="w-[48%]">
              <BrutalistButton title={t('scan.radar_tools')} colorClass="bg-secondary" onPress={() => setIsToolsModalVisible(true)} />
            </View>
@@ -255,62 +361,96 @@ export default function ScanScreen() {
            </View>
         </View>
 
-      </View>
+        {/* Section 3: Live Activity Feed */}
+        <View className="mb-6">
+           <LiveActivityFeed />
+        </View>
 
-      {/* Action Footer with POI Scan & Solana Pay QR Scanner */}
-      <View className="p-3 bg-background border-b-4 border-border">
-         {qrScanError && (
-           <Text className="text-primary font-black text-[10px] uppercase mb-2 text-center">{qrScanError}</Text>
-         )}
+      </ScrollView>
 
-         <View className="flex-row justify-between items-center">
-           {/* Scan POI Location */}
-           <View className="w-[48%]">
-              <BrutalistButton 
-                title={language === 'es' ? "ESCANEAR LUGAR" : "SCAN LOCATION"} 
-                colorClass="bg-primary" 
-                onPress={handleOpenScanner} 
-              />
-           </View>
+      {/* Fullscreen Simulated Interactive Map Modal */}
+      <Modal visible={isFullMapModalVisible} animationType="slide" onRequestClose={() => setIsFullMapModalVisible(false)}>
+        <View className="flex-1 bg-background pt-10">
+          
+          {/* Fullscreen Map Header */}
+          <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center z-50">
+            <View className="flex-row items-center">
+              <FontAwesome5 name="map-marked-alt" size={20} color="#FAF9F6" style={{ marginRight: 8 }} />
+              <Text className="text-background font-black text-xl uppercase">
+                {language === 'es' ? 'Mapa de Exploración' : 'Exploration Map'}
+              </Text>
+            </View>
+            
+            <Pressable 
+              onPress={() => setIsFullMapModalVisible(false)}
+              className="w-9 h-9 rounded-full bg-background border-2 border-border justify-center items-center shadow-brutal-sm active:scale-95"
+            >
+              <FontAwesome5 name="times" size={16} color={colors.border} />
+            </Pressable>
+          </View>
 
-           {/* Solana Pay QR Reader (File Upload on Web / Camera on Mobile) */}
-           <View className="w-[48%]">
-              {Platform.OS === 'web' ? (
-                <>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    ref={fileInputRef as any}
-                    onChange={handleWebFileUpload}
-                    style={{ display: 'none' }}
-                  />
-                  <BrutalistButton 
-                    title={language === 'es' ? "SUBIR QR SOLANA PAY" : "UPLOAD SOLANA QR"} 
-                    colorClass="bg-accent2" 
-                    onPress={() => {
-                      if (fileInputRef.current) {
-                        fileInputRef.current.click();
-                      } else {
-                        handleDemoSolanaPayQr();
-                      }
-                    }} 
-                  />
-                </>
-              ) : (
-                <BrutalistButton 
-                  title={language === 'es' ? "ESCANEAR QR SOLANA" : "SCAN SOLANA QR"} 
-                  colorClass="bg-accent2" 
-                  onPress={handleDemoSolanaPayQr} 
-                />
-              )}
-           </View>
-         </View>
-      </View>
+          {/* Map Environment View */}
+          <View className={`flex-1 ${isRadarBoosted ? 'bg-accent2/30' : 'bg-secondary/40'} relative justify-center items-center overflow-hidden`}>
+             
+             {/* Background Grid Pattern */}
+             <View style={StyleSheet.absoluteFillObject} className="opacity-20">
+                <View className="absolute top-1/4 w-full h-1 bg-border" />
+                <View className="absolute top-2/4 w-full h-1 bg-border" />
+                <View className="absolute top-3/4 w-full h-1 bg-border" />
+                <View className="absolute left-1/4 h-full w-1 bg-border" />
+                <View className="absolute left-2/4 h-full w-1 bg-border" />
+                <View className="absolute left-3/4 h-full w-1 bg-border" />
+             </View>
 
-      {/* Activity Feed */}
-      <View className="flex-1 bg-background">
-         <LiveActivityFeed />
-      </View>
+             {/* Radar Radius */}
+             <View className={`w-72 h-72 rounded-full border-4 ${isRadarBoosted ? 'border-primary border-dashed bg-accent2/20' : 'border-border bg-background/50'} absolute justify-center items-center`}>
+                <View className={`w-52 h-52 rounded-full border-2 ${isRadarBoosted ? 'border-primary' : 'border-border'} border-dashed opacity-50 absolute`} />
+                {isRadarBoosted && (
+                  <Text className="absolute top-4 text-primary font-black text-[10px] uppercase tracking-widest">{t('scan.boosted')}</Text>
+                )}
+             </View>
+
+             {/* User Astronaut Center Avatar */}
+             <View className="w-16 h-16 bg-primary border-4 border-border rounded-full justify-center items-center z-20 shadow-brutal-md">
+                <FontAwesome5 name="user-astronaut" size={24} color="#FAF9F6" />
+             </View>
+
+             {/* Render Interactive POI Pins in Full Map */}
+             {mapPoints.map((poi) => (
+               <Pressable
+                 key={poi.id}
+                 onPress={() => {
+                   setIsFullMapModalVisible(false);
+                   handlePoiClick(poi);
+                 }}
+                 style={{ top: poi.top, left: poi.left }}
+                 className="absolute z-30 items-center active:scale-110"
+               >
+                 <View className="bg-accent1 p-3 border-4 border-border shadow-brutal-md rounded-full justify-center items-center">
+                   <FontAwesome5 name={poi.category === 'business' ? 'store' : 'landmark'} size={16} color="#FAF9F6" />
+                 </View>
+                 <View className="bg-background border-2 border-border px-2 py-1 mt-1 shadow-brutal-sm max-w-[100px]">
+                   <Text className="text-border font-black text-[9px] uppercase text-center" numberOfLines={1}>
+                     {poi.name}
+                   </Text>
+                 </View>
+               </Pressable>
+             ))}
+
+             {/* Info Footer Overlay */}
+             <View className="absolute bottom-6 left-4 right-4 bg-background border-4 border-border p-3 shadow-brutal-md">
+                <Text className="text-border font-black text-xs uppercase mb-0.5">
+                  {language === 'es' ? '📍 Entorno Huajuapan de León' : '📍 Huajuapan Environment'}
+                </Text>
+                <Text className="text-border text-[10px] font-bold opacity-80">
+                  {language === 'es' ? 'Toca cualquier punto de interés en el mapa para reclamar tu estampa.' : 'Tap any POI on the map to claim your stamp.'}
+                </Text>
+             </View>
+
+          </View>
+
+        </View>
+      </Modal>
 
       {/* POI Scanner / Minting Modal */}
       <Modal visible={modalVisible} transparent animationType="slide" onRequestClose={() => setModalVisible(false)}>
@@ -441,6 +581,18 @@ export default function ScanScreen() {
 
       {/* Trade Accept Modal */}
       <TradeAcceptModal visible={isTradeModalVisible} onClose={() => setIsTradeModalVisible(false)} />
+
+      {/* Lightweight Stamp Claim Celebration Animation */}
+      <StickerClaimAnimation
+        visible={claimAnimationVisible}
+        title={claimedPoi?.name || 'Estampa Reclamada'}
+        location={(claimedPoi as any)?.location || 'Huajuapan de León, Oaxaca'}
+        rewardPoints={claimedReward}
+        image={claimedPoi?.image}
+        mintAddress={mintedToken?.mintAddress}
+        onClose={() => setClaimAnimationVisible(false)}
+        onGoToPassport={handleGoToPassport}
+      />
 
     </View>
   );

@@ -23,7 +23,7 @@ export function useHuellazoCnft() {
     // If wallet adapter is connected in browser / mobile (Solflare / Phantom / Solana)
     if (typeof window !== 'undefined') {
       const provider = (window as any).solflare || (window as any).phantom?.solana || (window as any).solana;
-      if (provider) {
+      if (provider && provider.publicKey) {
         try {
           umiClient.use(walletAdapterIdentity(provider));
         } catch {
@@ -40,7 +40,7 @@ export function useHuellazoCnft() {
     }
 
     return umiClient;
-  }, []);
+  }, [walletAddress]);
 
   /**
    * Mints a Compressed NFT (cNFT) stamp on Solana Devnet via Metaplex Bubblegum V2 & Helius DAS API
