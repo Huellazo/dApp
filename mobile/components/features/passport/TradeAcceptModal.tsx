@@ -18,11 +18,11 @@ export function TradeAcceptModal({ visible, onClose }: Props) {
   // Mock incoming NFT for simulation
   const incomingNft = {
     id: 'mock-incoming-1',
-    title: 'Mystic Axolotl',
-    location: 'Xochimilco Secret Canals',
+    title: 'Alebrije Místico',
+    location: 'Canales Secretos de Xochimilco',
     image: require('@/assets/images/nft_alebrije.png'),
     date: new Date().toISOString(),
-    style: 'rare'
+    style: 'Rara'
   };
 
   const handleConfirm = () => {
@@ -35,10 +35,10 @@ export function TradeAcceptModal({ visible, onClose }: Props) {
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View className="flex-1 bg-black/90 pt-12 px-2 pb-6">
+      <View className="flex-1 bg-black/90 pt-12 px-4 pb-6">
         
-        <Text className="text-white font-black text-2xl uppercase mb-4 text-center tracking-widest bg-primary px-4 py-2 self-center border-4 border-border shadow-brutal-sm">
-          Incoming Trade
+        <Text className="text-white font-black text-xl uppercase mb-4 text-center tracking-widest bg-primary px-4 py-2 self-center border-4 border-border shadow-brutal-sm">
+          Intercambio de Estampas
         </Text>
 
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -46,10 +46,10 @@ export function TradeAcceptModal({ visible, onClose }: Props) {
           {/* Incoming Offer */}
           <BrutalistCard colorClass="bg-background w-full p-0 overflow-hidden mb-6">
             <View className="w-full bg-accent2 p-3 border-b-4 border-border justify-center items-center">
-               <Text className="text-border font-black text-sm uppercase">Another explorer offers:</Text>
+               <Text className="text-border font-black text-sm uppercase">Otro explorador te ofrece:</Text>
             </View>
             <View className="p-4 flex-row items-center">
-              <View className="w-20 h-20 bg-accent1 border-4 border-border justify-center items-center relative mr-4">
+              <View className="w-20 h-20 bg-accent1 border-4 border-border justify-center items-center relative mr-4 shadow-brutal-sm">
                  <Image source={incomingNft.image} className="w-11/12 h-11/12" resizeMode="contain" />
               </View>
               <View className="flex-1">
@@ -61,13 +61,13 @@ export function TradeAcceptModal({ visible, onClose }: Props) {
           </BrutalistCard>
 
           {/* User's Selection */}
-          <Text className="text-white font-black text-lg uppercase mb-4 ml-2">
-            Select an NFT to trade:
+          <Text className="text-white font-black text-base uppercase mb-4 ml-1">
+            Selecciona tu estampa para intercambiar:
           </Text>
 
-          <View className="flex-row flex-wrap justify-between px-1">
+          <View className="flex-row flex-wrap justify-between">
             {ownedNfts.map((nft) => (
-              <Pressable key={nft.id} className="w-[48%] mb-4 active:scale-95 transition-transform" onPress={() => setSelectedMyNftId(nft.id)}>
+              <Pressable key={nft.id} className="w-[48%] mb-4 active:scale-95" onPress={() => setSelectedMyNftId(nft.id)}>
                 <BrutalistCard colorClass={selectedMyNftId === nft.id ? 'bg-primary' : 'bg-background'} style={{ padding: 0 }}>
                   <View style={{ aspectRatio: 1 }} className={`w-full ${nft.style === 'chromatic' ? 'bg-[#FF00FF]' : nft.style === 'metallic' ? 'bg-[#C0C0C0]' : 'bg-accent1'} border-b-4 border-border justify-center items-center relative overflow-hidden`}>
                     {nft.image ? (
@@ -89,11 +89,11 @@ export function TradeAcceptModal({ visible, onClose }: Props) {
         {/* Actions */}
         <View className="pt-4 flex-row justify-between w-full">
            <View className="flex-1 mr-2">
-             <BrutalistButton title="Cancel" colorClass="bg-secondary" onPress={onClose} />
+             <BrutalistButton title="CANCELAR" colorClass="bg-secondary" onPress={onClose} />
            </View>
            <View className="flex-1 ml-2">
              <BrutalistButton 
-               title="Confirm Swap" 
+               title="CONFIRMAR CAMBIO" 
                colorClass="bg-accent1" 
                disabled={!selectedMyNftId}
                onPress={handleConfirm} 

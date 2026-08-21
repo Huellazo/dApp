@@ -4,6 +4,16 @@ Huellazo is a gamified and sustainable mobile tourism dApp built on the Solana n
 
 ---
 
+## 📚 Documentation & Technical Guides
+
+- 🌐 **[Web3 Integration Guide](docs/WEB3_INTEGRATION.md)**: Detailed technical specifications for Solana Devnet RPC connections, PDAs, instructions (`mint_place`, `mint_business`), and Mobile Wallet Adapter hooks.
+- 🪙 **[Tokenomics Strategy & SPL Token Guide](docs/ESTRATEGIA_TOKEN_HUELLAZOS.md)**: Deep-dive into converting $HZ points into native Solana SPL Tokens via Anchor CPIs.
+- 🌲 **[Full Architecture & cNFTs Guide](docs/ARQUITECTURA_Y_CNFTS.md)**: Deep-dive into monorepo layers, Metaplex Bubblegum, Merkle Trees, and SPL State Compression for Compressed NFTs.
+- 🇲🇽 **[Huajuapan de León Real-World Research](docs/informe_huajuapan_de_leon.md)**: Research report detailing the 23 real POIs, gastronomy (Mole de Caderas, Chileajo), history, menus, and cultural routes.
+- 🎨 **[Neo-Brutalist Visual Guidelines](docs/promp_image/neobrutalismo.md)**: Design system rules for "Manchones Mexicanos" branding and artwork.
+
+---
+
 ## 🎨 Visual Identity: Mexican Brutalism
 
 The frontend and mobile experience are designed with a **Minimalist Neo-Brutalist approach featuring Mexican influences**. This style combines the structural solidity of brutalism (thick borders and hard shadows) with a warm, organic color palette representative of Mexico's architecture and nature.

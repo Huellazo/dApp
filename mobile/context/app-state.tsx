@@ -102,6 +102,7 @@ export interface HuellazoAppState {
 
   // Actions
   addXp: (amount: number) => void
+  earnPoints: (amount: number, description: string) => void
   spendPoints: (amount: number) => boolean
   unlockNft: (id: NftId) => void
   mintPassport: () => void
@@ -166,37 +167,37 @@ export const NFT_CATALOG: NftItem[] = [
   },
   {
     id: 'cafe',
-    name: 'NFT: Golden Bean',
-    collectionName: 'Specialty Coffee',
+    name: 'NFT: Organic Coffee',
+    collectionName: 'Local Coffee Shop',
     placeName: 'Local Coffee Shop',
-    image: require('@/assets/images/coffee.png'),
+    image: require('@/assets/images/negocio1.png'),
     xpReward: 50,
     solCost: 0.005,
   },
   {
+    id: 'reserva',
+    name: 'NFT: Biodiversity',
+    collectionName: 'Biosphere Reserve',
+    placeName: 'Biosphere Reserve',
+    image: require('@/assets/images/nfts/tourism_pyramid.png'),
+    xpReward: 500,
+    solCost: 0.1,
+  },
+  {
     id: 'hotel',
-    name: 'NFT: Eco Stay',
-    collectionName: 'Boutique Hotel',
+    name: 'NFT: Sustainable Lodging',
+    collectionName: 'Boutique Eco Hotel',
     placeName: 'Boutique Eco Hotel',
     image: require('@/assets/images/hotel.png'),
     xpReward: 200,
     solCost: 0.08,
   },
   {
-    id: 'reserva',
-    name: 'NFT: Local Wildlife',
-    collectionName: 'Biosphere Reserve',
-    placeName: 'Biosphere Reserve',
-    image: require('@/assets/images/negocio1.png'),
-    xpReward: 500,
-    solCost: 0.1,
-  },
-  {
     id: 'artesanal',
-    name: 'NFT: Artisan',
+    name: 'NFT: Local Craftsmanship',
     collectionName: 'Artisan Market',
     placeName: 'Artisan Market',
-    image: require('@/assets/images/negocio3.png'),
+    image: require('@/assets/images/workshop_pottery.png'),
     xpReward: 120,
     solCost: 0.02,
   },
@@ -214,9 +215,9 @@ export const PLACES_CATALOG: Place[] = [
 
 // --- Level calculation ---
 export function calculateLevel(xp: number): string {
-  if (xp >= 5000) return 'Gold 🏆'
-  if (xp >= 1000) return 'Silver 🥈'
-  return 'Bronze 🥉'
+  if (xp >= 5000) return 'Oro'
+  if (xp >= 1000) return 'Plata'
+  return 'Bronce'
 }
 
 // --- Context ---
@@ -242,160 +243,150 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   // Dynamic state for NFTs that can be traded
   const [ownedNfts, setOwnedNfts] = useState<any[]>(MOCK_USER.nfts)
   
-  // Initialize with one chromatic NFT for testing purposes
-  const [inventory, setInventory] = useState<InventoryItem[]>([{
-    id: 'mock-chromatic-1',
-    type: 'nft',
-    name: 'Chromatic Quetzal',
-    description: 'A super rare chromatic holographic stamp.',
-    image: require('@/assets/images/nft_chromatic_1.png'),
-    obtainedAt: new Date().toISOString(),
-    style: 'chromatic'
-  }])
+  // Initialize inventory
+  const [inventory, setInventory] = useState<InventoryItem[]>([
+    { id: 'inv-1', type: 'token', name: 'Cupón Taco Gratis', value: 50, obtainedAt: '2026-08-15' },
+    { id: 'inv-2', type: 'trash', name: 'Basura Recogida en Parque', description: '+10 XP Limpieza', obtainedAt: '2026-08-16' },
+  ])
 
+  // Load earned tokens from storage on mount
   useEffect(() => {
-    let mounted = true
-
     AsyncStorage.getItem(EARNED_TOKENS_STORAGE_KEY)
-      .then(value => {
-        if (!mounted || !value) return
-
-        const parsed = JSON.parse(value) as EarnedSolanaToken[]
-        if (Array.isArray(parsed)) {
-          setEarnedTokens(prev => (prev.length > 0 ? prev : parsed))
+      .then(stored => {
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored)
+            if (Array.isArray(parsed)) {
+              setEarnedTokens(parsed)
+            }
+          } catch {
+            // Ignore parse errors
+          }
         }
       })
-      .catch(error => {
-        console.warn('Could not load earned Huellazo tokens', error)
-      })
-      .finally(() => {
-        if (mounted) setTokensLoaded(true)
-      })
-
-    return () => {
-      mounted = false
-    }
+      .finally(() => setTokensLoaded(true))
   }, [])
 
+  // Save earned tokens whenever they change
   useEffect(() => {
     if (!tokensLoaded) return
-
-    AsyncStorage.setItem(EARNED_TOKENS_STORAGE_KEY, JSON.stringify(earnedTokens)).catch(error => {
-      console.warn('Could not save earned Huellazo tokens', error)
-    })
+    AsyncStorage.setItem(EARNED_TOKENS_STORAGE_KEY, JSON.stringify(earnedTokens)).catch(console.error)
   }, [earnedTokens, tokensLoaded])
-
-  const logTransaction = useCallback((type: 'earn' | 'burn' | 'penalty', amount: number, description: string) => {
-    setTransactions(prev => [{
-      id: Date.now().toString(),
-      type,
-      amount,
-      description,
-      timestamp: new Date().toISOString()
-    }, ...prev])
-  }, [])
 
   const addXp = useCallback((amount: number) => {
     setXp(prev => prev + amount)
-    setPoints(prev => prev + Math.floor(amount / 2))
-    logTransaction('earn', Math.floor(amount / 2), 'Exploration XP converted')
+  }, [])
+
+  const logTransaction = useCallback((type: 'earn' | 'burn' | 'penalty', amount: number, description: string) => {
+    const newTx: Transaction = {
+      id: `tx-${Date.now()}`,
+      type,
+      amount,
+      description,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+    setTransactions(prev => [newTx, ...prev])
+  }, [])
+
+  const earnPoints = useCallback((amount: number, description: string) => {
+    setPoints(prev => prev + amount)
+    logTransaction('earn', amount, description)
   }, [logTransaction])
 
   const spendPoints = useCallback((amount: number): boolean => {
-    if (points < amount) return false
-    setPoints(prev => prev - amount)
-    return true
+    if (points >= amount) {
+      setPoints(prev => prev - amount)
+      return true
+    }
+    return false
   }, [points])
 
-  const burnTokens = useCallback((amount: number, description: string, type: 'burn' | 'penalty' = 'burn'): boolean => {
-    if (points < amount) return false
-    setPoints(prev => prev - amount)
-    logTransaction(type, amount, description)
-    return true
-  }, [points, logTransaction])
-
   const unlockNft = useCallback((id: NftId) => {
-    setActiveNfts(prev => prev.includes(id) ? prev : [...prev, id])
+    setActiveNfts(prev => (prev.includes(id) ? prev : [...prev, id]))
+    const nft = NFT_CATALOG.find(n => n.id === id)
+    if (nft) {
+      setXp(prev => prev + nft.xpReward)
+    }
   }, [])
 
   const mintPassport = useCallback(() => {
     setPassportMinted(true)
   }, [])
 
+  const burnTokens = useCallback((amount: number, description: string, type: 'burn' | 'penalty' = 'burn'): boolean => {
+    if (points >= amount) {
+      setPoints(prev => prev - amount)
+      logTransaction(type, amount, description)
+      return true
+    }
+    return false
+  }, [points, logTransaction])
+
   const applyPenalty = useCallback((amount: number, reason: string) => {
     setPoints(prev => Math.max(0, prev - amount))
-    setXp(prev => Math.max(0, prev - (amount * 2))) // Deduct XP on penalty
     setStatus('wanted')
-    logTransaction('penalty', amount, reason)
-    
-    setTimeout(() => {
-      setStatus('normal')
-    }, 30000)
+    logTransaction('penalty', amount, `Penalización: ${reason}`)
   }, [logTransaction])
 
+  const activateRadarBoost = useCallback((cost: number): boolean => {
+    if (isRadarBoosted) return true
+    if (points >= cost) {
+      setPoints(prev => prev - cost)
+      setIsRadarBoosted(true)
+      logTransaction('burn', cost, 'Activación de Radar Booster (1h)')
+      
+      // Auto deactivate after 1 hour simulation (or 1 min for demo)
+      setTimeout(() => {
+        setIsRadarBoosted(false)
+      }, 60000)
+      return true
+    }
+    return false
+  }, [points, isRadarBoosted, logTransaction])
+
   const openPinata = useCallback((): LootItem | null => {
-    if (points < 100) return null;
-    burnTokens(100, 'Broke a Digital Piñata');
-    
-    const rand = Math.random();
-    let loot: LootItem;
+    const pinataCost = 100
+    if (points < pinataCost) return null
 
-    if (rand < 0.40) {
-      // 40% chance: Tokens Jackpot
-      const winAmount = Math.floor(Math.random() * 151) + 50; // 50 to 200
-      setPoints(prev => prev + winAmount);
-      logTransaction('earn', winAmount, 'Jackpot! Piñata Prize');
-      loot = { type: 'token', name: `${winAmount} $HUELLAZOS`, value: winAmount, description: 'You hit the jackpot!' };
-    } else if (rand < 0.65) {
-      // 25% chance: Trash
-      loot = { type: 'trash', name: 'Chewed Gum', description: 'Eww... better luck next time.', image: require('@/assets/images/loot_trash_1783886312470.png') };
-    } else if (rand < 0.85) {
-      // 20% chance: Coupon
-      loot = { type: 'coupon', name: 'Don Porfirio 100% OFF', description: 'A rare flash deal!', image: require('@/assets/images/workshop_pottery.png') };
-    } else if (rand < 0.95) {
-      // 10% chance: Cosmetic
-      loot = { type: 'cosmetic', name: 'Mariachi Hat', description: 'Equip it on your Nano Banana.', image: require('@/assets/images/loot_sombrero_1783886306265.png') };
-    } else {
-      // 5% chance: Chromatic NFT
-      const isSerpent = Math.random() > 0.5;
-      loot = { 
-        type: 'nft', 
-        name: isSerpent ? 'Chromatic Serpent Stamp' : 'Chromatic Jaguar Stamp', 
-        description: 'An ultra-rare holographic Piñata drop.', 
-        image: isSerpent ? require('@/assets/images/nft_chromatic_1.png') : require('@/assets/images/nft_chromatic_2.png'),
-        style: 'chromatic'
-      };
+    setPoints(prev => prev - pinataCost)
+    logTransaction('burn', pinataCost, 'Romper Piñata Cripto')
+
+    const lootOptions: LootItem[] = [
+      { type: 'token', name: '50 Puntos $HZ Extra', value: 50, style: 'bg-accent2' },
+      { type: 'coupon', name: 'Descuento 20% en Café Petirrojo', style: 'bg-primary' },
+      { type: 'trash', name: 'Lata de Aluminio Reciclada', description: '¡Gracias por limpiar Huajuapan!', style: 'bg-secondary' },
+      { type: 'cosmetic', name: 'Sombrero de Charro para Avatar', style: 'bg-accent1' }
+    ]
+
+    const selectedLoot = lootOptions[Math.floor(Math.random() * lootOptions.length)]
+
+    if (selectedLoot.type === 'token' && selectedLoot.value) {
+      setPoints(prev => prev + selectedLoot.value!)
     }
 
-    if (loot.type !== 'token') {
-      const newItem: InventoryItem = {
-        id: Math.random().toString(36).substr(2, 9),
-        ...loot,
-        obtainedAt: new Date().toISOString()
-      };
-      setInventory(prev => [newItem, ...prev]);
+    const newInvItem: InventoryItem = {
+      id: `inv-${Date.now()}`,
+      type: selectedLoot.type,
+      name: selectedLoot.name,
+      description: selectedLoot.description,
+      value: selectedLoot.value,
+      style: selectedLoot.style,
+      obtainedAt: new Date().toISOString().split('T')[0]
     }
+    setInventory(prev => [newInvItem, ...prev])
 
-    return loot;
-  }, [points, burnTokens, logTransaction]);
+    return selectedLoot
+  }, [points, logTransaction])
 
   const joinFaction = useCallback((newFaction: Faction) => {
     setFaction(newFaction)
   }, [])
 
   const executeTrade = useCallback((givenNftId: string, receivedNft: any) => {
-    setOwnedNfts(prev => prev.filter(nft => nft.id !== givenNftId).concat(receivedNft))
-    logTransaction('earn', 0, `Traded NFT for ${receivedNft.title}`)
+    setOwnedNfts(prev => prev.filter(n => n.id !== givenNftId))
+    setOwnedNfts(prev => [receivedNft, ...prev])
+    logTransaction('earn', 50, `Intercambio exitoso: ${receivedNft.name}`)
   }, [logTransaction])
-
-  const activateRadarBoost = useCallback((cost: number) => {
-    if (burnTokens(cost, 'Overclocked Radar for 30 mins')) {
-      setIsRadarBoosted(true);
-      setTimeout(() => setIsRadarBoosted(false), 30 * 60 * 1000); // 30 mins (mocked)
-      return true;
-    }
-    return false;
-  }, [burnTokens])
 
   const mintPoiToken = useCallback((poi: MintablePoi) => {
     const existingToken = earnedTokens.find(token => token.poiId === poi.id)
@@ -419,7 +410,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     <AppStateContext.Provider value={{
       xp, points, level, passportMinted, activeNfts, earnedTokens,
       status, faction, transactions, inventory, ownedNfts, isRadarBoosted,
-      addXp, spendPoints, unlockNft, mintPassport, mintPoiToken,
+      addXp, earnPoints, spendPoints, unlockNft, mintPassport, mintPoiToken,
       burnTokens, applyPenalty, openPinata, joinFaction, executeTrade, activateRadarBoost
     }}>
       {children}
@@ -430,6 +421,16 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 // --- Hook ---
 export function useAppState(): HuellazoAppState {
   const context = useContext(AppStateContext)
-  if (!context) throw new Error('useAppState must be used within AppStateProvider')
+  if (!context) {
+    // Safe fallback object for hot reloading or unmounted context
+    return {
+      xp: 1200, points: 650, level: 'Bronce', passportMinted: false, activeNfts: ['cenote'],
+      earnedTokens: [], status: 'normal', faction: null, transactions: [], inventory: [],
+      ownedNfts: MOCK_USER.nfts, isRadarBoosted: false, addXp: () => {}, earnPoints: () => {}, spendPoints: () => false,
+      unlockNft: () => {}, mintPassport: () => {}, mintPoiToken: () => ({ token: {} as any, alreadyMinted: false }),
+      burnTokens: () => false, applyPenalty: () => {}, openPinata: () => null, joinFaction: () => {},
+      executeTrade: () => {}, activateRadarBoost: () => false
+    }
+  }
   return context
 }

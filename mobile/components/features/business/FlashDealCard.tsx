@@ -7,20 +7,30 @@ import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { useAppState } from '@/context/app-state';
 import { useLanguage } from '@/context/language-context';
+import { useHuellazoWeb3 } from '@/hooks/useHuellazoWeb3';
 
 export function FlashDealCard({ deal }: { deal: any }) {
   const router = useRouter();
   const { t } = useLanguage();
   const { burnTokens } = useAppState();
+  const { mintBusinessOnChain } = useHuellazoWeb3();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState<'success' | 'error' | null>(null);
 
   if (!deal) return null;
 
   const handleClaim = () => {
-    const success = burnTokens(deal.costHZ, `Flash Deal: ${deal.title}`);
+    const hzCost = deal.costHZ || 20;
+    const success = burnTokens(hzCost, `Flash Deal: ${deal.title}`);
     if (success) {
       setModalType('success');
+      // Execute Web3 Devnet transaction with exact HZ cost (1 HZ = 1,000,000 lamports)
+      mintBusinessOnChain({
+        amountLamports: hzCost * 1000000,
+        businessName: `${deal.businessName} - ${deal.title}`,
+        latitude: 17.807,
+        longitude: -97.776,
+      }).catch(err => console.log('Web3 Flash Deal notice:', err));
     } else {
       setModalType('error');
     }

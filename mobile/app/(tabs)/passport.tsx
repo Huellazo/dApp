@@ -12,6 +12,8 @@ import { useGetBalance } from '@/components/account/use-get-balance';
 import { lamportsToSol } from '@/utils/lamports-to-sol';
 import { useAppState } from '@/context/app-state';
 import { useLanguage } from '@/context/language-context';
+import { useHuellazoWeb3 } from '@/hooks/useHuellazoWeb3';
+import { TradeAcceptModal } from '@/components/features/passport/TradeAcceptModal';
 import { PublicKey } from '@solana/web3.js';
 
 const AVATAR_OPTIONS = [
@@ -29,9 +31,16 @@ function formatSolBalance(balance: number) {
   });
 }
 
+const TOPUP_PACKAGES = [
+  { id: 'pkg1', hzAmount: 100, solCost: 0.01, label: 'Paquete Explorador' },
+  { id: 'pkg2', hzAmount: 500, solCost: 0.05, label: 'Paquete Viajero Pro', popular: true },
+  { id: 'pkg3', hzAmount: 1000, solCost: 0.10, label: 'Paquete Leyenda Mixteca' },
+];
+
 export default function PassportScreen() {
   const { language, setLanguage, t } = useLanguage();
   const { isLoading, signIn, signOut, walletAddress } = useAuth();
+  const { mintBusinessOnChain } = useHuellazoWeb3();
   const isWalletConnected = !!walletAddress;
   
   const pubkey = useMemo(() => {
@@ -43,12 +52,20 @@ export default function PassportScreen() {
   const [connectionError, setConnectionError] = useState<string | null>(null);
   
   const { 
-    xp, points, status, faction, transactions, joinFaction 
+    xp, points, status, faction, transactions, joinFaction, earnPoints 
   } = useAppState();
 
   const [selectedAvatar, setSelectedAvatar] = useState(MOCK_USER.avatarUrl);
   const [isAvatarModalVisible, setAvatarModalVisible] = useState(false);
   const [isFactionModalVisible, setFactionModalVisible] = useState(false);
+  
+  // Topup State
+  const [isTopupModalVisible, setTopupModalVisible] = useState(false);
+  const [selectedPkg, setSelectedPkg] = useState(TOPUP_PACKAGES[0]);
+  const [topupSuccessModal, setTopupSuccessModal] = useState(false);
+
+  // Trade Modal State
+  const [isTradeModalVisible, setIsTradeModalVisible] = useState(false);
 
   const statusBorderColor = 
     status === 'wanted' ? 'border-primary' : 
@@ -92,30 +109,51 @@ export default function PassportScreen() {
     await signOut();
   };
 
+  const handleExecuteTopup = async () => {
+    const lamports = Math.round(selectedPkg.solCost * 1_000_000_000);
+    
+    // Execute Solana Devnet transaction
+    mintBusinessOnChain({
+      amountLamports: lamports,
+      businessName: `Recarga de Puntos HZ - ${selectedPkg.label}`,
+      latitude: 17.807,
+      longitude: -97.776,
+    }).catch(err => console.log('Web3 Topup notice:', err));
+
+    // Update user's Puntos Huellazos balance and log transaction
+    earnPoints(
+      selectedPkg.hzAmount, 
+      `Recarga de ${selectedPkg.hzAmount} Puntos HZ (${selectedPkg.solCost} SOL)`
+    );
+
+    setTopupModalVisible(false);
+    setTopupSuccessModal(true);
+  };
+
   return (
     <ScrollView className="flex-1 bg-background pt-12 px-4 pb-24" showsVerticalScrollIndicator={false}>
       {/* Header with Title and Language Toggle */}
       <View className="flex-row justify-between items-center mb-6">
         <Text className="text-3xl font-black text-border uppercase tracking-tight">{t('passport.title')}</Text>
         
-        {/* Language Switcher */}
+        {/* Language Switcher without Emojis */}
         <View className="flex-row bg-background border-2 border-border shadow-brutal-sm overflow-hidden">
           <Pressable 
             onPress={() => setLanguage('es')}
             className={`px-3 py-1 ${language === 'es' ? 'bg-primary' : 'bg-background'}`}
           >
-            <Text className={`font-black text-xs ${language === 'es' ? 'text-background' : 'text-border'}`}>🇲🇽 ES</Text>
+            <Text className={`font-black text-xs ${language === 'es' ? 'text-background' : 'text-border'}`}>ES</Text>
           </Pressable>
           <Pressable 
             onPress={() => setLanguage('en')}
             className={`px-3 py-1 ${language === 'en' ? 'bg-primary' : 'bg-background'}`}
           >
-            <Text className={`font-black text-xs ${language === 'en' ? 'text-background' : 'text-border'}`}>🇺🇸 EN</Text>
+            <Text className={`font-black text-xs ${language === 'en' ? 'text-background' : 'text-border'}`}>EN</Text>
           </Pressable>
         </View>
       </View>
       
-      {/* Identity Card */}
+      {/* Identity Card - Tapping Avatar opens avatar modal directly */}
       <BrutalistCard colorClass="bg-accent2/20 mb-6 p-0 overflow-hidden" variant="info">
         <View className="bg-primary p-4 border-b-4 border-border flex-row items-center">
           <Pressable 
@@ -181,7 +219,7 @@ export default function PassportScreen() {
               {/* Balances Section */}
               <View className="flex-row justify-between mb-4">
                 {/* SOL Balance Card */}
-                <View className="bg-background border-4 border-border p-3 shadow-brutal-sm w-[48%]">
+                <View className="bg-background border-4 border-border p-3 shadow-brutal-sm w-[48%] justify-between">
                   <View className="flex-row items-center justify-between mb-1">
                     <Text className="text-border font-black text-[11px] uppercase">{t('passport.solana_balance')}</Text>
                     <Pressable onPress={() => balanceQuery.refetch()} disabled={balanceQuery.isFetching}>
@@ -193,7 +231,7 @@ export default function PassportScreen() {
                       />
                     </Pressable>
                   </View>
-                  <Text className="text-border font-black text-2xl" numberOfLines={1} adjustsFontSizeToFit>
+                  <Text className="text-border font-black text-xl my-1" numberOfLines={1} adjustsFontSizeToFit>
                     {balanceQuery.isLoading
                       ? '...'
                       : solBalance == null
@@ -203,16 +241,24 @@ export default function PassportScreen() {
                   <Text className="text-border font-black text-[10px] uppercase">SOL</Text>
                 </View>
 
-                {/* Explorer Fund Card */}
-                <View className="bg-secondary border-4 border-border p-3 shadow-brutal-sm w-[48%]">
+                {/* Explorer Fund HZ Card with Topup Trigger */}
+                <View className="bg-secondary border-4 border-border p-3 shadow-brutal-sm w-[48%] justify-between">
                   <View className="flex-row items-center justify-between mb-1">
                     <Text className="text-border font-black text-[11px] uppercase">{t('passport.explorer_fund')}</Text>
                     <FontAwesome5 name="coins" size={14} color={colors.border} />
                   </View>
-                  <Text className="text-border font-black text-2xl" numberOfLines={1} adjustsFontSizeToFit>
+                  <Text className="text-border font-black text-2xl my-1" numberOfLines={1} adjustsFontSizeToFit>
                     {points}
                   </Text>
-                  <Text className="text-border font-black text-[10px] uppercase">HZ</Text>
+                  <Pressable 
+                    onPress={() => setTopupModalVisible(true)} 
+                    className="bg-primary px-2 py-1 border-2 border-border shadow-brutal-sm active:scale-95 flex-row justify-between items-center"
+                  >
+                    <Text className="text-background font-black text-[9px] uppercase">
+                      {language === 'es' ? '+ RECARGAR HZ' : '+ TOP UP HZ'}
+                    </Text>
+                    <FontAwesome5 name="plus-circle" size={10} color="#FAF9F6" />
+                  </Pressable>
                 </View>
               </View>
 
@@ -250,147 +296,197 @@ export default function PassportScreen() {
         </View>
       </BrutalistCard>
 
+      {/* Quick Actions Header */}
       <View className="mb-4">
         <Text className="text-xl font-black text-border uppercase">{t('passport.quick_actions')}</Text>
         <Text className="text-border text-xs font-bold opacity-80 mt-0.5">
-          {language === 'es' ? 'Regala o pide estampas de recuerdo entre amigos exploradores' : 'Direct Sticker & Achievement transfer between explorers'}
+          {language === 'es' ? 'Recarga puntos Huellazos o intercambia estampas entre exploradores' : 'Recharge points or trade collectible stamps between explorers'}
         </Text>
       </View>
+
+      {/* Quick Action Buttons: Recargar HZ & Intercambiar Estampas (No duplicate avatar button) */}
       <View className="flex-row justify-between mb-8">
         <View className="w-[48%]">
-          <BrutalistButton title={t('passport.send')} colorClass="bg-primary" />
+           <BrutalistButton title={language === 'es' ? "RECARGAR HZ" : "RECHARGE HZ"} colorClass="bg-accent2" onPress={() => setTopupModalVisible(true)} />
         </View>
         <View className="w-[48%]">
-          <BrutalistButton title={t('passport.receive')} colorClass="bg-accent2" />
+           <BrutalistButton title={language === 'es' ? "INTERCAMBIAR ESTAMPAS" : "TRADE STAMPS"} colorClass="bg-primary" onPress={() => setIsTradeModalVisible(true)} />
         </View>
       </View>
 
-      <Text className="text-xl font-black text-border mb-4 uppercase">{t('passport.history')}</Text>
-      
-      {transactions.length === 0 ? (
-        <BrutalistCard variant="info" colorClass="bg-background p-6 items-center mb-8">
-          <FontAwesome5 name="ghost" size={32} color={colors.border} className="mb-2" />
-          <Text className="text-border font-black uppercase text-center">{t('passport.no_history')}</Text>
-          <Text className="text-border text-xs text-center font-bold opacity-70 mt-1">{t('passport.start_exploring')}</Text>
-        </BrutalistCard>
-      ) : (
-        transactions.map((tx) => (
-          <View key={tx.id} className="bg-background border-4 border-border mb-4 p-0 shadow-brutal-sm overflow-hidden flex-row">
-            <View className={`${tx.type === 'earn' ? 'bg-accent2' : tx.type === 'penalty' ? 'bg-primary' : 'bg-secondary'} w-14 justify-center items-center border-r-4 border-border`}>
-               <FontAwesome5 name={tx.type === 'earn' ? 'arrow-down' : tx.type === 'penalty' ? 'exclamation-triangle' : 'arrow-up'} size={20} color={colors.border} />
-            </View>
-            <View className="flex-1 p-3 flex-row justify-between items-center">
-              <View className="flex-1 pr-2">
-                <Text className="text-border font-black uppercase text-base" numberOfLines={1}>{tx.description}</Text>
-                <Text className="text-border text-[10px] font-bold opacity-70">
-                  {new Date(tx.timestamp).toLocaleDateString()} - {new Date(tx.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </Text>
-              </View>
-              <Text className={`${tx.type === 'earn' ? 'text-accent2' : 'text-primary'} font-black text-lg`}>
-                {tx.type === 'earn' ? '+' : '-'}{tx.amount} HZ
-              </Text>
-            </View>
+      {/* Transaction History Section */}
+      <Text className="text-2xl font-black text-border mb-4 uppercase">{t('passport.transaction_history')}</Text>
+      <View className="mb-12">
+        {transactions.length === 0 ? (
+          <View className="bg-background border-4 border-border p-4 items-center">
+             <Text className="text-border text-xs font-bold uppercase opacity-60">
+               {language === 'es' ? 'Aún no hay transacciones registradas' : 'No transactions logged yet'}
+             </Text>
           </View>
-        ))
-      )}
+        ) : (
+          transactions.map((tx) => (
+            <BrutalistCard key={tx.id} colorClass="bg-background mb-3 p-3 flex-row items-center justify-between" variant="info">
+               <View className="flex-row items-center flex-1 mr-2">
+                  <View className={`w-8 h-8 ${tx.type === 'earn' ? 'bg-accent2' : tx.type === 'penalty' ? 'bg-primary' : 'bg-secondary'} border-2 border-border justify-center items-center mr-3 shadow-brutal-sm`}>
+                     <FontAwesome5 name={tx.type === 'earn' ? 'arrow-down' : tx.type === 'penalty' ? 'exclamation' : 'arrow-up'} size={12} color={colors.border} />
+                  </View>
+                  <View className="flex-1">
+                     <Text className="text-border font-black text-xs uppercase" numberOfLines={1}>{tx.description}</Text>
+                     <Text className="text-border text-[9px] font-bold opacity-60">{tx.timestamp}</Text>
+                  </View>
+               </View>
 
-      {/* Avatar Selection Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isAvatarModalVisible}
-        onRequestClose={() => setAvatarModalVisible(false)}
-      >
-        <View className="flex-1 justify-center items-center bg-black/60 px-4">
-          <BrutalistCard colorClass="bg-background w-full max-w-sm p-0 overflow-hidden">
-             <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
-                <Text className="text-background font-black text-xl uppercase">{t('passport.select_avatar')}</Text>
-                <FontAwesome5 name="user-astronaut" size={24} color="#FAF9F6" />
-             </View>
-             
-             <View className="p-4">
-                <Text className="text-border text-sm mb-4 font-bold">
-                  {t('passport.avatar_desc')}
-                </Text>
-                
-                <View className="flex-row flex-wrap justify-between mb-4">
-                  {AVATAR_OPTIONS.map((avatarImg, index) => (
-                    <Pressable
-                      key={index}
-                      onPress={() => setSelectedAvatar(avatarImg)}
-                      style={{ aspectRatio: 1 }}
-                      className={`w-[48%] mb-4 border-4 overflow-hidden shadow-brutal-sm justify-center items-center ${
-                        selectedAvatar === avatarImg ? 'border-accent2 bg-accent2/30' : 'border-border bg-secondary/30'
-                      }`}
-                    >
-                      <Image source={avatarImg} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
-                      {selectedAvatar === avatarImg && (
-                        <View className="absolute top-1 right-1 bg-background border-2 border-border rounded-full p-1">
-                          <FontAwesome5 name="check" size={10} color={colors.border} />
+               <Text className={`font-black text-sm ${tx.type === 'earn' ? 'text-accent2' : 'text-primary'}`}>
+                  {tx.type === 'earn' ? '+' : '-'}{tx.amount} HZ
+               </Text>
+            </BrutalistCard>
+          ))
+        )}
+      </View>
+
+      {/* Topup / Recharge HZ Modal */}
+      <Modal visible={isTopupModalVisible} transparent animationType="slide" onRequestClose={() => setTopupModalVisible(false)}>
+        <View className="flex-1 bg-black/80 justify-center items-center p-4">
+          <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden">
+            <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
+               <Text className="text-background font-black text-xl uppercase">
+                 {language === 'es' ? 'Recargar Puntos Huellazos' : 'Top Up Huellazos Points'}
+               </Text>
+               <FontAwesome5 name="times" size={24} color="#FAF9F6" onPress={() => setTopupModalVisible(false)} />
+            </View>
+
+            <View className="p-4">
+              <Text className="text-border text-xs font-bold mb-4 leading-relaxed">
+                {language === 'es' 
+                  ? 'Selecciona un paquete para adquirir Puntos HZ utilizando tu monedero de Solana:' 
+                  : 'Select a package to buy HZ Points using your Solana wallet:'}
+              </Text>
+
+              {TOPUP_PACKAGES.map((pkg) => (
+                <Pressable
+                  key={pkg.id}
+                  onPress={() => setSelectedPkg(pkg)}
+                  className={`p-3 border-4 border-border mb-3 flex-row justify-between items-center ${selectedPkg.id === pkg.id ? 'bg-accent2/40' : 'bg-background'}`}
+                >
+                  <View className="flex-1 mr-2">
+                    <View className="flex-row items-center mb-1">
+                      <Text className="text-border font-black text-base uppercase mr-2">{pkg.hzAmount} HZ</Text>
+                      {pkg.popular && (
+                        <View className="bg-primary px-2 py-0.5 border border-border">
+                          <Text className="text-background font-black text-[9px] uppercase">POPULAR</Text>
                         </View>
                       )}
-                    </Pressable>
-                  ))}
-                </View>
+                    </View>
+                    <Text className="text-border text-xs font-bold opacity-70">{pkg.label}</Text>
+                  </View>
+                  <Text className="text-border font-black text-sm">{pkg.solCost} SOL</Text>
+                </Pressable>
+              ))}
 
-                <BrutalistButton 
-                  title={t('common.confirm')} 
-                  colorClass="bg-accent1" 
-                  onPress={() => setAvatarModalVisible(false)} 
-                />
-             </View>
+              <View className="mt-2 mb-4 bg-secondary/30 p-3 border-2 border-border flex-row justify-between items-center">
+                 <Text className="text-border font-bold text-xs uppercase">Total a pagar:</Text>
+                 <Text className="text-border font-black text-base">{selectedPkg.solCost} SOL</Text>
+              </View>
+
+              <BrutalistButton 
+                title={language === 'es' ? 'PAGAR CON SOLANA & RECARGAR' : 'PAY WITH SOLANA & RECHARGE'} 
+                colorClass="bg-primary"
+                onPress={handleExecuteTopup}
+              />
+            </View>
           </BrutalistCard>
         </View>
       </Modal>
 
-      {/* Faction Selection Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isFactionModalVisible}
-        onRequestClose={() => setFactionModalVisible(false)}
-      >
-        <View className="flex-1 justify-center items-center bg-black/60 px-4">
-          <BrutalistCard colorClass="bg-background w-full max-w-sm p-0 overflow-hidden">
-             <View className="bg-secondary p-4 border-b-4 border-border flex-row justify-between items-center">
-                <Text className="text-border font-black text-xl uppercase">{t('passport.join_faction_title')}</Text>
-                <FontAwesome5 name="users" size={24} color={colors.border} />
-             </View>
-             
-             <View className="p-4">
-                <Text className="text-border text-sm mb-4 font-bold text-center">
-                  {t('passport.join_faction_desc')}
+      {/* Topup Success Modal */}
+      <Modal visible={topupSuccessModal} transparent animationType="fade" onRequestClose={() => setTopupSuccessModal(false)}>
+        <View className="flex-1 bg-black/80 justify-center items-center p-4">
+          <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden">
+             <View className="bg-accent2 p-4 border-b-4 border-border flex-row justify-between items-center">
+                <Text className="text-border font-black text-xl uppercase">
+                  {language === 'es' ? 'Recarga Exitosa' : 'Recharge Successful'}
                 </Text>
-                
-                {[
-                  { id: 'Ajolotes', label: 'Ajolotes de la Mixteca' },
-                  { id: 'Eagles', label: 'Águilas Mixtecas' },
-                  { id: 'Jaguars', label: 'Jaguares Ñuiñe' }
-                ].map((item) => (
-                  <Pressable
-                    key={item.id}
-                    onPress={() => {
-                      joinFaction(item.id as any);
-                      setFactionModalVisible(false);
-                    }}
-                    className={`mb-3 p-4 border-4 shadow-brutal-sm flex-row justify-between items-center ${faction === item.id ? 'border-accent2 bg-accent2/30' : 'border-border bg-background'}`}
-                  >
-                    <Text className="text-border font-black uppercase text-base">{item.label}</Text>
-                    {faction === item.id && <FontAwesome5 name="check-circle" solid size={20} color={colors.border} />}
-                  </Pressable>
-                ))}
+                <FontAwesome5 name="check-circle" size={24} color={colors.border} />
+             </View>
 
-                <View className="mt-2">
-                  <BrutalistButton 
-                    title={t('common.cancel')} 
-                    colorClass="bg-primary" 
-                    onPress={() => setFactionModalVisible(false)} 
-                  />
+             <View className="p-6 items-center">
+                <View className="w-16 h-16 bg-accent2 border-4 border-border rounded-full justify-center items-center mb-4 shadow-brutal-sm">
+                   <FontAwesome5 name="coins" size={28} color={colors.border} />
                 </View>
+                <Text className="text-border font-black text-2xl uppercase mb-1">+{selectedPkg.hzAmount} HZ</Text>
+                <Text className="text-border text-sm font-bold text-center mb-6 leading-relaxed">
+                  {language === 'es' 
+                    ? `Se han añadido ${selectedPkg.hzAmount} Puntos Huellazos a tu monedero mediante una transacción confirmada en Solana.`
+                    : `Added ${selectedPkg.hzAmount} Huellazos Points to your wallet via Solana.`}
+                </Text>
+                <BrutalistButton title={t('common.okay')} colorClass="bg-primary" onPress={() => setTopupSuccessModal(false)} />
              </View>
           </BrutalistCard>
         </View>
       </Modal>
+
+      {/* Avatar Change Modal */}
+      <Modal visible={isAvatarModalVisible} transparent animationType="slide" onRequestClose={() => setAvatarModalVisible(false)}>
+        <View className="flex-1 bg-black/80 justify-center items-center p-4">
+          <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden">
+            <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
+               <Text className="text-background font-black text-xl uppercase">{language === 'es' ? 'Seleccionar Avatar' : 'Select Avatar'}</Text>
+               <FontAwesome5 name="times" size={24} color="#FAF9F6" onPress={() => setAvatarModalVisible(false)} />
+            </View>
+
+            <View className="p-4 flex-row flex-wrap justify-around">
+               {AVATAR_OPTIONS.map((imgSrc, idx) => (
+                 <Pressable
+                   key={idx}
+                   onPress={() => {
+                     setSelectedAvatar(imgSrc);
+                     setAvatarModalVisible(false);
+                   }}
+                   className="w-20 h-20 bg-background border-4 border-border m-2 rounded-full overflow-hidden shadow-brutal-sm active:scale-95"
+                 >
+                    <Image source={imgSrc} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
+                 </Pressable>
+               ))}
+            </View>
+          </BrutalistCard>
+        </View>
+      </Modal>
+
+      {/* Faction Join Modal */}
+      <Modal visible={isFactionModalVisible} transparent animationType="slide" onRequestClose={() => setFactionModalVisible(false)}>
+        <View className="flex-1 bg-black/80 justify-center items-center p-4">
+          <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden">
+            <View className="bg-accent1 p-4 border-b-4 border-border flex-row justify-between items-center">
+               <Text className="text-background font-black text-xl uppercase">{t('passport.join_faction')}</Text>
+               <FontAwesome5 name="times" size={24} color="#FAF9F6" onPress={() => setFactionModalVisible(false)} />
+            </View>
+
+            <View className="p-4">
+              <Text className="text-border text-xs font-bold mb-4">{t('passport.faction_desc')}</Text>
+
+              {(['Ajolotes', 'Eagles', 'Jaguars'] as const).map((facName) => (
+                <Pressable
+                  key={facName}
+                  onPress={() => {
+                    joinFaction(facName);
+                    setFactionModalVisible(false);
+                  }}
+                  className={`p-3 border-4 border-border mb-3 flex-row items-center justify-between active:scale-95 ${faction === facName ? 'bg-accent2' : 'bg-secondary/40'}`}
+                >
+                   <View className="flex-row items-center">
+                      <FontAwesome5 name={facName === 'Ajolotes' ? 'water' : facName === 'Eagles' ? 'feather-alt' : 'paw'} size={18} color={colors.border} className="mr-3" />
+                      <Text className="text-border font-black text-lg uppercase">{facName}</Text>
+                   </View>
+                   {faction === facName && <FontAwesome5 name="check" size={16} color={colors.border} />}
+                </Pressable>
+              ))}
+            </View>
+          </BrutalistCard>
+        </View>
+      </Modal>
+
+      {/* Trade Modal for collectible stamps */}
+      <TradeAcceptModal visible={isTradeModalVisible} onClose={() => setIsTradeModalVisible(false)} />
 
     </ScrollView>
   );

@@ -1,3 +1,11 @@
+import { Buffer } from 'buffer';
+if (typeof globalThis.Buffer === 'undefined') {
+  globalThis.Buffer = Buffer;
+}
+if (typeof global.Buffer === 'undefined') {
+  global.Buffer = Buffer;
+}
+
 import { AppProviders } from '@/components/app-providers'
 import { LanguageProvider } from '@/context/language-context'
 import { AppStateProvider } from '@/context/app-state'
@@ -38,32 +46,19 @@ export default function RootLayout() {
     }
   }, [loaded])
 
-  // Return a minimal view instead of null to avoid Fabric mounting issues
   if (!loaded) {
-    return <View style={{ flex: 1 }} />
+    return null
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FAF9F6' }} onLayout={onLayoutRootView}>
-      <LanguageProvider>
-        <AppProviders>
-          <AppStateProvider>
-            <AppSplashController />
-            <RootNavigator />
-            <StatusBar style="auto" />
-          </AppStateProvider>
-        </AppProviders>
-      </LanguageProvider>
-      <PortalHost />
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <StatusBar style="auto" />
+      <AppProviders>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+        <PortalHost />
+      </AppProviders>
     </View>
-  )
-}
-
-function RootNavigator() {
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="+not-found" />
-    </Stack>
   )
 }
