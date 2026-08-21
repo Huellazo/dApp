@@ -4,6 +4,17 @@ Este documento describe la arquitectura, servicios, hooks e instrucciones en Sol
 
 ---
 
+## 📌 0. Política de Terminología Web3 (Terminology Policy)
+
+Por estándar del proyecto, se establece la siguiente regla estricta de lenguaje:
+
+1. **Scripts, Backend, Smart Contracts & Developer Logs**:
+   - Se deben usar obligatoriamente **términos técnicos en inglés** (ejemplo: `Token Mint`, `Associated Token Account (ATA)`, `Program Derived Address (PDA)`, `Keypair`, `Cross-Program Invocation (CPI)`, `SPL Token`, `Devnet RPC Endpoint`, `Airdrop`, `Transaction Signature`).
+2. **Frontend UI & Texto orientados al Usuario Final**:
+   - Se debe mantener un lenguaje simple en **español mexicano** sin jerga cripto que pueda confundir al turista o comerciante (ejemplo: `Puntos Huellazos ($HZ)`, `Estampas de Pasaporte`, `Código de Autenticidad`, `Monedero`).
+
+---
+
 ## 🏛️ 1. Resumen de Smart Contracts (Anchor)
 
 Los contratos fueron escritos en **Rust** utilizando el framework **Anchor v0.32.0** y se encuentran desplegados en **Solana Devnet**.
@@ -24,7 +35,25 @@ Los contratos fueron escritos en **Rust** utilizando el framework **Anchor v0.32
 
 ---
 
-## 🌐 2. Capa de Servicios Frontend (`mobile/services/solana-program.ts`)
+## 🪙 2. Despliegue de SPL Token Mint ($HZ)
+
+Para crear o actualizar la menta del token fungible `$HZ` en Solana Devnet, el monorepo incluye un script automatizado:
+
+```bash
+npm run create-token
+```
+
+- **Script Source**: [scripts/create-spl-token.js](file:///home/m4r10/Documents/projects/dApp/scripts/create-spl-token.js)
+- **Persistent Keypair**: [scripts/payer-keypair.json](file:///home/m4r10/Documents/projects/dApp/scripts/payer-keypair.json) (`42XmeSGwx2w8WZ5ghVSBiLnKVfbmASYNMCVJJBJEZP3C`)
+- **Acciones**:
+  1. Se conecta a `https://api.devnet.solana.com`.
+  2. Verifica saldo SOL del desplegador o solicita Airdrop en Devnet.
+  3. Ejecuta `createMint(...)` con 6 decimales.
+  4. Actualiza automáticamente la constante `HUELLAZO_TOKEN_MINT` en [mobile/services/solana-program.ts](file:///home/m4r10/Documents/projects/dApp/mobile/services/solana-program.ts).
+
+---
+
+## 🌐 3. Capa de Servicios Frontend (`mobile/services/solana-program.ts`)
 
 El archivo [mobile/services/solana-program.ts](file:///home/m4r10/Documents/projects/dApp/mobile/services/solana-program.ts) gestiona la conexión con el nodo RPC de Solana y serializa las instrucciones de Anchor en formato binario.
 
@@ -36,12 +65,15 @@ export function getConfigPda(): [PublicKey, number]
 // 2. Derivación determinista de la PDA de una Estampa/POAP
 export function getPoapPda(userPublicKey: PublicKey, tokenId: number): [PublicKey, number]
 
-// 3. Serialización de la instrucción `mint_place` (Vista Turista)
+// 3. Derivación de la Associated Token Account (ATA) para $HZ
+export function getAssociatedTokenAddress(owner: PublicKey, mint?: PublicKey): PublicKey
+
+// 4. Serialización de la instrucción `mint_place` (Vista Turista)
 export function createMintPlaceInstructionData(
   tokenId: number, tokenUri: string, latitude: number, longitude: number, poapType: number
 ): Buffer
 
-// 4. Serialización de la instrucción `mint_business` (Vista Comercio)
+// 5. Serialización de la instrucción `mint_business` (Vista Comercio)
 export function createMintBusinessInstructionData(
   tokenId: number, tokenUri: string, latitude: number, longitude: number, amountLamports: number
 ): Buffer
@@ -49,41 +81,15 @@ export function createMintBusinessInstructionData(
 
 ---
 
-## 🎣 3. Hook Personalizado Web3 (`mobile/hooks/useHuellazoWeb3.ts`)
+## 🎣 4. Hook Personalizado Web3 (`mobile/hooks/useHuellazoWeb3.ts`)
 
 El hook [mobile/hooks/useHuellazoWeb3.ts](file:///home/m4r10/Documents/projects/dApp/mobile/hooks/useHuellazoWeb3.ts) abstrae la complejidad de la blockchain para las pantallas de la aplicación.
 
-### Métodos Expuestos:
-
-#### A. `mintPlaceOnChain(...)`
-- **Propósito**: Ejecutar el minteo on-chain de una estampa turística al escanear un lugar en el Radar.
-- **Flujo**:
-  1. Deriva la PDA del POAP para la wallet actual.
-  2. Construye la transacción `mint_place`.
-  3. Solicita la firma a la billetera (vía **Mobile Wallet Adapter** o Phantom).
-  4. Envía y confirma la transacción en Solana Devnet.
-
-#### B. `mintBusinessOnChain(...)`
-- **Propósito**: Realizar un pago atómico en SOL del producto de un negocio y mintear la estampa en una sola transacción.
-- **Flujo**:
-  1. Construye una instrucción `mint_business` con los lamports a transferir.
-  2. Ejecuta en una sola transacción atómica el envío de SOL al negocio y la creación del `PoapState`.
-
-#### C. Fallback Híbrido No-Destructivo (Graceful Fallback)
-- Si el usuario no tiene una billetera conectada o el RPC de Solana no responde, el hook captura el evento sin lanzar excepciones críticas, manteniendo la app 100% funcional en modo simulado.
-
----
-
-## 📱 4. Integración en Pantallas
-
-### 1. Radar de Escaneo (`mobile/app/(tabs)/scan.tsx`)
-- Al escanear un atractivo turístico (ej. *Cerro de las Minas*, *Catedral*), invoca `mintPlaceOnChain(...)` registrando la visita on-chain.
-
-### 2. Detalle de Comercio (`mobile/app/business/[id].tsx`)
-- Al canjear una oferta o comprar en el menú, invoca `mintBusinessOnChain(...)` procesando la transferencia de SOL y el minteo atómico.
-
-### 3. Pasaporte de Viaje (`mobile/app/(tabs)/passport.tsx`)
-- Conexión con Phantom/Solflare mediante `useAuth()` e inspección en tiempo real del saldo SOL vía el hook `useGetBalance()`.
+### Métodos y Propiedades Expuestos:
+- **`hzTokenMint`**: Dirección pública Base58 del Token Mint de `$HZ`.
+- **`hzUserAta`**: Associated Token Account (ATA) del usuario conectado.
+- **`mintPlaceOnChain(...)`**: Minteo de estampas turísticas y recompensa de tokens `$HZ`.
+- **`mintBusinessOnChain(...)`**: Pago atómico de SOL y minteo de estampa en comercios aliados.
 
 ---
 

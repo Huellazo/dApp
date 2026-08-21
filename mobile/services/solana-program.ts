@@ -13,7 +13,7 @@ export const HUELLAZO_PROGRAM_ID = new PublicKey('4pioWVSCp5oSbxbeRbquccusTkvT6Z
 // --- SPL Token Program & HZ Token Mint Configuration ---
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 export const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
-export const HUELLAZO_TOKEN_MINT = new PublicKey('HZtokE8v5X1M3Y7S9aP2b4C6d8e0F1G2H3J4K5L6M7N');
+export const HUELLAZO_TOKEN_MINT = new PublicKey('HZ11111111111111111111111111111111111111111');
 
 export const connection = new Connection(SOLANA_DEVNET_RPC, 'confirmed');
 

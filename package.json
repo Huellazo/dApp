@@ -19,6 +19,7 @@
     "anchor:test": "cd anchor && anchor test",
     "anchor:deploy:local": "cd anchor && anchor deploy --provider.cluster localnet",
     "anchor:deploy:devnet": "cd anchor && anchor deploy --provider.cluster devnet",
+    "create-token": "node scripts/create-spl-token.js",
     "setup": "npm install && cp -n .env.example .env || true && echo 'Done. Edit .env with your tokens.'"
   }
 }

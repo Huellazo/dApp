@@ -349,7 +349,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     if (points < pinataCost) return null
 
     setPoints(prev => prev - pinataCost)
-    logTransaction('burn', pinataCost, 'Romper Piñata Cripto')
+    logTransaction('burn', pinataCost, 'Romper Piñata Sorpresa')
 
     const lootOptions: LootItem[] = [
       { type: 'token', name: '50 Puntos $HZ Extra', value: 50, style: 'bg-accent2' },

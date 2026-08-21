@@ -20,14 +20,16 @@ Para garantizar el éxito con el usuario masivo (turistas y pequeños comerciant
 
 Para convertir los Puntos Huellazos en un Token Cripto real en Solana, se utilizan los siguientes 3 pasos:
 
-### Paso 1: Creación del Mint del Token SPL
-En Solana se crea una cuenta **Mint** con 6 decimales para representar `$HZ`:
+### Paso 1: Creación del SPL Token Mint
+En Solana se crea una cuenta **Token Mint** con 6 decimales para representar `$HZ`. El monorepo incluye el script automatizado:
 
 ```bash
-# Crear la menta del token SPL en Solana Devnet
-spl-token create-token --decimals 6
-# Resultado: Mint Address (ej. HZtoken111111111111111111111111111111111111)
+# Executing SPL Token Mint deployment script on Devnet
+npm run create-token
 ```
+- **Script Source**: [scripts/create-spl-token.js](file:///home/m4r10/Documents/projects/dApp/scripts/create-spl-token.js)
+- **Persistent Keypair**: [scripts/payer-keypair.json](file:///home/m4r10/Documents/projects/dApp/scripts/payer-keypair.json)
+- **Auto-Update**: Actualiza dinámicamente `HUELLAZO_TOKEN_MINT` en [mobile/services/solana-program.ts](file:///home/m4r10/Documents/projects/dApp/mobile/services/solana-program.ts).
 
 ---
 

@@ -32,9 +32,9 @@ function formatSolBalance(balance: number) {
 }
 
 const TOPUP_PACKAGES = [
-  { id: 'pkg1', hzAmount: 100, solCost: 0.01, label: 'Paquete Explorador' },
-  { id: 'pkg2', hzAmount: 500, solCost: 0.05, label: 'Paquete Viajero Pro', popular: true },
-  { id: 'pkg3', hzAmount: 1000, solCost: 0.10, label: 'Paquete Leyenda Mixteca' },
+  { id: 'pkg1', hzAmount: 35, solCost: 0.01, label: 'Paquete Inicial (Aprox. $35 MXN)' },
+  { id: 'pkg2', hzAmount: 100, solCost: 0.03, label: 'Paquete Explorador Pro (Aprox. $100 MXN)', popular: true },
+  { id: 'pkg3', hzAmount: 175, solCost: 0.05, label: 'Paquete Leyenda Mixteca (Aprox. $175 MXN)' },
 ];
 
 export default function PassportScreen() {
@@ -63,6 +63,8 @@ export default function PassportScreen() {
   const [isTopupModalVisible, setTopupModalVisible] = useState(false);
   const [selectedPkg, setSelectedPkg] = useState(TOPUP_PACKAGES[0]);
   const [topupSuccessModal, setTopupSuccessModal] = useState(false);
+  const [topupLoading, setTopupLoading] = useState(false);
+  const [topupError, setTopupError] = useState<string | null>(null);
 
   // Trade Modal State
   const [isTradeModalVisible, setIsTradeModalVisible] = useState(false);
@@ -110,24 +112,42 @@ export default function PassportScreen() {
   };
 
   const handleExecuteTopup = async () => {
-    const lamports = Math.round(selectedPkg.solCost * 1_000_000_000);
-    
-    // Execute Solana Devnet transaction
-    mintBusinessOnChain({
-      amountLamports: lamports,
-      businessName: `Recarga de Puntos HZ - ${selectedPkg.label}`,
-      latitude: 17.807,
-      longitude: -97.776,
-    }).catch(err => console.log('Web3 Topup notice:', err));
+    setTopupError(null);
+    setTopupLoading(true);
 
-    // Update user's Puntos Huellazos balance and log transaction
-    earnPoints(
-      selectedPkg.hzAmount, 
-      `Recarga de ${selectedPkg.hzAmount} Puntos HZ (${selectedPkg.solCost} SOL)`
-    );
+    try {
+      const lamports = Math.round(selectedPkg.solCost * 1_000_000_000);
 
-    setTopupModalVisible(false);
-    setTopupSuccessModal(true);
+      // Prompt wallet signature & execute payment on Solana Devnet
+      const res = await mintBusinessOnChain({
+        amountLamports: lamports,
+        businessName: `Recarga de Puntos HZ - ${selectedPkg.label}`,
+        latitude: 17.807,
+        longitude: -97.776,
+      });
+
+      if (!res.success) {
+        setTopupError(
+          res.error || 
+          (language === 'es' ? 'Transacción rechazada en el monedero.' : 'Transaction rejected in wallet.')
+        );
+        return;
+      }
+
+      // Update user's Puntos Huellazos balance and log transaction ONLY on verified wallet signature
+      earnPoints(
+        selectedPkg.hzAmount, 
+        `Recarga de ${selectedPkg.hzAmount} Puntos HZ (${selectedPkg.solCost} SOL)`
+      );
+
+      setTopupModalVisible(false);
+      setTopupSuccessModal(true);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Error en la transacción';
+      setTopupError(msg);
+    } finally {
+      setTopupLoading(false);
+    }
   };
 
   return (
@@ -304,7 +324,7 @@ export default function PassportScreen() {
         </Text>
       </View>
 
-      {/* Quick Action Buttons: Recargar HZ & Intercambiar Estampas (No duplicate avatar button) */}
+      {/* Quick Action Buttons: Recargar HZ & Intercambiar Estampas */}
       <View className="flex-row justify-between mb-8">
         <View className="w-[48%]">
            <BrutalistButton title={language === 'es' ? "RECARGAR HZ" : "RECHARGE HZ"} colorClass="bg-accent2" onPress={() => setTopupModalVisible(true)} />
@@ -356,11 +376,25 @@ export default function PassportScreen() {
             </View>
 
             <View className="p-4">
-              <Text className="text-border text-xs font-bold mb-4 leading-relaxed">
+              <Text className="text-border text-xs font-bold mb-3 leading-relaxed">
                 {language === 'es' 
                   ? 'Selecciona un paquete para adquirir Puntos HZ utilizando tu monedero de Solana:' 
                   : 'Select a package to buy HZ Points using your Solana wallet:'}
               </Text>
+
+              <View className="bg-secondary/30 p-2.5 border-2 border-border mb-3">
+                <Text className="text-border text-[10px] font-bold text-center uppercase">
+                  {language === 'es' 
+                    ? '1 Punto HZ equivale a $1.00 MXN en consumos' 
+                    : '1 HZ Point equals $1.00 MXN in purchases'}
+                </Text>
+              </View>
+
+              {topupError && (
+                <View className="bg-primary/20 border-2 border-primary p-2 mb-3">
+                   <Text className="text-primary font-black text-xs uppercase text-center">{topupError}</Text>
+                </View>
+              )}
 
               {TOPUP_PACKAGES.map((pkg) => (
                 <Pressable
@@ -389,8 +423,13 @@ export default function PassportScreen() {
               </View>
 
               <BrutalistButton 
-                title={language === 'es' ? 'PAGAR CON SOLANA & RECARGAR' : 'PAY WITH SOLANA & RECHARGE'} 
+                title={
+                  topupLoading
+                    ? (language === 'es' ? 'CONFIRMANDO EN MONEDERO...' : 'CONFIRMING IN WALLET...')
+                    : (language === 'es' ? 'PAGAR CON SOLANA & RECARGAR' : 'PAY WITH SOLANA & RECHARGE')
+                } 
                 colorClass="bg-primary"
+                disabled={topupLoading}
                 onPress={handleExecuteTopup}
               />
             </View>

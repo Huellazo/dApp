@@ -105,7 +105,7 @@ export default function TourismDetailScreen() {
                     </View>
                     <View className="ml-4">
                       <Text className="text-border font-bold text-lg">{(place as any).nftReward}</Text>
-                      <Text className="text-border text-xs uppercase opacity-70">Collectible NFT</Text>
+                      <Text className="text-border text-xs uppercase opacity-70">Estampa Coleccionable</Text>
                     </View>
                   </View>
                </View>
@@ -113,11 +113,11 @@ export default function TourismDetailScreen() {
           </BrutalistCard>
 
           {/* Map Location */}
-          <Text className="text-xl font-bold text-border mb-2 uppercase">Location</Text>
+          <Text className="text-xl font-bold text-border mb-2 uppercase">Ubicación</Text>
           <Text className="text-border mb-4">{place.address}</Text>
           <View className="w-full h-48 bg-secondary border-4 border-border shadow-brutal mb-8 justify-center items-center relative overflow-hidden">
              <FontAwesome5 name="map-marked-alt" size={48} color={colors.border} className="opacity-50" />
-             <Text className="text-border font-bold mt-2 uppercase">Interactive Map</Text>
+             <Text className="text-border font-bold mt-2 uppercase">Mapa Interactivo</Text>
           </View>
         </View>
       </ScrollView>
@@ -134,12 +134,12 @@ export default function TourismDetailScreen() {
         }}
       >
         <View>
-          <Text className="text-border font-bold uppercase text-xs">Reward</Text>
+          <Text className="text-border font-bold uppercase text-xs">Recompensa</Text>
           <View className="flex-row items-center">
              <Text className="text-primary font-black text-2xl">+{place.reward} HZ</Text>
              {(place as any).nftReward && (
                 <View className="bg-accent2 ml-2 px-1 border-2 border-border shadow-brutal-sm">
-                   <Text className="text-border font-bold text-xs uppercase">+ NFT</Text>
+                   <Text className="text-border font-bold text-xs uppercase">+ Estampa</Text>
                 </View>
              )}
           </View>

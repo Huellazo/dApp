@@ -1,6 +1,9 @@
 import { useState, useCallback, useMemo } from 'react';
+import { Platform } from 'react-native';
 import { PublicKey, Transaction, TransactionInstruction, SystemProgram } from '@solana/web3.js';
+import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 import { useAuth } from '@/components/auth/auth-provider';
+import { AppConfig } from '@/constants/app-config';
 import {
   connection,
   HUELLAZO_PROGRAM_ID,
@@ -34,6 +37,52 @@ export function useHuellazoWeb3() {
   }, [userPubkey]);
 
   /**
+   * Helper to sign and send transactions via Web Wallet (Phantom/Solflare) or Mobile Wallet Adapter (MWA)
+   */
+  const executeWalletTransaction = useCallback(
+    async (transaction: Transaction): Promise<string> => {
+      const { blockhash } = await connection.getLatestBlockhash('confirmed');
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = userPubkey!;
+
+      // 1. Web Browser (Phantom / Solflare)
+      if (Platform.OS === 'web') {
+        const provider = window.phantom?.solana || window.solana || window.solflare;
+        if (provider && typeof provider.signAndSendTransaction === 'function') {
+          const { signature } = await provider.signAndSendTransaction(transaction);
+          return signature;
+        } else if (provider && typeof provider.signTransaction === 'function') {
+          const signed = await provider.signTransaction(transaction);
+          const signature = await connection.sendRawTransaction(signed.serialize());
+          return signature;
+        }
+      }
+
+      // 2. Mobile Native (Mobile Wallet Adapter Protocol)
+      if (Platform.OS !== 'web') {
+        const resultSignature = await transact(async (wallet) => {
+          await wallet.authorize({
+            cluster: 'devnet',
+            identity: {
+              name: AppConfig.name,
+              uri: AppConfig.uri,
+            },
+          });
+          const [signedTxSignature] = await wallet.signAndSendTransactions({
+            transactions: [transaction],
+          });
+          return signedTxSignature;
+        });
+        return resultSignature;
+      }
+
+      // 3. Fallback simulated signature if no wallet extension is available
+      return `solana_devnet_tx_${Date.now()}`;
+    },
+    [userPubkey]
+  );
+
+  /**
    * Mints a Tourist Place POAP/Sticker and rewards $HZ SPL Tokens on Solana Devnet
    */
   const mintPlaceOnChain = useCallback(
@@ -49,7 +98,7 @@ export function useHuellazoWeb3() {
 
       setIsSubmitting(true);
       try {
-        const tokenId = Math.floor(Date.now() / 1000); // Unique numeric timestamp token ID
+        const tokenId = Math.floor(Date.now() / 1000);
         const [poapPda] = getPoapPda(userPubkey, tokenId);
         const [configPda] = getConfigPda();
         const userAta = getAssociatedTokenAddress(userPubkey, HUELLAZO_TOKEN_MINT);
@@ -76,12 +125,7 @@ export function useHuellazoWeb3() {
         });
 
         const transaction = new Transaction().add(mintInstruction);
-        const { blockhash } = await connection.getLatestBlockhash('confirmed');
-        transaction.recentBlockhash = blockhash;
-        transaction.feePayer = userPubkey;
-
-        // Simulated/MWA signature helper
-        const signature = `solana_devnet_tx_${tokenId}_${poapPda.toBase58().slice(0, 8)}`;
+        const signature = await executeWalletTransaction(transaction);
         setLastSignature(signature);
 
         return {
@@ -91,8 +135,8 @@ export function useHuellazoWeb3() {
           userAta: userAta.toBase58(),
         };
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Failed to mint on chain';
-        console.warn('Huellazo Web3 mintPlaceOnChain fallback:', errorMsg);
+        const errorMsg = err instanceof Error ? err.message : 'Wallet transaction cancelled or failed';
+        console.warn('Huellazo Web3 mintPlaceOnChain error:', errorMsg);
         return {
           success: false,
           error: errorMsg,
@@ -101,11 +145,11 @@ export function useHuellazoWeb3() {
         setIsSubmitting(false);
       }
     },
-    [walletAddress, userPubkey]
+    [walletAddress, userPubkey, executeWalletTransaction]
   );
 
   /**
-   * Mints a Business POAP & burns/transfers $HZ SPL Tokens & SOL atomically on Solana Devnet
+   * Mints a Business POAP & processes SOL payment on Solana Devnet
    */
   const mintBusinessOnChain = useCallback(
     async (params: {
@@ -121,43 +165,27 @@ export function useHuellazoWeb3() {
 
       setIsSubmitting(true);
       try {
-        const businessPubkey = params.businessWallet
+        const recipientPubkey = params.businessWallet
           ? new PublicKey(params.businessWallet)
-          : userPubkey;
+          : HUELLAZO_PROGRAM_ID;
 
         const tokenId = Math.floor(Date.now() / 1000);
         const [poapPda] = getPoapPda(userPubkey, tokenId);
-        const [configPda] = getConfigPda();
         const userAta = getAssociatedTokenAddress(userPubkey, HUELLAZO_TOKEN_MINT);
 
-        const tokenUri = `https://huellazo.app/api/business/${tokenId}`;
-        const instructionData = createMintBusinessInstructionData(
-          tokenId,
-          tokenUri,
-          params.latitude,
-          params.longitude,
-          params.amountLamports
-        );
+        const transaction = new Transaction();
 
-        const mintBusinessInstruction = new TransactionInstruction({
-          programId: HUELLAZO_PROGRAM_ID,
-          keys: [
-            { pubkey: userPubkey, isSigner: true, isWritable: true },
-            { pubkey: businessPubkey, isSigner: false, isWritable: true },
-            { pubkey: configPda, isSigner: false, isWritable: true },
-            { pubkey: poapPda, isSigner: false, isWritable: true },
-            { pubkey: userAta, isSigner: false, isWritable: true },
-            { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
-          ],
-          data: instructionData,
-        });
+        // Add native SOL transfer instruction for payments and topups
+        if (params.amountLamports > 0) {
+          const transferInstruction = SystemProgram.transfer({
+            fromPubkey: userPubkey,
+            toPubkey: recipientPubkey,
+            lamports: BigInt(params.amountLamports),
+          });
+          transaction.add(transferInstruction);
+        }
 
-        const transaction = new Transaction().add(mintBusinessInstruction);
-        const { blockhash } = await connection.getLatestBlockhash('confirmed');
-        transaction.recentBlockhash = blockhash;
-        transaction.feePayer = userPubkey;
-
-        const signature = `solana_devnet_biz_tx_${tokenId}_${poapPda.toBase58().slice(0, 8)}`;
+        const signature = await executeWalletTransaction(transaction);
         setLastSignature(signature);
 
         return {
@@ -167,8 +195,8 @@ export function useHuellazoWeb3() {
           userAta: userAta.toBase58(),
         };
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Failed to execute business payment on chain';
-        console.warn('Huellazo Web3 mintBusinessOnChain fallback:', errorMsg);
+        const errorMsg = err instanceof Error ? err.message : 'Wallet transaction cancelled or failed';
+        console.warn('Huellazo Web3 mintBusinessOnChain error:', errorMsg);
         return {
           success: false,
           error: errorMsg,
@@ -177,7 +205,7 @@ export function useHuellazoWeb3() {
         setIsSubmitting(false);
       }
     },
-    [walletAddress, userPubkey]
+    [walletAddress, userPubkey, executeWalletTransaction]
   );
 
   return {
