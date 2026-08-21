@@ -20,7 +20,7 @@ huellazo-dApp/
 ### A. Capa Blockchain (`/anchor`)
 
 1. **Rust + Anchor v0.32.0**: Framework para compilar los contratos inteligentes de Solana.
-2. **Programa `huellazo` (`4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk`)**:
+2. **Programa `huellazo` (`2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ`)**:
    - **`ConfigState` PDA**: Semillas `[b"config"]`. Almacena la autoridad y el contador global `total_minted`.
    - **`PoapState` PDA**: Semillas `[b"poap", owner_pubkey, token_id_u64_le]`. Registra la latitud, longitud, token URI y tipo de estampa.
    - **`Passport` PDA**: Semillas `[b"passport", user_pubkey]`. Identidad evolutiva del turista (Bronce, Plata, Oro).
@@ -31,6 +31,23 @@ huellazo-dApp/
    - Macros `#[ephemeral]` con instrucciones `delegate`, `commit` y `undelegate` para transferir PDAs a capas L2 de ejecución ultra-rápida y sin comisiones de gas.
 5. **Metaplex Bubblegum (`mpl-bubblegum`) & SPL State Compression**:
    - Estándar para minteo y gestión de **Compressed NFTs (cNFTs)** masivos a fracciones de centavo de dólar.
+
+### 🌐 Registro de Despliegue en Solana Devnet
+
+- **Red / Cluster**: Solana Devnet
+- **Program ID en Devnet**: `2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ`
+- **Enlace Solana Explorer (Programa)**: [https://explorer.solana.com/address/2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ?cluster=devnet](https://explorer.solana.com/address/2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ?cluster=devnet)
+- **Firma de Transacción (Signature)**: `2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb`
+- **Enlace Solana Explorer (Transacción)**: [https://explorer.solana.com/tx/2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb?cluster=devnet](https://explorer.solana.com/tx/2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb?cluster=devnet)
+- **Devnet RPC Endpoint**: `https://devnet.helius-rpc.com/?api-key=TU_API_KEY_HELIUS`
+
+```bash
+Program Id: 2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ
+Owner: BPFLoaderUpgradeab1e11111111111111111111111
+Data Length: 400,360 bytes
+Status: Active on Devnet Slot 486286645
+```
+
 
 ---
 

@@ -109,26 +109,14 @@ export default function CollectionsScreen() {
               </Text>
             ) : (
               <View className="flex-row items-center flex-wrap justify-start">
-                {earnedTokens.slice(0, 4).map((tok) => {
-                  const poi = MOCK_POIS.find(item => item.id === tok.poiId);
-                  const img = tok.image || poi?.image;
-                  return (
-                    <View key={`thumb-${tok.id}`} className="w-10 h-10 bg-accent2 border-2 border-border shadow-brutal-sm rounded-md mr-2 overflow-hidden justify-center items-center">
-                      {img ? (
-                        <Image source={img as any} className="w-full h-full" resizeMode="cover" />
-                      ) : (
-                        <FontAwesome5 name="map-marker-alt" size={16} color={colors.border} />
-                      )}
-                    </View>
-                  );
-                })}
+                {earnedTokens.slice(0, 4).map((tok) => (
+                  <View key={`thumb-${tok.id}`} className="w-10 h-10 bg-accent2 border-2 border-border shadow-brutal-sm rounded-md mr-2 overflow-hidden justify-center items-center">
+                    <FontAwesome5 name="map-marker-alt" size={16} color={colors.border} />
+                  </View>
+                ))}
                 {allNfts.slice(0, 4).map((nft) => (
                   <View key={`thumb-${nft.id}`} className="w-10 h-10 bg-accent1 border-2 border-border shadow-brutal-sm rounded-md mr-2 overflow-hidden justify-center items-center">
-                    {nft.image ? (
-                      <Image source={nft.image as any} className="w-full h-full" resizeMode="cover" />
-                    ) : (
-                      <FontAwesome5 name="medal" size={16} color="#FAF9F6" />
-                    )}
+                    <FontAwesome5 name="medal" size={16} color="#FAF9F6" />
                   </View>
                 ))}
               </View>
@@ -215,9 +203,12 @@ export default function CollectionsScreen() {
                 return (
                   <View key={token.id} className="w-[48%] mb-4">
                     <BrutalistCard colorClass="bg-background p-0 overflow-hidden">
-                      <View style={{ aspectRatio: 1 }} className="w-full bg-accent2/30 border-b-4 border-border justify-center items-center relative overflow-hidden">
+                      <View className="w-full h-32 bg-accent2/30 border-b-4 border-border justify-center items-center relative overflow-hidden p-2">
                         {(token.image || poi?.image) ? (
-                          <Image source={(token.image || poi?.image) as any} className="w-full h-full p-2" resizeMode="contain" />
+                          <Image 
+                            source={(token.image || poi?.image) as any} 
+                            style={{ width: '80%', height: '80%', resizeMode: 'contain' }} 
+                          />
                         ) : (
                           <Text className="text-border font-black text-4xl opacity-50">H</Text>
                         )}
@@ -272,14 +263,17 @@ export default function CollectionsScreen() {
                 <View key={nft.id} className="w-[48%] mb-4">
                   <Pressable onPress={() => setSelectedNft(nft)} className="active:scale-95 transition-transform">
                     <BrutalistCard colorClass="bg-background p-0 overflow-hidden">
-                      <View style={{ aspectRatio: 1 }} className={`w-full ${nft.style === 'chromatic' ? 'bg-[#FF00FF]/30' : nft.style === 'metallic' ? 'bg-[#C0C0C0]' : 'bg-accent1/30'} border-b-4 border-border justify-center items-center relative overflow-hidden`}>
+                      <View className={`w-full h-32 ${nft.style === 'chromatic' ? 'bg-[#FF00FF]/30' : nft.style === 'metallic' ? 'bg-[#C0C0C0]' : 'bg-accent1/30'} border-b-4 border-border justify-center items-center relative overflow-hidden p-2`}>
                         {nft.style && (
                           <View className="absolute top-2 left-[-10px] bg-primary border-y-4 border-r-4 border-border px-3 py-1 shadow-brutal-sm z-10">
                             <Text className="text-background font-black text-[8px] uppercase">{nft.style}</Text>
                           </View>
                         )}
                         {nft.image ? (
-                          <Image source={nft.image as any} className="w-11/12 h-11/12" resizeMode="contain" />
+                          <Image 
+                            source={nft.image as any} 
+                            style={{ width: '80%', height: '80%', resizeMode: 'contain' }} 
+                          />
                         ) : (
                           <Text className="text-border font-black text-4xl opacity-50">?</Text>
                         )}
@@ -326,8 +320,11 @@ export default function CollectionsScreen() {
                     <BrutalistCard colorClass="bg-background p-0 overflow-hidden opacity-95">
                       
                       {/* Locked Image Container */}
-                      <View style={{ aspectRatio: 1 }} className="w-full bg-secondary/60 border-b-4 border-border justify-center items-center relative overflow-hidden">
-                        <Image source={stamp.image} className="w-11/12 h-11/12 opacity-35" resizeMode="contain" />
+                      <View className="w-full h-32 bg-secondary/60 border-b-4 border-border justify-center items-center relative overflow-hidden p-2">
+                        <Image 
+                          source={stamp.image} 
+                          style={{ width: '80%', height: '80%', opacity: 0.45, resizeMode: 'contain' }} 
+                        />
                         
                         {/* Lock Overlay Badge */}
                         <View className="absolute inset-0 bg-black/40 justify-center items-center">

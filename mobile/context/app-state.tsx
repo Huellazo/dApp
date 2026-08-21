@@ -472,7 +472,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setEarnedTokens(prev => [token, ...prev])
     setXp(prev => prev + token.reward * 2)
     setPoints(prev => prev + token.reward)
-    logTransaction('earn', token.reward, `Scanned ${poi.name}`)
+    setStatus('normal')
+    logTransaction('earn', token.reward, `Estampa Obtenida: ${poi.name}`)
 
     return { token, alreadyMinted: false }
   }, [earnedTokens, logTransaction])

@@ -15,6 +15,7 @@ import { useHuellazoWeb3 } from '@/hooks/useHuellazoWeb3';
 import { SolanaPayModal } from '@/components/features/scan/SolanaPayModal';
 import { parseSolanaPayUrl } from '@/utils/solana-pay-parser';
 import type { ParsedSolanaPay } from '@/utils/solana-pay-parser';
+import { getMetadataJsonUrl } from '@/services/metadata-service';
 
 let jsQR: any = null;
 try {
@@ -34,7 +35,7 @@ function shortHash(value: string) {
 
 export default function ScanScreen() {
   const { t, language } = useLanguage();
-  const { mintPoiToken, applyPenalty, isRadarBoosted, activateRadarBoost } = useAppState();
+  const { mintPoiToken, applyPenalty, isRadarBoosted, activateRadarBoost, earnPoints } = useAppState();
   const { mintPlaceOnChain } = useHuellazoWeb3();
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -80,6 +81,29 @@ export default function ScanScreen() {
 
   const handleProcessQrCode = (qrString: string) => {
     setQrScanError(null);
+
+    // 1. P2P Stamp Trade QR Code
+    if (qrString.includes('huellazo:trade') || qrString.includes('solana:trade') || qrString.includes('stampId=')) {
+      try {
+        const urlStr = qrString.replace('huellazo:', 'https://huellazo.app/').replace('solana:', 'https://huellazo.app/');
+        const urlObj = new URL(urlStr);
+        const stampId = urlObj.searchParams.get('stampId') || 'poi1';
+        const stampTitle = urlObj.searchParams.get('title') ? decodeURIComponent(urlObj.searchParams.get('title')!) : 'Estampa Intercambiada';
+        
+        const matchedPoi = MOCK_POIS.find(p => p.id === stampId) || MOCK_POIS[0];
+        
+        mintPoiToken(matchedPoi);
+        earnPoints(50, `Intercambio P2P: Estampa ${stampTitle}`);
+        
+        setSelectedPoi(matchedPoi);
+        setModalVisible(true);
+        return;
+      } catch (err) {
+        console.warn('Trade QR parse notice:', err);
+      }
+    }
+
+    // 2. Solana Pay Payment QR Code
     const parsed = parseSolanaPayUrl(qrString);
     if (parsed) {
       setSolanaPayData(parsed);
@@ -87,8 +111,8 @@ export default function ScanScreen() {
     } else {
       setQrScanError(
         language === 'es'
-          ? 'El código QR no es un formato válido de Solana Pay (solana:...)'
-          : 'Invalid Solana Pay QR format'
+          ? 'El código QR no es un formato válido de Solana Pay o Intercambio P2P'
+          : 'Invalid Solana Pay or Trade QR format'
       );
     }
   };
@@ -139,7 +163,7 @@ export default function ScanScreen() {
     
     // Simulate 10% chance of a GPS spoofing penalty
     if (Math.random() < 0.1) {
-      applyPenalty(50, 'Fake GPS Detected');
+      applyPenalty(50, 'Inconsistencia de Ubicación GPS');
       setIsPenaltyFlagged(true);
       return;
     }
@@ -148,9 +172,11 @@ export default function ScanScreen() {
     const lat = (poiToMint as any).coordinates?.latitude || 17.807;
     const lng = (poiToMint as any).coordinates?.longitude || -97.776;
 
+    const metadataUri = getMetadataJsonUrl(poiToMint.id);
+
     mintPlaceOnChain({
       tokenId: Number(poiToMint.id.replace(/\D/g, '')) || 101,
-      tokenUri: `https://huellazo.app/api/poap/${poiToMint.id}.json`,
+      tokenUri: metadataUri,
       latitude: lat,
       longitude: lng,
       placeName: poiToMint.name,

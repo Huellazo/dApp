@@ -35,7 +35,7 @@ Sin embargo, en el código actual las tres capas principales (Mobile, Backend Fa
 - Usa PostgreSQL + Shapely (no PostGIS como afirma el diagrama).
 
 ### Anchor (`anchor/programs/huellazo`)
-- **Estado de Program ID:** El Program ID `4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk` ya ha sido sincronizado exitosamente entre `lib.rs`, `Anchor.toml`, la configuración del backend y el IDL.
+- **Estado de Program ID:** El Program ID `2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ` ya ha sido sincronizado exitosamente entre `lib.rs`, `Anchor.toml`, la configuración del backend y el IDL.
 - El IDL en la app móvil (`mobile/idl/huellazo.json`) pertenece a una versión antigua (`recordVisit` etc.) y no concuerda con el código en Rust actual (`mint_place`, `mint_business`).
 - Pruebas TypeScript (`anchor/tests/anchor.ts`) están rotas porque apuntan a una API antigua.
 - Utiliza `ephemeral_rollups_sdk` de MagicBlock para delegación de PDAs, lo cual es avanzado pero requiere validación si se mantendrá.

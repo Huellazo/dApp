@@ -19,7 +19,7 @@ const MAGIC_ROUTER_WS = "wss://devnet-router.magicblock.app/";
 const SOLANA_DEVNET_RPC = "https://api.devnet.solana.com";
 
 // Programa Huellazo
-const PROGRAM_ID = "4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk";
+const PROGRAM_ID = "2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ";
 
 // ER Validator Devnet Asia
 const ER_VALIDATOR = "MAS1Dt9qreoRMQ14YQuhg8UTZMMzDdKhmkZMECCzk57";

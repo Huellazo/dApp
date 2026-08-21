@@ -9,7 +9,7 @@ import { CustomTabBarButton } from './custom-tab-bar-button'
 const TAB_ITEMS: Array<{ route: string; icon: any; label: string }> = [
   { route: 'map',      icon: require('@/assets/images/map-icon.png'),      label: 'MAPA'      },
   { route: 'passport', icon: require('@/assets/images/passport-icon.png'), label: 'MI PERFIL' },
-  { route: 'badges',   icon: require('@/assets/images/badges-icon.png'),   label: 'MIS NFTS'  },
+  { route: 'badges',   icon: require('@/assets/images/badges-icon.png'),   label: 'ESTAMPAS'  },
   { route: 'rewards',  icon: require('@/assets/images/rewards-icon.png'),  label: 'CANJEAR'   },
   { route: 'qr',       icon: require('@/assets/images/map-icon.png'),      label: 'ESCANEAR'  },
 ]

@@ -1,5 +1,5 @@
 {
-  "address": "4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk",
+  "address": "2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ",
   "metadata": {
     "name": "huellazo",
     "version": "0.1.0",
@@ -205,7 +205,7 @@
         },
         {
           "name": "owner_program",
-          "address": "4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk"
+          "address": "2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ"
         },
         {
           "name": "delegation_program",

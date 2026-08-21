@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView, Image, Pressable, Modal, TextInput } from 'react-native';
+import { router } from 'expo-router';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { MOCK_USER } from '@/mocks/db';
@@ -116,6 +117,14 @@ export default function PassportScreen() {
     await signOut();
   };
 
+  const handleSwitchWallet = async () => {
+    setConnectionError(null);
+    await signOut();
+    setTimeout(() => {
+      signIn().catch(console.warn);
+    }, 300);
+  };
+
   const handleExecuteTopup = async () => {
     setTopupError(null);
     setTopupLoading(true);
@@ -161,20 +170,34 @@ export default function PassportScreen() {
       <View className="flex-row justify-between items-center mb-6">
         <Text className="text-3xl font-black text-border uppercase tracking-tight">{t('passport.title')}</Text>
         
-        {/* Language Switcher without Emojis */}
-        <View className="flex-row bg-background border-2 border-border shadow-brutal-sm overflow-hidden">
-          <Pressable 
-            onPress={() => setLanguage('es')}
-            className={`px-3 py-1 ${language === 'es' ? 'bg-primary' : 'bg-background'}`}
-          >
-            <Text className={`font-black text-xs ${language === 'es' ? 'text-background' : 'text-border'}`}>ES</Text>
-          </Pressable>
-          <Pressable 
-            onPress={() => setLanguage('en')}
-            className={`px-3 py-1 ${language === 'en' ? 'bg-primary' : 'bg-background'}`}
-          >
-            <Text className={`font-black text-xs ${language === 'en' ? 'text-background' : 'text-border'}`}>EN</Text>
-          </Pressable>
+        <View className="flex-row items-center">
+          {isWalletConnected && (
+            <Pressable 
+              onPress={handleSwitchWallet}
+              className="bg-primary px-2.5 py-1 border-2 border-border shadow-brutal-sm mr-2 active:scale-95 flex-row items-center"
+            >
+              <FontAwesome5 name="exchange-alt" size={10} color="#FAF9F6" className="mr-1" />
+              <Text className="text-background font-black text-[9px] uppercase">
+                {language === 'es' ? 'CAMBIAR' : 'SWITCH'}
+              </Text>
+            </Pressable>
+          )}
+
+          {/* Language Switcher without Emojis */}
+          <View className="flex-row bg-background border-2 border-border shadow-brutal-sm overflow-hidden">
+            <Pressable 
+              onPress={() => setLanguage('es')}
+              className={`px-3 py-1 ${language === 'es' ? 'bg-primary' : 'bg-background'}`}
+            >
+              <Text className={`font-black text-xs ${language === 'es' ? 'text-background' : 'text-border'}`}>ES</Text>
+            </Pressable>
+            <Pressable 
+              onPress={() => setLanguage('en')}
+              className={`px-3 py-1 ${language === 'en' ? 'bg-primary' : 'bg-background'}`}
+            >
+              <Text className={`font-black text-xs ${language === 'en' ? 'text-background' : 'text-border'}`}>EN</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
       
@@ -305,12 +328,24 @@ export default function PassportScreen() {
                 </Text>
               </View>
 
-              <BrutalistButton
-                title={isLoading ? t('passport.disconnecting') : t('passport.disconnect')}
-                colorClass="bg-primary"
-                disabled={isLoading}
-                onPress={handleDisconnectWallet}
-              />
+              <View className="flex-row justify-between">
+                <View className="flex-1 mr-1.5">
+                  <BrutalistButton
+                    title={isLoading ? "CERRANDO..." : "CERRAR SESIÓN"}
+                    colorClass="bg-primary"
+                    disabled={isLoading}
+                    onPress={handleDisconnectWallet}
+                  />
+                </View>
+                <View className="flex-1 ml-1.5">
+                  <BrutalistButton
+                    title="CAMBIAR MONEDERO"
+                    colorClass="bg-accent2"
+                    disabled={isLoading}
+                    onPress={handleSwitchWallet}
+                  />
+                </View>
+              </View>
             </View>
           ) : (
             <View>
@@ -337,17 +372,25 @@ export default function PassportScreen() {
       <View className="mb-4">
         <Text className="text-xl font-black text-border uppercase">{t('passport.quick_actions')}</Text>
         <Text className="text-border text-xs font-bold opacity-80 mt-0.5">
-          {language === 'es' ? 'Recarga puntos Huellazos o intercambia estampas entre exploradores' : 'Recharge points or trade collectible stamps between explorers'}
+          {language === 'es' ? 'Envía estampas generando un QR o escanea para recibir coleccionables P2P' : 'Send stamps by generating a QR or scan to receive P2P collectibles'}
         </Text>
       </View>
 
-      {/* Quick Action Buttons: Recargar HZ & Intercambiar Estampas */}
+      {/* Quick Action Buttons: Enviar Estampa & Escanear QR */}
       <View className="flex-row justify-between mb-8">
         <View className="w-[48%]">
-           <BrutalistButton title={language === 'es' ? "RECARGAR HZ" : "RECHARGE HZ"} colorClass="bg-accent2" onPress={() => setTopupModalVisible(true)} />
+           <BrutalistButton 
+             title={language === 'es' ? "ENVIAR ESTAMPA" : "SEND STAMP"} 
+             colorClass="bg-accent2" 
+             onPress={() => setIsTradeModalVisible(true)} 
+           />
         </View>
         <View className="w-[48%]">
-           <BrutalistButton title={language === 'es' ? "INTERCAMBIAR ESTAMPAS" : "TRADE STAMPS"} colorClass="bg-primary" onPress={() => setIsTradeModalVisible(true)} />
+           <BrutalistButton 
+             title={language === 'es' ? "ESCANEAR QR" : "SCAN QR"} 
+             colorClass="bg-primary" 
+             onPress={() => router.push('/(tabs)/scan')} 
+           />
         </View>
       </View>
 
@@ -364,9 +407,15 @@ export default function PassportScreen() {
           transactions.map((tx) => (
             <BrutalistCard key={tx.id} colorClass="bg-background mb-3 p-3 flex-row items-center justify-between" variant="info">
                <View className="flex-row items-center flex-1 mr-2">
-                  <View className={`w-8 h-8 ${tx.type === 'earn' ? 'bg-accent2' : tx.type === 'penalty' ? 'bg-primary' : 'bg-secondary'} border-2 border-border justify-center items-center mr-3 shadow-brutal-sm`}>
-                     <FontAwesome5 name={tx.type === 'earn' ? 'arrow-down' : tx.type === 'penalty' ? 'exclamation' : 'arrow-up'} size={12} color={colors.border} />
-                  </View>
+                   {tx.image ? (
+                     <View className="w-9 h-9 border-2 border-border mr-3 rounded-md overflow-hidden shadow-brutal-sm bg-accent2/20">
+                       <Image source={typeof tx.image === 'string' ? { uri: tx.image } : tx.image} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                     </View>
+                   ) : (
+                     <View className={`w-8 h-8 ${tx.type === 'earn' ? 'bg-accent2' : tx.type === 'penalty' ? 'bg-primary' : 'bg-secondary'} border-2 border-border justify-center items-center mr-3 shadow-brutal-sm`}>
+                        <FontAwesome5 name={tx.type === 'earn' ? 'arrow-down' : tx.type === 'penalty' ? 'exclamation' : 'arrow-up'} size={12} color={colors.border} />
+                     </View>
+                   )}
                   <View className="flex-1">
                      <Text className="text-border font-black text-xs uppercase" numberOfLines={1}>{tx.description}</Text>
                      <Text className="text-border text-[9px] font-bold opacity-60">{tx.timestamp}</Text>

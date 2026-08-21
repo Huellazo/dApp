@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Umi, PublicKey as UmiPublicKey } from '@metaplex-foundation/umi';
-import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
-import { generateSigner, publicKey as toUmiPublicKey, none } from '@metaplex-foundation/umi';
+import { createUmi as createBaseUmi, generateSigner, publicKey as toUmiPublicKey, none } from '@metaplex-foundation/umi';
+import { defaultPlugins } from '@metaplex-foundation/umi-bundle-defaults';
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import {
   createTreeV2,
@@ -14,8 +14,7 @@ import type { DasApiInterface } from '@metaplex-foundation/digital-asset-standar
 
 // --- Helius Devnet DAS RPC Endpoint read securely from process.env ---
 export const HELIUS_DEVNET_DAS_RPC =
-  process.env.EXPO_PUBLIC_HELIUS_DAS_RPC ||
-  'https://devnet.helius-rpc.com/?api-key=1c16080b-479c-4d65-9ce0-3b2e8ba0b8b0';
+  process.env.EXPO_PUBLIC_HELIUS_DAS_RPC || 'https://api.devnet.solana.com';
 
 export const MERKLE_TREE_STORAGE_KEY = 'huellazo:merkle-tree:devnet:v1';
 
@@ -53,7 +52,8 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  */
 export function getUmiClient(customRpcUrl?: string): UmiDas {
   const rpcUrl = customRpcUrl || HELIUS_DEVNET_DAS_RPC;
-  const umi = createUmi(rpcUrl)
+  const umi = createBaseUmi()
+    .use(defaultPlugins(rpcUrl))
     .use(mplBubblegum())
     .use(dasApi());
   
@@ -117,9 +117,10 @@ export async function obtenerOMintarArbolMerkle(umi: Umi): Promise<UmiPublicKey>
 export async function mintearCnftEstampa(
   umi: Umi,
   merkleTree: UmiPublicKey,
-  input: CnftStampMetadataInput
+  input: CnftStampMetadataInput,
+  targetOwnerAddress?: string
 ): Promise<MintCnftResult> {
-  const leafOwner = umi.identity.publicKey;
+  const leafOwner = targetOwnerAddress ? toUmiPublicKey(targetOwnerAddress) : umi.identity.publicKey;
 
   const builder = await mintV2(umi, {
     merkleTree,

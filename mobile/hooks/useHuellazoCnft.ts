@@ -20,11 +20,17 @@ export function useHuellazoCnft() {
   const umi = useMemo(() => {
     const umiClient = getUmiClient();
 
-    // If wallet adapter is connected in browser / mobile
-    if (typeof window !== 'undefined' && (window as any).solana) {
-      try {
-        umiClient.use(walletAdapterIdentity((window as any).solana));
-      } catch {
+    // If wallet adapter is connected in browser / mobile (Solflare / Phantom / Solana)
+    if (typeof window !== 'undefined') {
+      const provider = (window as any).solflare || (window as any).phantom?.solana || (window as any).solana;
+      if (provider) {
+        try {
+          umiClient.use(walletAdapterIdentity(provider));
+        } catch {
+          const keypair = generateSigner(umiClient);
+          umiClient.use(signerIdentity(keypair));
+        }
+      } else {
         const keypair = generateSigner(umiClient);
         umiClient.use(signerIdentity(keypair));
       }
@@ -48,8 +54,8 @@ export function useHuellazoCnft() {
         // 1. Retrieve or automatically create Merkle Tree on-chain on first mint
         const merkleTree = await obtenerOMintarArbolMerkle(umi);
 
-        // 2. Mint Compressed NFT (cNFT) leaf in the tree
-        const result = await mintearCnftEstampa(umi, merkleTree, metadata);
+        // 2. Mint Compressed NFT (cNFT) leaf in the tree, target owner = connected wallet (Solflare/Phantom)
+        const result = await mintearCnftEstampa(umi, merkleTree, metadata, walletAddress || undefined);
 
         setLastCnftResult(result);
 

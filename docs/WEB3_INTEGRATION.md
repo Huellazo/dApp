@@ -21,8 +21,33 @@ Los contratos fueron escritos en **Rust** utilizando el framework **Anchor v0.32
 
 | Programa | Program ID (Devnet) | Ubicación en el Monorepo | Descripción |
 | :--- | :--- | :--- | :--- |
-| **`huellazo`** | `4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk` | `/anchor/programs/huellazo` | Lógica principal de minteo de POAPs, pasaportes dinámicos y pagos |
+| **`huellazo`** | `2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ` | `/anchor/programs/huellazo` | Lógica principal de minteo de POAPs, pasaportes dinámicos y pagos |
 | **`vault`** | `HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU` | `/anchor/programs/vault` | Tesorería y bóveda de depósitos on-chain |
+
+### 🚀 Registro de Despliegue Exitoso en Solana Devnet
+
+- **Red / Cluster**: Solana Devnet
+- **Devnet RPC Endpoint**: `https://devnet.helius-rpc.com/?api-key=TU_API_KEY_HELIUS`
+- **Program ID en Devnet**: `2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ`
+- **Solana Explorer URL (Programa)**: [https://explorer.solana.com/address/2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ?cluster=devnet](https://explorer.solana.com/address/2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ?cluster=devnet)
+- **Transaction Signature**: `2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb`
+- **Solana Explorer URL (Transacción)**: [https://explorer.solana.com/tx/2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb?cluster=devnet](https://explorer.solana.com/tx/2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb?cluster=devnet)
+
+#### Verificación On-Chain:
+```bash
+Program Id: 2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ
+Owner: BPFLoaderUpgradeab1e11111111111111111111111
+Data Length: 400,360 bytes
+Status: Active on Devnet Slot 486286645
+Authority: ABt3mfoS61TH2DKg97hiznWWnhwYmfbUo3R8ii7epZ2U
+```
+
+#### Variables de Entorno Actualizadas:
+Se actualizó tanto en `mobile/.env` como en `mobile/.env.example` y `backend/app/core/config.py`:
+```env
+EXPO_PUBLIC_HUELLAZO_PROGRAM_ID=2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ
+EXPO_PUBLIC_HELIUS_DAS_RPC=https://devnet.helius-rpc.com/?api-key=TU_API_KEY_HELIUS
+```
 
 ### Cuentas y Cuentas Derivadas de Programa (PDAs)
 - **`ConfigState`**: Derivada de los seeds `[b"config"]`. Almacena la autoridad del sistema y el contador global de tokens minteados (`total_minted`).

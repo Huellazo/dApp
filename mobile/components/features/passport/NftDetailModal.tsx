@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, Image } from 'react-native';
+import { View, Text, Modal, Image, Pressable } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { colors } from '@/theme/colors';
 import { useHuellazoCnft } from '@/hooks/useHuellazoCnft';
 import { getMetadataJsonUrl } from '@/services/metadata-service';
 
@@ -86,48 +87,58 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
         <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden" variant="info">
           
           {/* Header */}
-          <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
-             <View className="flex-1 mr-2">
-                <Text className="text-background font-black text-xl uppercase" numberOfLines={1}>
+          <View className="bg-primary p-3.5 border-b-4 border-border flex-row justify-between items-center">
+             <View className="flex-1 mr-3">
+                <Text className="text-background font-black text-lg uppercase" numberOfLines={1}>
                   {nft.title}
                 </Text>
-                <Text className="text-background text-xs font-bold opacity-80 uppercase">
+                <Text className="text-background text-[10px] font-bold opacity-80 uppercase">
                   {nft.rarity || 'Estampa Coleccionable'}
                 </Text>
              </View>
-             <FontAwesome5 name="times" size={24} color="#FAF9F6" onPress={onClose} style={{ padding: 4 }} />
+             
+             {/* Small Circular Close Button */}
+             <Pressable 
+               onPress={onClose} 
+               className="w-8 h-8 rounded-full bg-background border-2 border-border shadow-brutal-sm justify-center items-center active:scale-95"
+             >
+               <FontAwesome5 name="times" size={14} color={colors.border} />
+             </Pressable>
           </View>
 
           {/* Image Container */}
-          <View className={`w-full aspect-square ${bgStyle} border-b-4 border-border justify-center items-center relative overflow-hidden`}>
+          <View className={`w-full h-48 ${bgStyle} border-b-4 border-border justify-center items-center relative overflow-hidden p-2`}>
             {nft.style && (
-              <View className="absolute top-4 left-[-16px] bg-primary border-y-4 border-r-4 border-border px-4 py-2 shadow-brutal-sm z-10">
-                <Text className="text-background font-black text-xs uppercase tracking-widest">{nft.style}</Text>
+              <View className="absolute top-2 left-[-12px] bg-primary border-y-2 border-r-2 border-border px-3 py-1 shadow-brutal-sm z-10">
+                <Text className="text-background font-black text-[9px] uppercase tracking-widest">{nft.style}</Text>
               </View>
             )}
             {nft.image ? (
-              <Image source={nft.image as any} className="w-full h-full p-4" resizeMode="contain" />
+              <Image 
+                source={nft.image as any} 
+                style={{ width: '80%', height: '80%', resizeMode: 'contain' }} 
+              />
             ) : (
-              <Text className="text-border font-black text-6xl opacity-50">?</Text>
+              <Text className="text-border font-black text-5xl opacity-50">?</Text>
             )}
           </View>
 
           {/* Details */}
-          <View className="p-6 bg-secondary">
+          <View className="p-4 bg-secondary">
              
-             <View className="bg-background border-4 border-border p-4 shadow-brutal-sm mb-4">
-               <Text className="text-border font-black text-xs uppercase opacity-70 mb-1">Lugar de Origen</Text>
-               <Text className="text-border font-bold text-base mb-3">{nft.location}</Text>
+             <View className="bg-background border-4 border-border p-3 shadow-brutal-sm mb-3">
+               <Text className="text-border font-black text-[10px] uppercase opacity-70 mb-0.5">Lugar de Origen</Text>
+               <Text className="text-border font-bold text-xs mb-2">{nft.location}</Text>
                
-               <Text className="text-border font-black text-xs uppercase opacity-70 mb-1">Fecha de Colección</Text>
-               <Text className="text-border font-bold text-sm mb-3">
+               <Text className="text-border font-black text-[10px] uppercase opacity-70 mb-0.5">Fecha de Colección</Text>
+               <Text className="text-border font-bold text-xs mb-2">
                  {nft.date ? new Date(nft.date).toLocaleDateString() : 'Fecha no registrada'}
                </Text>
 
                {/* Digital authenticity badge without crypto jargon */}
-               <View className="bg-accent2/30 p-2.5 border-2 border-border mt-1">
+               <View className="bg-accent2/30 p-2 border-2 border-border mt-0.5">
                  <View className="flex-row items-center justify-between mb-1">
-                   <Text className="text-border font-black text-[10px] uppercase">Autenticidad Digital:</Text>
+                   <Text className="text-border font-black text-[9px] uppercase">Autenticidad Digital:</Text>
                    <View className="bg-primary px-1.5 py-0.5 border border-border">
                      <Text className="text-background font-black text-[8px] uppercase">Estampa Auténtica</Text>
                    </View>
@@ -137,22 +148,18 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
                </View>
              </View>
 
-             <Text className="text-border font-bold text-xs text-center opacity-80 mb-4 px-2">
-               Esta estampa digital cuenta con un código único de autenticidad registrado en tu Monedero Huellazo.
-             </Text>
-
-             {/* Action Buttons */}
+             {/* Action Button */}
              {mintStatus === 'success' ? (
-               <View className="bg-accent2 p-3 border-2 border-border mb-3 items-center">
-                 <Text className="text-border font-black text-xs uppercase mb-1">¡Guardado en Tu Monedero!</Text>
-                 <Text className="text-border font-bold text-[10px] text-center opacity-90">
+               <View className="bg-accent2 p-2.5 border-2 border-border items-center">
+                 <Text className="text-border font-black text-xs uppercase mb-0.5">¡Guardado en Tu Monedero!</Text>
+                 <Text className="text-border font-bold text-[9px] text-center opacity-90">
                    Registrado en Solana Devnet con tu dirección de monedero.
                  </Text>
                </View>
              ) : (
-               <View className="mb-3">
+               <View>
                  <BrutalistButton
-                   title={isMinting ? "Guardando en Monedero..." : "Guardar en Monedero"}
+                   title={isMinting ? "Guardando..." : "Guardar en Monedero"}
                    colorClass="bg-accent1"
                    disabled={isMinting}
                    onPress={handleSaveToWallet}
@@ -164,24 +171,6 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
                  )}
                </View>
              )}
-
-             <View className="w-full flex-row justify-between">
-               <View className="flex-1 mr-2">
-                 <BrutalistButton 
-                   title="Intercambiar" 
-                   colorClass="bg-accent2" 
-                   disabled={isMinting}
-                   onPress={onTradePress} 
-                 />
-               </View>
-               <View className="flex-1 ml-2">
-                 <BrutalistButton 
-                   title="Volver" 
-                   colorClass="bg-primary" 
-                   onPress={onClose} 
-                 />
-               </View>
-             </View>
 
           </View>
         </BrutalistCard>
