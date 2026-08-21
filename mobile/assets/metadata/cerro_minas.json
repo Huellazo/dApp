@@ -1,0 +1,34 @@
+{
+  "name": "Estampa Cerro de las Minas",
+  "symbol": "HZ",
+  "description": "Zona arqueológica principal de la cultura Mixteca Ñuiñe con vistas panorámicas al valle.",
+  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_cerro_minas.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    {
+      "trait_type": "Categoría",
+      "value": "Zona Arqueológica"
+    },
+    {
+      "trait_type": "Lugar",
+      "value": "Cerro de las Minas"
+    },
+    {
+      "trait_type": "Rareza",
+      "value": "Rara"
+    },
+    {
+      "trait_type": "Recompensa HZ",
+      "value": "+50 HZ"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_cerro_minas.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "Estampa Catedral de Huajuapan",
+  "symbol": "HZ",
+  "description": "La monumental Catedral de El Señor de los Corazones en el centro histórico de Huajuapan de León.",
+  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_catedral.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    {
+      "trait_type": "Categoría",
+      "value": "Turismo e Historia"
+    },
+    {
+      "trait_type": "Lugar",
+      "value": "Catedral de Huajuapan"
+    },
+    {
+      "trait_type": "Rareza",
+      "value": "Común"
+    },
+    {
+      "trait_type": "Recompensa HZ",
+      "value": "+50 HZ"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_catedral.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

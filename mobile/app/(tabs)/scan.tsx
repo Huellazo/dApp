@@ -149,10 +149,12 @@ export default function ScanScreen() {
     const lng = (poiToMint as any).coordinates?.longitude || -97.776;
 
     mintPlaceOnChain({
-      poiName: poiToMint.name,
+      tokenId: Number(poiToMint.id.replace(/\D/g, '')) || 101,
+      tokenUri: `https://huellazo.app/api/poap/${poiToMint.id}.json`,
       latitude: lat,
       longitude: lng,
-      poapType: poiToMint.category === 'business' ? 1 : 0,
+      placeName: poiToMint.name,
+      allowSimulationFallback: true,
     }).catch(err => console.log('Web3 Devnet background mint notice:', err));
 
     const result = mintPoiToken(poiToMint);

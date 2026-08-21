@@ -5,19 +5,19 @@ anchor_version = "0.32.0"
 resolution = true
 skip-lint = false
 
-[programs.localnet]
-huellazo = "4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk"
-vault = "HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU"
-
 [programs.devnet]
 huellazo = "4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk"
 vault = "HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU"
+
+[programs.localnet]
+huellazo = "2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ"
+vault = "Ht9r6USRvJCzMnJicMfXzL6U9cBf3nFnAGKN11yaa8n5"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

@@ -10,7 +10,7 @@ use anchor_lang::prelude::*;
 #[account]
 #[derive(InitSpace)]
 pub struct PoapState {
-    /// Identificador único e irrepetible del POAP.
+    /// Identificador único e irrepetible del POAP / Estampa.
     pub token_id: u64,
 
     /// Pubkey de la wallet propietaria del POAP (turista).
@@ -19,7 +19,7 @@ pub struct PoapState {
     /// Pubkey del programa emisor (este smart contract).
     pub smart_contract_address: Pubkey,
 
-    /// URL que apunta a los metadatos off-chain (JSON gestionado por el backend Python).
+    /// URL que apunta a los metadatos off-chain (JSON en Arweave/IPFS/Backend).
     #[max_len(256)]
     pub token_uri: String,
 
@@ -37,7 +37,7 @@ pub struct PoapState {
 }
 
 // ===========================================================================
-// ConfigState — Configuración global del programa
+// ConfigState — Configuración global del programa & cNFT Merkle Tree
 // ===========================================================================
 
 #[account]
@@ -48,6 +48,9 @@ pub struct ConfigState {
 
     /// Contador global de tokens minteados.
     pub total_minted: u64,
+
+    /// Pubkey del Concurrent Merkle Tree de Metaplex Bubblegum V2.
+    pub merkle_tree: Pubkey,
 
     /// Bump de la PDA de config.
     pub bump: u8,

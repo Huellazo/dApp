@@ -14,17 +14,21 @@ import {
   createMintPlaceInstructionData,
   buildSolanaPayTransaction,
 } from '@/services/solana-program';
+import { useHuellazoCnft } from '@/hooks/useHuellazoCnft';
 
 export interface OnChainMintResult {
   success: boolean;
   signature?: string;
   poapPda?: string;
   userAta?: string;
+  cnftAssetId?: string;
+  cnftMerkleTree?: string;
   error?: string;
 }
 
 export function useHuellazoWeb3() {
   const { walletAddress } = useAuth();
+  const { mintCnftStamp } = useHuellazoCnft();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSignature, setLastSignature] = useState<string | null>(null);
 
@@ -68,89 +72,125 @@ export function useHuellazoWeb3() {
               uri: AppConfig.uri,
             },
           });
-          const [signedTxSignature] = await wallet.signAndSendTransactions({
+
+          const [signedTx] = await wallet.signTransactions({
             transactions: [transaction],
           });
-          return signedTxSignature;
+
+          const txSig = await connection.sendRawTransaction(signedTx.serialize());
+          return txSig;
         });
+
         return resultSignature;
       }
 
-      // 3. Fallback simulated signature if no wallet extension is available
-      return `solana_devnet_tx_${Date.now()}`;
+      throw new Error('NO_WALLET');
     },
     []
   );
 
   /**
-   * Mints a Tourist Place POAP/Sticker and rewards $HZ SPL Tokens on Solana Devnet
+   * Mints a Tourist POAP stamp on-chain and mints a Metaplex Bubblegum V2 Compressed NFT (cNFT)
    */
   const mintPlaceOnChain = useCallback(
     async (params: {
-      poiName: string;
+      tokenId: number;
+      tokenUri: string;
       latitude: number;
       longitude: number;
-      poapType?: number;
+      placeName?: string;
+      allowSimulationFallback?: boolean;
     }): Promise<OnChainMintResult> => {
-      const activePubkey = userPubkey || HUELLAZO_PROGRAM_ID;
-
       setIsSubmitting(true);
-      try {
-        const tokenId = Math.floor(Date.now() / 1000);
-        const [poapPda] = getPoapPda(activePubkey, tokenId);
-        const [configPda] = getConfigPda();
-        const userAta = getAssociatedTokenAddress(activePubkey, HUELLAZO_TOKEN_MINT);
+      let cnftRes: any = null;
 
-        const tokenUri = `https://huellazo.app/api/poap/${tokenId}`;
-        const instructionData = createMintPlaceInstructionData(
-          tokenId,
-          tokenUri,
+      // Also mint a Compressed NFT (cNFT) stamp into the Merkle tree via Bubblegum V2
+      try {
+        cnftRes = await mintCnftStamp({
+          name: params.placeName || `Estampa #${params.tokenId}`,
+          uri: params.tokenUri,
+          sellerFeeBasisPoints: 0,
+        });
+      } catch (e) {
+        console.warn('cNFT minting notice:', e);
+      }
+
+      if (!userPubkey) {
+        if (params.allowSimulationFallback) {
+          const simulatedSig = `simulated_devnet_tx_${Date.now()}`;
+          const [poapPdaPk] = getPoapPda(new PublicKey('11111111111111111111111111111111'), params.tokenId);
+          setLastSignature(simulatedSig);
+          setIsSubmitting(false);
+          return {
+            success: true,
+            signature: simulatedSig,
+            poapPda: poapPdaPk.toBase58(),
+            cnftAssetId: cnftRes?.assetId?.toString(),
+            cnftMerkleTree: cnftRes?.merkleTree?.toString(),
+          };
+        }
+        setIsSubmitting(false);
+        return { success: false, error: 'NO_WALLET' };
+      }
+
+      try {
+        const [configPdaPk] = getConfigPda();
+        const [poapPdaPk] = getPoapPda(userPubkey, params.tokenId);
+
+        const data = createMintPlaceInstructionData(
+          params.tokenId,
+          params.tokenUri,
           params.latitude,
           params.longitude,
-          params.poapType ?? 0
+          0 // 0 = Tourism POAP
         );
 
-        const mintInstruction = new TransactionInstruction({
-          programId: HUELLAZO_PROGRAM_ID,
+        const instruction = new TransactionInstruction({
           keys: [
-            { pubkey: activePubkey, isSigner: true, isWritable: true },
-            { pubkey: configPda, isSigner: false, isWritable: true },
-            { pubkey: poapPda, isSigner: false, isWritable: true },
-            { pubkey: userAta, isSigner: false, isWritable: true },
+            { pubkey: configPdaPk, isSigner: false, isWritable: true },
+            { pubkey: poapPdaPk, isSigner: false, isWritable: true },
+            { pubkey: userPubkey, isSigner: true, isWritable: true },
             { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
           ],
-          data: instructionData,
+          programId: HUELLAZO_PROGRAM_ID,
+          data,
         });
 
-        const transaction = new Transaction().add(mintInstruction);
-        const signature = userPubkey
-          ? await executeWalletTransaction(transaction, activePubkey)
-          : `solana_devnet_simulated_${Date.now()}`;
-
+        const tx = new Transaction().add(instruction);
+        const signature = await executeWalletTransaction(tx, userPubkey);
         setLastSignature(signature);
 
         return {
           success: true,
           signature,
-          poapPda: poapPda.toBase58(),
-          userAta: userAta.toBase58(),
+          poapPda: poapPdaPk.toBase58(),
+          cnftAssetId: cnftRes?.assetId?.toString(),
+          cnftMerkleTree: cnftRes?.merkleTree?.toString(),
         };
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Wallet transaction cancelled or failed';
-        console.warn('Huellazo Web3 mintPlaceOnChain error:', errorMsg);
-        return {
-          success: false,
-          error: errorMsg,
-        };
+        if (params.allowSimulationFallback) {
+          const simulatedSig = `devnet_fallback_tx_${Date.now()}`;
+          const [poapPdaPk] = getPoapPda(userPubkey, params.tokenId);
+          setLastSignature(simulatedSig);
+          return {
+            success: true,
+            signature: simulatedSig,
+            poapPda: poapPdaPk.toBase58(),
+            cnftAssetId: cnftRes?.assetId?.toString(),
+            cnftMerkleTree: cnftRes?.merkleTree?.toString(),
+          };
+        }
+        const errorMsg = err instanceof Error ? err.message : 'Error al mintear POAP en Solana Devnet';
+        return { success: false, error: errorMsg };
       } finally {
         setIsSubmitting(false);
       }
     },
-    [userPubkey, executeWalletTransaction]
+    [userPubkey, executeWalletTransaction, mintCnftStamp]
   );
 
   /**
-   * Processes SOL commercial payment via buildSolanaPayTransaction on Solana Devnet
+   * Mints a Commercial Business POAP and transfers SOL payment to merchant
    */
   const mintBusinessOnChain = useCallback(
     async (params: {
@@ -161,61 +201,56 @@ export function useHuellazoWeb3() {
       longitude: number;
       allowSimulationFallback?: boolean;
     }): Promise<OnChainMintResult> => {
-      // If no wallet connected and simulation fallback is false, inform caller
-      if (!walletAddress || !userPubkey) {
-        if (!params.allowSimulationFallback) {
-          return { success: false, error: 'NO_WALLET' };
-        }
+      setIsSubmitting(true);
+      const recipientStr = params.businessWallet || '8XbN77QkP11111111111111111111111111111111111';
+      let recipientPubkey: PublicKey;
+
+      try {
+        recipientPubkey = new PublicKey(recipientStr);
+      } catch {
+        recipientPubkey = new PublicKey('8XbN77QkP11111111111111111111111111111111111');
       }
 
-      const activePubkey = userPubkey || HUELLAZO_PROGRAM_ID;
+      if (!userPubkey) {
+        if (params.allowSimulationFallback) {
+          const simulatedSig = `solana_pay_simulated_${Date.now()}`;
+          setLastSignature(simulatedSig);
+          setIsSubmitting(false);
+          return { success: true, signature: simulatedSig };
+        }
+        setIsSubmitting(false);
+        return { success: false, error: 'NO_WALLET' };
+      }
 
-      setIsSubmitting(true);
       try {
-        const recipientPubkey = params.businessWallet
-          ? new PublicKey(params.businessWallet)
-          : HUELLAZO_PROGRAM_ID;
-
-        const tokenId = Math.floor(Date.now() / 1000);
-        const [poapPda] = getPoapPda(activePubkey, tokenId);
-        const userAta = getAssociatedTokenAddress(activePubkey, HUELLAZO_TOKEN_MINT);
-
-        // Build Solana Pay Transfer transaction using buildSolanaPayTransaction
-        const transaction = buildSolanaPayTransaction(
-          activePubkey,
+        const solanaPayTx = buildSolanaPayTransaction(
+          userPubkey,
           recipientPubkey,
           params.amountLamports
         );
 
-        const signature = userPubkey
-          ? await executeWalletTransaction(transaction, activePubkey)
-          : `solana_devnet_simulated_pay_${Date.now()}`;
-
+        const signature = await executeWalletTransaction(solanaPayTx, userPubkey);
         setLastSignature(signature);
 
-        return {
-          success: true,
-          signature,
-          poapPda: poapPda.toBase58(),
-          userAta: userAta.toBase58(),
-        };
+        return { success: true, signature };
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Wallet transaction cancelled or failed';
-        console.warn('Huellazo Web3 mintBusinessOnChain error:', errorMsg);
-        return {
-          success: false,
-          error: errorMsg,
-        };
+        if (params.allowSimulationFallback) {
+          const simulatedSig = `solana_pay_fallback_${Date.now()}`;
+          setLastSignature(simulatedSig);
+          return { success: true, signature: simulatedSig };
+        }
+        const errorMsg = err instanceof Error ? err.message : 'Error en el pago de Solana Pay';
+        return { success: false, error: errorMsg };
       } finally {
         setIsSubmitting(false);
       }
     },
-    [walletAddress, userPubkey, executeWalletTransaction]
+    [userPubkey, executeWalletTransaction]
   );
 
   return {
     walletAddress,
-    hzTokenMint: HUELLAZO_TOKEN_MINT.toBase58(),
+    userPubkey,
     hzUserAta,
     isSubmitting,
     lastSignature,

@@ -11,7 +11,7 @@ pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk");
+declare_id!("2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ");
 
 // ===========================================================================
 // Programa Huellazo
