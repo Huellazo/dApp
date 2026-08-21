@@ -1,31 +1,31 @@
 {
-  "name": "Estampa Mirador Yukunitza",
+  "name": "Estampa Mirador Yukunitzá",
   "symbol": "HZ",
-  "description": "Punto panorámico espectacular en la cima de Huajuapan para admirar los atardeceres mixtecos.",
-  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_mirador_yukunitza.png",
+  "description": "Punto panorámico sobre el cerro Yukunitzá con vistas espectaculares del valle de Huajuapan.",
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_mirador_yukunitza.png",
   "external_url": "https://huellazo.app",
   "attributes": [
     {
       "trait_type": "Categoría",
-      "value": "Ecoturismo"
+      "value": "Naturaleza y Senderismo"
     },
     {
-      "trait_type": "Lugar",
-      "value": "Mirador Yukunitza"
+      "trait_type": "Origen",
+      "value": "Cerro Yukunitzá"
     },
     {
       "trait_type": "Rareza",
-      "value": "Común"
+      "value": "Épica"
     },
     {
       "trait_type": "Recompensa HZ",
-      "value": "+50 HZ"
+      "value": "+60 HZ"
     }
   ],
   "properties": {
     "files": [
       {
-        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_mirador_yukunitza.png",
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_mirador_yukunitza.png",
         "type": "image/png"
       }
     ],

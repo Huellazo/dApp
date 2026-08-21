@@ -2,7 +2,7 @@
   "name": "Estampa Jaguarcito Ñuiñe",
   "symbol": "HZ",
   "description": "Estampa coleccionable oficial en formato cNFT que conmemora la cultura precolombina Ñuiñe de Huajuapan de León, Oaxaca.",
-  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/nfts/nft_jaguarcito_nui%C3%B1e.png",
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_jaguarcito_nuine.png",
   "external_url": "https://huellazo.app",
   "attributes": [
     {
@@ -25,7 +25,7 @@
   "properties": {
     "files": [
       {
-        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/nfts/nft_jaguarcito_nui%C3%B1e.png",
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_jaguarcito_nuine.png",
         "type": "image/png"
       }
     ],

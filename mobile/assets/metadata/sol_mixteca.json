@@ -2,7 +2,7 @@
   "name": "Estampa Sol de la Mixteca",
   "symbol": "HZ",
   "description": "Símbolo ancestral del Sol Mixteco que representa la calidez, historia y raíces de la región Huajuapeña.",
-  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/nfts/nft_sol_mixteca.png",
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_sol_mixteca.png",
   "external_url": "https://huellazo.app",
   "attributes": [
     {
@@ -25,7 +25,7 @@
   "properties": {
     "files": [
       {
-        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/nfts/nft_sol_mixteca.png",
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_sol_mixteca.png",
         "type": "image/png"
       }
     ],

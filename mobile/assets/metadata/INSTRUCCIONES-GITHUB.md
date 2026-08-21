@@ -51,7 +51,7 @@ mobile/assets/
 2. **Obtener el Enlace Raw (Directo)**:
    Entra a tu repositorio en GitHub y abre cualquier archivo JSON en `mobile/assets/metadata/jaguarcito_nuine.json`.
    Haz clic en el botón **"Raw"**. El enlace tendrá este formato:
-   `https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/mobile/assets/metadata/jaguarcito_nuine.json`
+   `https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/metadata/jaguarcito_nuine.json`
 
 3. **Utilizar la URI en la minting service de la dApp**:
    Pasa esa URL como el argumento `uri` al mintear el cNFT con `useHuellazoCnft` o `cnft-service.ts`.

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Modal, Image } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { useHuellazoCnft } from '@/hooks/useHuellazoCnft';
+import { getMetadataJsonUrl } from '@/services/metadata-service';
 
 export interface NFT {
   id: string;
@@ -30,7 +32,37 @@ function shortAddress(addr?: string) {
 }
 
 export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
+  const { mintCnftStamp } = useHuellazoCnft();
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintStatus, setMintStatus] = useState<'idle' | 'success'>('idle');
+  const [mintError, setMintError] = useState<string | null>(null);
+
   if (!nft) return null;
+
+  const handleSaveToWallet = async () => {
+    if (!nft) return;
+    setIsMinting(true);
+    setMintError(null);
+
+    try {
+      const uri = getMetadataJsonUrl(nft.id);
+      const res = await mintCnftStamp({
+        name: nft.title || `Estampa ${nft.location}`,
+        uri,
+        sellerFeeBasisPoints: 0,
+      });
+
+      if (res) {
+        setMintStatus('success');
+      } else {
+        setMintError('No se pudo confirmar el guardado en el monedero');
+      }
+    } catch (e) {
+      setMintError(e instanceof Error ? e.message : 'Error al guardar la estampa');
+    } finally {
+      setIsMinting(false);
+    }
+  };
 
   const bgStyle = nft.isSpecial 
     ? 'bg-accent2' 
@@ -74,7 +106,7 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
               </View>
             )}
             {nft.image ? (
-              <Image source={nft.image as any} className="w-11/12 h-11/12" resizeMode="contain" />
+              <Image source={nft.image as any} className="w-full h-full p-4" resizeMode="contain" />
             ) : (
               <Text className="text-border font-black text-6xl opacity-50">?</Text>
             )}
@@ -92,30 +124,53 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
                  {nft.date ? new Date(nft.date).toLocaleDateString() : 'Fecha no registrada'}
                </Text>
 
-               {/* cNFT Metaplex Bubblegum V2 technical badge */}
+               {/* Digital authenticity badge without crypto jargon */}
                <View className="bg-accent2/30 p-2.5 border-2 border-border mt-1">
                  <View className="flex-row items-center justify-between mb-1">
-                   <Text className="text-border font-black text-[10px] uppercase">Tecnología Web3:</Text>
+                   <Text className="text-border font-black text-[10px] uppercase">Autenticidad Digital:</Text>
                    <View className="bg-primary px-1.5 py-0.5 border border-border">
-                     <Text className="text-background font-black text-[8px] uppercase">cNFT Bubblegum V2</Text>
+                     <Text className="text-background font-black text-[8px] uppercase">Estampa Auténtica</Text>
                    </View>
                  </View>
-                 <Text className="text-border font-mono text-[9px]">Asset ID: {shortAddress(assetIdDisplay)}</Text>
-                 <Text className="text-border font-mono text-[9px]">Árbol Merkle: {shortAddress(merkleTreeDisplay)}</Text>
+                 <Text className="text-border font-mono text-[9px]">Código de Registro: {shortAddress(assetIdDisplay)}</Text>
+                 <Text className="text-border font-mono text-[9px]">Folio Digital: {shortAddress(merkleTreeDisplay)}</Text>
                </View>
              </View>
 
              <Text className="text-border font-bold text-xs text-center opacity-80 mb-4 px-2">
-               Esta estampa es un Compressed NFT (cNFT) verificado en el Merkle Tree de Solana Devnet.
+               Esta estampa digital cuenta con un código único de autenticidad registrado en tu Monedero Huellazo.
              </Text>
 
              {/* Action Buttons */}
+             {mintStatus === 'success' ? (
+               <View className="bg-accent2 p-3 border-2 border-border mb-3 items-center">
+                 <Text className="text-border font-black text-xs uppercase mb-1">¡Guardado en Tu Monedero!</Text>
+                 <Text className="text-border font-bold text-[10px] text-center opacity-90">
+                   Registrado en Solana Devnet con tu dirección de monedero.
+                 </Text>
+               </View>
+             ) : (
+               <View className="mb-3">
+                 <BrutalistButton
+                   title={isMinting ? "Guardando en Monedero..." : "Guardar en Monedero"}
+                   colorClass="bg-accent1"
+                   disabled={isMinting}
+                   onPress={handleSaveToWallet}
+                 />
+                 {mintError && (
+                   <Text className="text-primary font-bold text-[10px] text-center mt-1">
+                     {mintError}
+                   </Text>
+                 )}
+               </View>
+             )}
+
              <View className="w-full flex-row justify-between">
                <View className="flex-1 mr-2">
                  <BrutalistButton 
                    title="Intercambiar" 
                    colorClass="bg-accent2" 
-                   disabled={false}
+                   disabled={isMinting}
                    onPress={onTradePress} 
                  />
                </View>

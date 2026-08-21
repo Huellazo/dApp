@@ -1,8 +1,8 @@
 {
   "name": "Estampa Fonda Julita",
   "symbol": "HZ",
-  "description": "Icónico restaurante de mole de caderas y platillos típicos regionales mixtecos en Huajuapan.",
-  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_fonda_julita.png",
+  "description": "Fonda gastronómica tradicional célebre por su auténtico Mole de Caderas mixteco.",
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_fonda_julita.png",
   "external_url": "https://huellazo.app",
   "attributes": [
     {
@@ -11,21 +11,21 @@
     },
     {
       "trait_type": "Giro",
-      "value": "Restaurante Tradicional"
+      "value": "Gastronomía Tradicional"
     },
     {
       "trait_type": "Rareza",
-      "value": "Común"
+      "value": "Rara"
     },
     {
       "trait_type": "Recompensa HZ",
-      "value": "+30 HZ"
+      "value": "+40 HZ"
     }
   ],
   "properties": {
     "files": [
       {
-        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_fonda_julita.png",
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_fonda_julita.png",
         "type": "image/png"
       }
     ],

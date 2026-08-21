@@ -1,8 +1,8 @@
 {
-  "name": "Estampa Casa del Humo",
+  "name": "Estampa La Casa de Humo",
   "symbol": "HZ",
-  "description": "Restaurante de cocina tradicional mixteca a la leña participante de Huellazo Pay.",
-  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_casa_humo.png",
+  "description": "Restaurante de cocina artesanal mixteca a la leña en Huajuapan de León.",
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_casa_humo.png",
   "external_url": "https://huellazo.app",
   "attributes": [
     {
@@ -11,21 +11,21 @@
     },
     {
       "trait_type": "Giro",
-      "value": "Gastronomía Mixteca"
+      "value": "Cocina de Humo Tradicional"
     },
     {
       "trait_type": "Rareza",
-      "value": "Común"
+      "value": "Épica"
     },
     {
       "trait_type": "Recompensa HZ",
-      "value": "+30 HZ"
+      "value": "+50 HZ"
     }
   ],
   "properties": {
     "files": [
       {
-        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_casa_humo.png",
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_casa_humo.png",
         "type": "image/png"
       }
     ],

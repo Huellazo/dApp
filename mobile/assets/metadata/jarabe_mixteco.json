@@ -1,31 +1,31 @@
 {
-  "name": "Estampa Jarabe Mixteco",
+  "name": "Estampa Maestro Jarabe Mixteco",
   "symbol": "HZ",
-  "description": "Baile tradicional folclórico distintivo de Huajuapan de León presentado anualmente en la Guelaguetza.",
-  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/nfts/nft_jarabe_mixteco.png",
+  "description": "Danza folklórica icónica de Huajuapan de León que engalana los lunes del cerro y fiestas patronales.",
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_jarabe_mixteco.png",
   "external_url": "https://huellazo.app",
   "attributes": [
     {
       "trait_type": "Categoría",
-      "value": "Danza Folclórica"
+      "value": "Danza y Tradición"
     },
     {
       "trait_type": "Origen",
-      "value": "Guelaguetza Oaxaca"
+      "value": "Huajuapan de León, Oaxaca"
     },
     {
       "trait_type": "Rareza",
-      "value": "Rara"
+      "value": "Épica"
     },
     {
       "trait_type": "Recompensa HZ",
-      "value": "+60 HZ"
+      "value": "+75 HZ"
     }
   ],
   "properties": {
     "files": [
       {
-        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/nfts/nft_jarabe_mixteco.png",
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_jarabe_mixteco.png",
         "type": "image/png"
       }
     ],

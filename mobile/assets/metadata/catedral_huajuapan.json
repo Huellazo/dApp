@@ -1,17 +1,17 @@
 {
-  "name": "Estampa Catedral de Huajuapan",
+  "name": "Estampa Catedral de San Juan Bautista",
   "symbol": "HZ",
-  "description": "La monumental Catedral de El Señor de los Corazones en el centro histórico de Huajuapan de León.",
-  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_catedral.png",
+  "description": "Monumento histórico y espiritual en el corazón de Huajuapan de León.",
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_catedral.png",
   "external_url": "https://huellazo.app",
   "attributes": [
     {
       "trait_type": "Categoría",
-      "value": "Turismo e Historia"
+      "value": "Patrimonio Histórico"
     },
     {
-      "trait_type": "Lugar",
-      "value": "Catedral de Huajuapan"
+      "trait_type": "Origen",
+      "value": "Huajuapan Centro"
     },
     {
       "trait_type": "Rareza",
@@ -19,13 +19,13 @@
     },
     {
       "trait_type": "Recompensa HZ",
-      "value": "+50 HZ"
+      "value": "+35 HZ"
     }
   ],
   "properties": {
     "files": [
       {
-        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_catedral.png",
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_catedral.png",
         "type": "image/png"
       }
     ],

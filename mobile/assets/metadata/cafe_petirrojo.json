@@ -2,7 +2,7 @@
   "name": "Estampa Café Petirrojo",
   "symbol": "HZ",
   "description": "Cafetería gastronómica artesanal en Huajuapan registrada en la red de comercios Huellazo Pay.",
-  "image": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_cafe_petirrojo.png",
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_cafe_petirrojo.png",
   "external_url": "https://huellazo.app",
   "attributes": [
     {
@@ -25,7 +25,7 @@
   "properties": {
     "files": [
       {
-        "uri": "https://raw.githubusercontent.com/m4r10/dApp/main/mobile/assets/images/huajuapan/huajuapan_cafe_petirrojo.png",
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_cafe_petirrojo.png",
         "type": "image/png"
       }
     ],

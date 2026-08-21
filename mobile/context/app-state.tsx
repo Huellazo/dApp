@@ -50,6 +50,7 @@ export interface EarnedSolanaToken {
   transactionSignature: string
   network: 'solana-devnet-simulated'
   mintedAt: string
+  image?: any
 }
 
 export type UserStatus = 'normal' | 'wanted' | 'dusty' | 'premium';
@@ -61,6 +62,7 @@ export interface Transaction {
   amount: number;
   description: string;
   timestamp: string;
+  image?: any;
 }
 
 export type InventoryItemType = 'token' | 'nft' | 'coupon' | 'trash' | 'cosmetic';
@@ -129,7 +131,7 @@ function createMockBase58Address(length: number): string {
 
 function createSolanaTokenFromPoi(poi: MintablePoi): EarnedSolanaToken {
   const reward = poi.reward ?? 50
-  const tokenName = poi.nftReward ?? `${poi.name} Huellazo Token`
+  const tokenName = poi.nftReward ?? `${poi.name} Estampa Huellazo`
 
   return {
     id: `${poi.id}-${Date.now()}`,
@@ -146,6 +148,7 @@ function createSolanaTokenFromPoi(poi: MintablePoi): EarnedSolanaToken {
     transactionSignature: createMockBase58Address(88),
     network: 'solana-devnet-simulated',
     mintedAt: new Date().toISOString(),
+    image: poi.image,
   }
 }
 
@@ -242,7 +245,11 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   // Gamification state
   const [status, setStatus] = useState<UserStatus>('normal')
   const [faction, setFaction] = useState<Faction>(null)
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>([
+    { id: 'tx-1', type: 'earn', amount: 35, description: 'Cupón de Café Gratis Canjeado', timestamp: '14:30', image: require('@/assets/images/huajuapan/huajuapan_cafe_petirrojo.png') },
+    { id: 'tx-2', type: 'earn', amount: 50, description: 'Basura Recogida en Parque Ecológico', timestamp: '10:15', image: require('@/assets/images/huajuapan/huajuapan_cerro_minas.png') },
+    { id: 'tx-3', type: 'earn', amount: 100, description: 'Visita Zona Arqueológica Cerro de las Minas', timestamp: '16:45', image: require('@/assets/images/huajuapan/huajuapan_cerro_minas.png') },
+  ])
   
   // Radar Boost State
   const [isRadarBoosted, setIsRadarBoosted] = useState(false)
@@ -252,8 +259,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   
   // Initialize inventory
   const [inventory, setInventory] = useState<InventoryItem[]>([
-    { id: 'inv-1', type: 'token', name: 'Cupón Taco Gratis', value: 50, obtainedAt: '2026-08-15' },
-    { id: 'inv-2', type: 'trash', name: 'Basura Recogida en Parque', description: '+10 XP Limpieza', obtainedAt: '2026-08-16' },
+    { id: 'inv-1', type: 'coupon', name: 'Cupón de Café Gratis', value: 35, description: '100% Descuento en Café Petirrojo', image: require('@/assets/images/huajuapan/huajuapan_cafe_petirrojo.png'), obtainedAt: '2026-08-15' },
+    { id: 'inv-2', type: 'trash', name: 'Basura Recogida en Parque', description: 'Acción Ecológica +10 XP', image: require('@/assets/images/huajuapan/huajuapan_cerro_minas.png'), obtainedAt: '2026-08-16' },
   ])
 
   // Load earned tokens from storage on mount
@@ -292,12 +299,13 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setXp(prev => prev + amount)
   }, [])
 
-  const logTransaction = useCallback((type: 'earn' | 'burn' | 'penalty', amount: number, description: string) => {
+  const logTransaction = useCallback((type: 'earn' | 'burn' | 'penalty', amount: number, description: string, image?: any) => {
     const newTx: Transaction = {
       id: `tx-${Date.now()}`,
       type,
       amount,
       description,
+      image,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
     setTransactions(prev => [newTx, ...prev])
@@ -364,19 +372,68 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     if (points < pinataCost) return null
 
     setPoints(prev => prev - pinataCost)
-    logTransaction('burn', pinataCost, 'Romper Piñata Sorpresa')
+    logTransaction('burn', pinataCost, 'Romper Piñata Sorpresa', require('@/assets/images/pinata_broken_1783886298855.png'))
 
     const lootOptions: LootItem[] = [
-      { type: 'token', name: '50 Puntos $HZ Extra', value: 50, style: 'bg-accent2' },
-      { type: 'coupon', name: 'Descuento 20% en Café Petirrojo', style: 'bg-primary' },
-      { type: 'trash', name: 'Lata de Aluminio Reciclada', description: '¡Gracias por limpiar Huajuapan!', style: 'bg-secondary' },
-      { type: 'cosmetic', name: 'Sombrero de Charro para Avatar', style: 'bg-accent1' }
+      { 
+        type: 'token', 
+        name: '50 Puntos $HZ Extra', 
+        value: 50, 
+        style: 'bg-accent2',
+        description: 'Premio Especial de Piñata',
+        image: require('@/assets/images/rewards-icon.png')
+      },
+      { 
+        type: 'coupon', 
+        name: 'Descuento 20% en Café Petirrojo', 
+        description: 'Válido en Huajuapan Centro',
+        style: 'bg-primary',
+        image: require('@/assets/images/huajuapan/huajuapan_cafe_petirrojo.png')
+      },
+      { 
+        type: 'trash', 
+        name: 'Lata de Aluminio Reciclada', 
+        description: 'Acción Ecológica +10 XP', 
+        style: 'bg-secondary',
+        image: require('@/assets/images/loot_trash_1783886312470.png')
+      },
+      { 
+        type: 'cosmetic', 
+        name: 'Sombrero Tradicional Mixteco', 
+        description: 'Accesorio Especial para Avatar',
+        style: 'bg-accent1',
+        image: require('@/assets/images/loot_sombrero_1783886306265.png')
+      },
+      { 
+        type: 'nft', 
+        name: 'Insignia Alebrije Místico', 
+        description: 'Estampa Legendaria de Huajuapan',
+        style: 'bg-accent2',
+        image: require('@/assets/images/nft_alebrije.png')
+      }
     ]
 
     const selectedLoot = lootOptions[Math.floor(Math.random() * lootOptions.length)]
 
     if (selectedLoot.type === 'token' && selectedLoot.value) {
       setPoints(prev => prev + selectedLoot.value!)
+    }
+
+    logTransaction('earn', selectedLoot.value || 25, `Premio Piñata: ${selectedLoot.name}`, selectedLoot.image)
+
+    if (selectedLoot.type === 'nft') {
+      setOwnedNfts(prev => [
+        ...prev,
+        {
+          id: `pinata-nft-${Date.now()}`,
+          title: selectedLoot.name,
+          location: 'Huajuapan de León, Oaxaca',
+          date: new Date().toISOString().split('T')[0],
+          image: selectedLoot.image,
+          rarity: 'Épico',
+          isSpecial: true,
+        }
+      ])
     }
 
     const newInvItem: InventoryItem = {
@@ -386,6 +443,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       description: selectedLoot.description,
       value: selectedLoot.value,
       style: selectedLoot.style,
+      image: selectedLoot.image,
       obtainedAt: new Date().toISOString().split('T')[0]
     }
     setInventory(prev => [newInvItem, ...prev])

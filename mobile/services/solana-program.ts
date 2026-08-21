@@ -9,7 +9,7 @@ import { idlHuellazo } from './idl-huellazo';
 // --- Solana Devnet & Program Configuration ---
 export const SOLANA_DEVNET_RPC = 'https://api.devnet.solana.com';
 export const HUELLAZO_PROGRAM_ID_STR =
-  process.env.EXPO_PUBLIC_HUELLAZO_PROGRAM_ID || '4pioWVSCp5oSbxbeRbquccusTkvT6Z9B8jTg7j2XXNVk';
+  process.env.EXPO_PUBLIC_HUELLAZO_PROGRAM_ID || '2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ';
 export const HUELLAZO_PROGRAM_ID = new PublicKey(HUELLAZO_PROGRAM_ID_STR);
 
 // --- SPL Token Program & HZ Token Mint Configuration ---

@@ -109,14 +109,26 @@ export default function CollectionsScreen() {
               </Text>
             ) : (
               <View className="flex-row items-center flex-wrap justify-start">
-                {earnedTokens.slice(0, 4).map((tok) => (
-                  <View key={`thumb-${tok.id}`} className="w-10 h-10 bg-accent2 border-2 border-border shadow-brutal-sm rounded-md mr-2 overflow-hidden justify-center items-center">
-                    <FontAwesome5 name="map-marker-alt" size={16} color={colors.border} />
-                  </View>
-                ))}
+                {earnedTokens.slice(0, 4).map((tok) => {
+                  const poi = MOCK_POIS.find(item => item.id === tok.poiId);
+                  const img = tok.image || poi?.image;
+                  return (
+                    <View key={`thumb-${tok.id}`} className="w-10 h-10 bg-accent2 border-2 border-border shadow-brutal-sm rounded-md mr-2 overflow-hidden justify-center items-center">
+                      {img ? (
+                        <Image source={img as any} className="w-full h-full" resizeMode="cover" />
+                      ) : (
+                        <FontAwesome5 name="map-marker-alt" size={16} color={colors.border} />
+                      )}
+                    </View>
+                  );
+                })}
                 {allNfts.slice(0, 4).map((nft) => (
                   <View key={`thumb-${nft.id}`} className="w-10 h-10 bg-accent1 border-2 border-border shadow-brutal-sm rounded-md mr-2 overflow-hidden justify-center items-center">
-                    <FontAwesome5 name="medal" size={16} color="#FAF9F6" />
+                    {nft.image ? (
+                      <Image source={nft.image as any} className="w-full h-full" resizeMode="cover" />
+                    ) : (
+                      <FontAwesome5 name="medal" size={16} color="#FAF9F6" />
+                    )}
                   </View>
                 ))}
               </View>
@@ -204,8 +216,8 @@ export default function CollectionsScreen() {
                   <View key={token.id} className="w-[48%] mb-4">
                     <BrutalistCard colorClass="bg-background p-0 overflow-hidden">
                       <View style={{ aspectRatio: 1 }} className="w-full bg-accent2/30 border-b-4 border-border justify-center items-center relative overflow-hidden">
-                        {poi?.image ? (
-                          <Image source={poi.image as any} className="w-full h-full" resizeMode="cover" />
+                        {(token.image || poi?.image) ? (
+                          <Image source={(token.image || poi?.image) as any} className="w-full h-full p-2" resizeMode="contain" />
                         ) : (
                           <Text className="text-border font-black text-4xl opacity-50">H</Text>
                         )}
