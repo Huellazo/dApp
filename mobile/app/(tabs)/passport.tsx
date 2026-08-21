@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ScrollView, Image, Pressable, Modal } from 'react-native';
+import { View, Text, ScrollView, Image, Pressable, Modal, TextInput } from 'react-native';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { MOCK_USER } from '@/mocks/db';
@@ -52,12 +52,17 @@ export default function PassportScreen() {
   const [connectionError, setConnectionError] = useState<string | null>(null);
   
   const { 
-    xp, points, status, faction, transactions, joinFaction, earnPoints 
+    userName, setUserName, userAvatar, setUserAvatar,
+    xp, points, status, faction, transactions, ownedNfts, earnedTokens,
+    joinFaction, earnPoints 
   } = useAppState();
 
-  const [selectedAvatar, setSelectedAvatar] = useState(MOCK_USER.avatarUrl);
   const [isAvatarModalVisible, setAvatarModalVisible] = useState(false);
   const [isFactionModalVisible, setFactionModalVisible] = useState(false);
+
+  // Edit Username State
+  const [isEditNameModalVisible, setIsEditNameModalVisible] = useState(false);
+  const [newUsernameInput, setNewUsernameInput] = useState(userName);
   
   // Topup State
   const [isTopupModalVisible, setTopupModalVisible] = useState(false);
@@ -180,8 +185,8 @@ export default function PassportScreen() {
             onPress={() => setAvatarModalVisible(true)}
             className={`w-16 h-16 bg-background border-4 ${statusBorderColor} shadow-brutal-sm rounded-full overflow-hidden mr-4 relative active:opacity-70 justify-center items-center`}
           >
-             {selectedAvatar ? (
-               <Image source={selectedAvatar} style={{ width: '100%', height: '100%', resizeMode: 'contain', backgroundColor: 'white' }} />
+             {userAvatar ? (
+               <Image source={typeof userAvatar === 'string' ? { uri: userAvatar } : userAvatar} style={{ width: '100%', height: '100%', resizeMode: 'contain', backgroundColor: 'white' }} />
              ) : (
                <FontAwesome5 name="user" size={24} color={colors.border} className="m-auto" />
              )}
@@ -190,7 +195,19 @@ export default function PassportScreen() {
              </View>
           </Pressable>
           <View className="flex-1">
-             <Text className="text-background font-black uppercase text-xl">{MOCK_USER.name}</Text>
+             <View className="flex-row items-center mb-1">
+               <Text className="text-background font-black uppercase text-xl flex-1 mr-2" numberOfLines={1}>{userName}</Text>
+               <Pressable 
+                 onPress={() => {
+                   setNewUsernameInput(userName);
+                   setIsEditNameModalVisible(true);
+                 }}
+                 className="bg-background px-2 py-1 border-2 border-border shadow-brutal-sm flex-row items-center active:scale-95"
+               >
+                 <FontAwesome5 name="pen" size={10} color={colors.border} className="mr-1" />
+                 <Text className="text-border font-black text-[9px] uppercase">{language === 'es' ? 'EDITAR' : 'EDIT'}</Text>
+               </Pressable>
+             </View>
              <View className="flex-row mt-1 mb-2 flex-wrap">
                <View className="bg-background px-2 py-0.5 border-2 border-border shadow-brutal-sm mr-2 mb-1">
                  <Text className="text-border font-bold text-[10px] uppercase">
@@ -364,6 +381,39 @@ export default function PassportScreen() {
         )}
       </View>
 
+      {/* Edit Username Modal */}
+      <Modal visible={isEditNameModalVisible} transparent animationType="slide" onRequestClose={() => setIsEditNameModalVisible(false)}>
+        <View className="flex-1 bg-black/80 justify-center items-center p-4">
+          <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden">
+            <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
+               <Text className="text-background font-black text-xl uppercase">{language === 'es' ? 'Editar Nombre' : 'Edit Name'}</Text>
+               <FontAwesome5 name="times" size={24} color="#FAF9F6" onPress={() => setIsEditNameModalVisible(false)} />
+            </View>
+
+            <View className="p-4">
+              <Text className="text-border font-bold text-xs mb-2 uppercase">{language === 'es' ? 'Nombre de Explorador:' : 'Explorer Name:'}</Text>
+              <TextInput
+                value={newUsernameInput}
+                onChangeText={setNewUsernameInput}
+                placeholder="Ej. Mario Explorador"
+                placeholderTextColor="#888"
+                className="bg-background border-4 border-border p-3 text-border font-bold text-base mb-4 shadow-brutal-sm"
+              />
+              <BrutalistButton 
+                title={language === 'es' ? 'GUARDAR CAMBIOS' : 'SAVE CHANGES'}
+                colorClass="bg-accent2"
+                onPress={() => {
+                  if (newUsernameInput.trim()) {
+                    setUserName(newUsernameInput.trim());
+                  }
+                  setIsEditNameModalVisible(false);
+                }}
+              />
+            </View>
+          </BrutalistCard>
+        </View>
+      </Modal>
+
       {/* Topup / Recharge HZ Modal */}
       <Modal visible={isTopupModalVisible} transparent animationType="slide" onRequestClose={() => setTopupModalVisible(false)}>
         <View className="flex-1 bg-black/80 justify-center items-center p-4">
@@ -464,29 +514,68 @@ export default function PassportScreen() {
         </View>
       </Modal>
 
-      {/* Avatar Change Modal */}
+      {/* Dynamic Avatar Change Modal with Earned Stamps */}
       <Modal visible={isAvatarModalVisible} transparent animationType="slide" onRequestClose={() => setAvatarModalVisible(false)}>
         <View className="flex-1 bg-black/80 justify-center items-center p-4">
-          <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden">
+          <BrutalistCard colorClass="bg-background max-w-md w-full p-0 overflow-hidden max-h-[85%]">
             <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
-               <Text className="text-background font-black text-xl uppercase">{language === 'es' ? 'Seleccionar Avatar' : 'Select Avatar'}</Text>
+               <Text className="text-background font-black text-xl uppercase">{language === 'es' ? 'Foto de Perfil' : 'Profile Picture'}</Text>
                <FontAwesome5 name="times" size={24} color="#FAF9F6" onPress={() => setAvatarModalVisible(false)} />
             </View>
 
-            <View className="p-4 flex-row flex-wrap justify-around">
-               {AVATAR_OPTIONS.map((imgSrc, idx) => (
-                 <Pressable
-                   key={idx}
-                   onPress={() => {
-                     setSelectedAvatar(imgSrc);
-                     setAvatarModalVisible(false);
-                   }}
-                   className="w-20 h-20 bg-background border-4 border-border m-2 rounded-full overflow-hidden shadow-brutal-sm active:scale-95"
-                 >
-                    <Image source={imgSrc} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
-                 </Pressable>
-               ))}
-            </View>
+            <ScrollView className="p-4" showsVerticalScrollIndicator={false}>
+               {/* Section 1: Default Avatars */}
+               <Text className="text-border font-black text-xs uppercase mb-3 opacity-80">
+                 {language === 'es' ? 'Avatares Predeterminados:' : 'Default Avatars:'}
+               </Text>
+               <View className="flex-row flex-wrap justify-around mb-6">
+                  {AVATAR_OPTIONS.map((imgSrc, idx) => (
+                    <Pressable
+                      key={`def-${idx}`}
+                      onPress={() => {
+                        setUserAvatar(imgSrc);
+                        setAvatarModalVisible(false);
+                      }}
+                      className="w-16 h-16 bg-background border-4 border-border m-1.5 rounded-full overflow-hidden shadow-brutal-sm active:scale-95"
+                    >
+                       <Image source={imgSrc} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
+                    </Pressable>
+                  ))}
+               </View>
+
+               {/* Section 2: Earned Stamps / NFTs */}
+               <Text className="text-border font-black text-xs uppercase mb-3 opacity-80">
+                 {language === 'es' ? 'Tus Estampas Conseguidas:' : 'Your Unlocked Stamps:'}
+               </Text>
+               {ownedNfts.length === 0 ? (
+                 <View className="bg-secondary/30 p-3 border-2 border-border mb-4 items-center">
+                    <Text className="text-border text-xs font-bold text-center">
+                      {language === 'es' ? '¡Explora la ciudad y escanea lugares para desbloquear más estampas!' : 'Explore and scan places to unlock stamps!'}
+                    </Text>
+                 </View>
+               ) : (
+                 <View className="flex-row flex-wrap justify-start mb-4">
+                    {ownedNfts.map((nft) => (
+                      <Pressable
+                        key={`nft-${nft.id}`}
+                        onPress={() => {
+                          if (nft.image) {
+                            setUserAvatar(nft.image);
+                            setAvatarModalVisible(false);
+                          }
+                        }}
+                        className="w-16 h-16 bg-accent1 border-4 border-border m-1.5 rounded-full overflow-hidden shadow-brutal-sm active:scale-95 justify-center items-center"
+                      >
+                         {nft.image ? (
+                           <Image source={typeof nft.image === 'string' ? { uri: nft.image } : nft.image} style={{ width: '90%', height: '90%', resizeMode: 'contain' }} />
+                         ) : (
+                           <FontAwesome5 name="award" size={20} color={colors.border} />
+                         )}
+                      </Pressable>
+                    ))}
+                 </View>
+               )}
+            </ScrollView>
           </BrutalistCard>
         </View>
       </Modal>

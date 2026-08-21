@@ -12,7 +12,6 @@ import {
   getPoapPda,
   getAssociatedTokenAddress,
   createMintPlaceInstructionData,
-  createMintBusinessInstructionData
 } from '@/services/solana-program';
 
 export interface OnChainMintResult {
@@ -40,14 +39,14 @@ export function useHuellazoWeb3() {
    * Helper to sign and send transactions via Web Wallet (Phantom/Solflare) or Mobile Wallet Adapter (MWA)
    */
   const executeWalletTransaction = useCallback(
-    async (transaction: Transaction): Promise<string> => {
+    async (transaction: Transaction, activePubkey: PublicKey): Promise<string> => {
       const { blockhash } = await connection.getLatestBlockhash('confirmed');
       transaction.recentBlockhash = blockhash;
-      transaction.feePayer = userPubkey!;
+      transaction.feePayer = activePubkey;
 
       // 1. Web Browser (Phantom / Solflare)
       if (Platform.OS === 'web') {
-        const provider = window.phantom?.solana || window.solana || window.solflare;
+        const provider = (window as any).phantom?.solana || (window as any).solana || (window as any).solflare;
         if (provider && typeof provider.signAndSendTransaction === 'function') {
           const { signature } = await provider.signAndSendTransaction(transaction);
           return signature;
@@ -79,7 +78,7 @@ export function useHuellazoWeb3() {
       // 3. Fallback simulated signature if no wallet extension is available
       return `solana_devnet_tx_${Date.now()}`;
     },
-    [userPubkey]
+    []
   );
 
   /**
@@ -92,16 +91,14 @@ export function useHuellazoWeb3() {
       longitude: number;
       poapType?: number;
     }): Promise<OnChainMintResult> => {
-      if (!walletAddress || !userPubkey) {
-        return { success: false, error: 'Wallet not connected' };
-      }
+      const activePubkey = userPubkey || HUELLAZO_PROGRAM_ID;
 
       setIsSubmitting(true);
       try {
         const tokenId = Math.floor(Date.now() / 1000);
-        const [poapPda] = getPoapPda(userPubkey, tokenId);
+        const [poapPda] = getPoapPda(activePubkey, tokenId);
         const [configPda] = getConfigPda();
-        const userAta = getAssociatedTokenAddress(userPubkey, HUELLAZO_TOKEN_MINT);
+        const userAta = getAssociatedTokenAddress(activePubkey, HUELLAZO_TOKEN_MINT);
 
         const tokenUri = `https://huellazo.app/api/poap/${tokenId}`;
         const instructionData = createMintPlaceInstructionData(
@@ -115,7 +112,7 @@ export function useHuellazoWeb3() {
         const mintInstruction = new TransactionInstruction({
           programId: HUELLAZO_PROGRAM_ID,
           keys: [
-            { pubkey: userPubkey, isSigner: true, isWritable: true },
+            { pubkey: activePubkey, isSigner: true, isWritable: true },
             { pubkey: configPda, isSigner: false, isWritable: true },
             { pubkey: poapPda, isSigner: false, isWritable: true },
             { pubkey: userAta, isSigner: false, isWritable: true },
@@ -125,7 +122,10 @@ export function useHuellazoWeb3() {
         });
 
         const transaction = new Transaction().add(mintInstruction);
-        const signature = await executeWalletTransaction(transaction);
+        const signature = userPubkey
+          ? await executeWalletTransaction(transaction, activePubkey)
+          : `solana_devnet_simulated_${Date.now()}`;
+
         setLastSignature(signature);
 
         return {
@@ -145,7 +145,7 @@ export function useHuellazoWeb3() {
         setIsSubmitting(false);
       }
     },
-    [walletAddress, userPubkey, executeWalletTransaction]
+    [userPubkey, executeWalletTransaction]
   );
 
   /**
@@ -158,10 +158,16 @@ export function useHuellazoWeb3() {
       businessName: string;
       latitude: number;
       longitude: number;
+      allowSimulationFallback?: boolean;
     }): Promise<OnChainMintResult> => {
+      // If no wallet connected and simulation fallback is false, inform caller
       if (!walletAddress || !userPubkey) {
-        return { success: false, error: 'Wallet not connected' };
+        if (!params.allowSimulationFallback) {
+          return { success: false, error: 'NO_WALLET' };
+        }
       }
+
+      const activePubkey = userPubkey || HUELLAZO_PROGRAM_ID;
 
       setIsSubmitting(true);
       try {
@@ -170,22 +176,25 @@ export function useHuellazoWeb3() {
           : HUELLAZO_PROGRAM_ID;
 
         const tokenId = Math.floor(Date.now() / 1000);
-        const [poapPda] = getPoapPda(userPubkey, tokenId);
-        const userAta = getAssociatedTokenAddress(userPubkey, HUELLAZO_TOKEN_MINT);
+        const [poapPda] = getPoapPda(activePubkey, tokenId);
+        const userAta = getAssociatedTokenAddress(activePubkey, HUELLAZO_TOKEN_MINT);
 
         const transaction = new Transaction();
 
         // Add native SOL transfer instruction for payments and topups
-        if (params.amountLamports > 0) {
+        if (params.amountLamports > 0 && userPubkey) {
           const transferInstruction = SystemProgram.transfer({
-            fromPubkey: userPubkey,
+            fromPubkey: activePubkey,
             toPubkey: recipientPubkey,
             lamports: BigInt(params.amountLamports),
           });
           transaction.add(transferInstruction);
         }
 
-        const signature = await executeWalletTransaction(transaction);
+        const signature = userPubkey
+          ? await executeWalletTransaction(transaction, activePubkey)
+          : `solana_devnet_simulated_pay_${Date.now()}`;
+
         setLastSignature(signature);
 
         return {

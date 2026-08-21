@@ -50,7 +50,7 @@ export default function BusinessTabScreen() {
                     <Image source={poi.image as any} className="w-11/12 h-5/6" resizeMode="contain" />
                   )}
                   <View className="absolute top-2 right-2 bg-primary px-2 py-1 border-2 border-border shadow-brutal-sm">
-                    <Text className="text-background font-black text-xs uppercase">{t('business.pay_with_hz')}</Text>
+                    <Text className="text-background font-black text-xs uppercase">Acepta Solana (SOL)</Text>
                   </View>
                 </View>
                 <View className="p-4 bg-background z-10 w-full">

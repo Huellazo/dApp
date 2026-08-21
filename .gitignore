@@ -1,6 +1,7 @@
 # --- Environment ---
 .env
 *.env.local
+Solana-cNFT-template/
 
 # --- Python ---
 __pycache__/

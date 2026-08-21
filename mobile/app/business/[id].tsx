@@ -14,17 +14,21 @@ export default function BusinessDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { t, language } = useLanguage();
-  const { burnTokens } = useAppState();
-  const { mintBusinessOnChain } = useHuellazoWeb3();
+  const { earnPoints } = useAppState();
+  const { mintBusinessOnChain, walletAddress } = useHuellazoWeb3();
   
   const place = MOCK_POIS.find(p => p.id === id);
 
   const [selectedMenuItem, setSelectedMenuItem] = useState<any>(null);
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [noWalletModalVisible, setNoWalletModalVisible] = useState(false);
+
   const [guestCount, setGuestCount] = useState(2);
   const [reservationModalVisible, setReservationModalVisible] = useState(false);
-  const [reservationConfirmed, setReservationConfirmed] = useState(false);
+  const [reservationLoading, setReservationLoading] = useState(false);
 
   if (!place) {
     return (
@@ -35,33 +39,80 @@ export default function BusinessDetailScreen() {
     );
   }
 
-  const handleOrderMenuItem = async (item: any) => {
-    setSelectedMenuItem(item);
-    const hzCost = item.discountHZ || 10;
-    
-    // Burn exact HZ points mentioned on the item card
-    const success = burnTokens(hzCost, `Compra en ${place.name}: ${item.name}`);
-    setPaymentSuccess(success);
-    setPaymentModalVisible(true);
+  // Execute Solana Commercial Payment
+  const executePayment = async (allowSimulation = false) => {
+    if (!selectedMenuItem) return;
 
-    if (success) {
-      // 1 HZ point = 1,000,000 lamports (0.001 SOL) to make Web3 transaction amount strictly match the HZ cost!
-      const amountLamports = hzCost * 1000000;
-      const lat = place.coordinates?.latitude || 17.807;
-      const lng = place.coordinates?.longitude || -97.776;
+    setPaymentError(null);
+    setPaymentLoading(true);
 
-      mintBusinessOnChain({
+    const solAmount = Math.max(0.005, Number((selectedMenuItem.priceMXN * 0.0003).toFixed(4)));
+    const amountLamports = Math.round(solAmount * 1_000_000_000);
+    const lat = place.coordinates?.latitude || 17.807;
+    const lng = place.coordinates?.longitude || -97.776;
+
+    try {
+      const res = await mintBusinessOnChain({
         amountLamports,
-        businessName: `${place.name} - ${item.name}`,
+        businessName: `${place.name} - ${selectedMenuItem.name}`,
         latitude: lat,
         longitude: lng,
-      }).catch(err => console.log('Web3 Devnet business mint notice:', err));
+        allowSimulationFallback: allowSimulation,
+      });
+
+      if (res.success) {
+        earnPoints(15, `Consumo en ${place.name}: ${selectedMenuItem.name}`);
+        setPaymentSuccess(true);
+        setPaymentModalVisible(true);
+      } else if (res.error === 'NO_WALLET') {
+        setNoWalletModalVisible(true);
+      } else {
+        setPaymentError(res.error || (language === 'es' ? 'Transacción rechazada en el monedero.' : 'Payment rejected in wallet.'));
+        setPaymentSuccess(false);
+        setPaymentModalVisible(true);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Error al procesar el pago';
+      setPaymentError(msg);
+      setPaymentSuccess(false);
+      setPaymentModalVisible(true);
+    } finally {
+      setPaymentLoading(false);
     }
   };
 
-  const handleConfirmReservation = () => {
-    setReservationConfirmed(true);
-    setReservationModalVisible(true);
+  const handleOrderMenuItem = (item: any) => {
+    setSelectedMenuItem(item);
+    if (!walletAddress) {
+      setNoWalletModalVisible(true);
+    } else {
+      executePayment(false);
+    }
+  };
+
+  const handleConfirmReservation = async () => {
+    setReservationLoading(true);
+    const solAmount = 0.01;
+    const amountLamports = Math.round(solAmount * 1_000_000_000);
+    const lat = place.coordinates?.latitude || 17.807;
+    const lng = place.coordinates?.longitude || -97.776;
+
+    try {
+      await mintBusinessOnChain({
+        amountLamports,
+        businessName: `Reservación ${place.name} (${guestCount} personas)`,
+        latitude: lat,
+        longitude: lng,
+        allowSimulationFallback: true,
+      });
+
+      earnPoints(20, `Reservación confirmada en ${place.name}`);
+    } catch (err) {
+      console.log('Reservation notice:', err);
+    } finally {
+      setReservationLoading(false);
+      setReservationModalVisible(true);
+    }
   };
 
   return (
@@ -130,7 +181,7 @@ export default function BusinessDetailScreen() {
             {place.description}
           </Text>
 
-          {/* 🍔 MENU SECTION FOR RESTAURANTS & CAFES */}
+          {/* 🍔 MENU SECTION - DIRECT SOLANA COMMERCIAL PURCHASES */}
           {place.menu && place.menu.length > 0 && (
             <View className="mb-8">
               <View className="flex-row items-center mb-4">
@@ -140,51 +191,61 @@ export default function BusinessDetailScreen() {
                 </Text>
               </View>
 
-              {place.menu.map((item: any) => (
-                <BrutalistCard key={item.id} colorClass="bg-background mb-4 p-4" variant="info">
-                  <View className="flex-row justify-between items-start mb-2">
-                    <View className="flex-1 mr-2">
-                      <View className="flex-row items-center mb-1">
-                        <Text className="text-border font-black text-lg uppercase mr-2">{item.name}</Text>
-                        {item.isPopular && (
-                          <View className="bg-accent1 px-2 py-0.5 border border-border">
-                            <Text className="text-background font-black text-[9px] uppercase">TOP</Text>
-                          </View>
-                        )}
+              {place.menu.map((item: any) => {
+                const solCost = Math.max(0.005, Number((item.priceMXN * 0.0003).toFixed(4)));
+                return (
+                  <BrutalistCard key={item.id} colorClass="bg-background mb-4 p-4" variant="info">
+                    <View className="flex-row justify-between items-start mb-2">
+                      <View className="flex-1 mr-2">
+                        <View className="flex-row items-center mb-1">
+                          <Text className="text-border font-black text-lg uppercase mr-2">{item.name}</Text>
+                          {item.isPopular && (
+                            <View className="bg-accent1 px-2 py-0.5 border border-border">
+                              <Text className="text-background font-black text-[9px] uppercase">TOP</Text>
+                            </View>
+                          )}
+                        </View>
+                        <Text className="text-border text-xs font-bold opacity-80">{item.description}</Text>
                       </View>
-                      <Text className="text-border text-xs font-bold opacity-80">{item.description}</Text>
-                    </View>
-                    <Text className="text-border font-black text-lg">${item.priceMXN} MXN</Text>
-                  </View>
-
-                  <View className="flex-row justify-between items-center mt-3 pt-3 border-t-2 border-border">
-                    <View className="bg-accent2/40 px-2 py-1 border border-border flex-row items-center">
-                      <FontAwesome5 name="fire" size={12} color={colors.primary} className="mr-1" />
-                      <Text className="text-border font-black text-xs uppercase">
-                        Costo: {item.discountHZ || 10} $HZ
-                      </Text>
+                      <View className="items-end">
+                        <Text className="text-border font-black text-lg">${item.priceMXN} MXN</Text>
+                        <Text className="text-border font-bold text-xs opacity-75">≈ {solCost} SOL</Text>
+                      </View>
                     </View>
 
-                    <Pressable
-                      onPress={() => handleOrderMenuItem(item)}
-                      className="bg-primary px-4 py-2 border-2 border-border shadow-brutal-sm active:scale-95"
-                    >
-                      <Text className="text-background font-black text-xs uppercase">
-                        {language === 'es' ? `Pagar (${item.discountHZ || 10} HZ)` : `Pay (${item.discountHZ || 10} HZ)`}
-                      </Text>
-                    </Pressable>
-                  </View>
-                </BrutalistCard>
-              ))}
+                    <View className="flex-row justify-between items-center mt-3 pt-3 border-t-2 border-border">
+                      <View className="bg-accent2/40 px-2 py-1 border border-border flex-row items-center">
+                        <FontAwesome5 name="gift" size={12} color={colors.border} className="mr-1" />
+                        <Text className="text-border font-black text-xs uppercase">
+                          Recompensa: +15 HZ
+                        </Text>
+                      </View>
+
+                      <Pressable
+                        onPress={() => handleOrderMenuItem(item)}
+                        disabled={paymentLoading}
+                        className="bg-primary px-4 py-2 border-2 border-border shadow-brutal-sm active:scale-95 flex-row items-center"
+                      >
+                        <FontAwesome5 name="wallet" size={12} color="#FAF9F6" className="mr-1.5" />
+                        <Text className="text-background font-black text-xs uppercase">
+                          {paymentLoading && selectedMenuItem?.id === item.id 
+                            ? (language === 'es' ? 'PROCESANDO...' : 'PAYING...') 
+                            : (language === 'es' ? `PAGAR (${solCost} SOL)` : `PAY (${solCost} SOL)`)}
+                        </Text>
+                      </Pressable>
+                    </View>
+                  </BrutalistCard>
+                );
+              })}
             </View>
           )}
 
-          {/* 📅 TABLE & EXPERIENCE RESERVATION SECTION */}
+          {/* 📅 TABLE RESERVATION SECTION */}
           <View className="mb-8">
             <View className="flex-row items-center mb-3">
               <FontAwesome5 name="calendar-alt" size={20} color={colors.primary} className="mr-2" />
               <Text className="text-2xl font-black text-border uppercase">
-                {language === 'es' ? 'Reservar Mesa / Visita' : 'Book Table / Visit'}
+                {language === 'es' ? 'Reservar Mesa en Restaurante' : 'Book Restaurant Table'}
               </Text>
             </View>
 
@@ -216,8 +277,13 @@ export default function BusinessDetailScreen() {
               </View>
 
               <BrutalistButton 
-                title={language === 'es' ? 'CONFIRMAR RESERVACIÓN' : 'CONFIRM RESERVATION'} 
+                title={
+                  reservationLoading 
+                    ? (language === 'es' ? 'PROCESANDO...' : 'PROCESSING...')
+                    : (language === 'es' ? 'RESERVAR CON SOLANA (0.01 SOL)' : 'BOOK WITH SOLANA (0.01 SOL)')
+                } 
                 colorClass="bg-primary"
+                disabled={reservationLoading}
                 onPress={handleConfirmReservation}
               />
             </BrutalistCard>
@@ -262,31 +328,67 @@ export default function BusinessDetailScreen() {
              </View>
           </BrutalistCard>
 
-          {/* Reward Info Banner */}
-          <BrutalistCard colorClass="bg-accent2/30 p-4 mb-6 flex-row items-center justify-between" variant="info">
-             <View className="flex-1 mr-2">
-                <Text className="text-border font-black text-sm uppercase">
-                  {language === 'es' ? 'Recompensa de Visita' : 'Visit Reward'}
-                </Text>
-                <Text className="text-border text-xs font-bold opacity-80 mt-0.5">
-                  {language === 'es' ? 'Escanea con el Radar al llegar al establecimiento' : 'Scan with Radar upon arrival'}
-                </Text>
-             </View>
-             <View className="bg-accent2 px-3 py-1 border-2 border-border shadow-brutal-sm">
-                <Text className="text-border font-black text-sm">+{place.reward || 50} HZ</Text>
-             </View>
-          </BrutalistCard>
-
         </View>
       </ScrollView>
 
-      {/* Payment Confirmation Modal */}
+      {/* No Wallet Connected Modal */}
+      <Modal visible={noWalletModalVisible} transparent animationType="slide" onRequestClose={() => setNoWalletModalVisible(false)}>
+        <View className="flex-1 bg-black/80 justify-center items-center p-4">
+          <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden">
+             <View className="bg-primary p-4 border-b-4 border-border flex-row justify-between items-center">
+                <Text className="text-background font-black text-xl uppercase">
+                  {language === 'es' ? 'Conectar Monedero' : 'Connect Wallet'}
+                </Text>
+                <FontAwesome5 name="times" size={24} color="#FAF9F6" onPress={() => setNoWalletModalVisible(false)} />
+             </View>
+
+             <View className="p-6 items-center">
+                <View className="w-16 h-16 bg-secondary border-4 border-border rounded-full justify-center items-center mb-4 shadow-brutal-sm">
+                   <FontAwesome5 name="wallet" size={28} color={colors.border} />
+                </View>
+                
+                <Text className="text-border font-black text-lg text-center uppercase mb-2">
+                  {language === 'es' ? 'Pago en Solana' : 'Solana Payment'}
+                </Text>
+                <Text className="text-border text-xs font-bold text-center mb-6 leading-relaxed">
+                  {language === 'es' 
+                    ? `Para comprar en ${place.name} pagando directamente con Solana, necesitas conectar tu monedero o realizar una prueba simulada.`
+                    : `To buy directly with Solana, connect your wallet or execute a test simulation.`}
+                </Text>
+
+                <View className="w-full mb-3">
+                  <BrutalistButton 
+                    title={language === 'es' ? 'CONECTAR EN PASAPORTE' : 'CONNECT IN PASSPORT'} 
+                    colorClass="bg-accent2" 
+                    onPress={() => {
+                      setNoWalletModalVisible(false);
+                      router.push('/(tabs)/passport');
+                    }} 
+                  />
+                </View>
+
+                <View className="w-full">
+                  <BrutalistButton 
+                    title={language === 'es' ? 'PROBAR PAGO SIMULADO' : 'TRY SIMULATED PAY'} 
+                    colorClass="bg-primary" 
+                    onPress={() => {
+                      setNoWalletModalVisible(false);
+                      executePayment(true);
+                    }} 
+                  />
+                </View>
+             </View>
+          </BrutalistCard>
+        </View>
+      </Modal>
+
+      {/* Commercial Solana Payment Confirmation Modal */}
       <Modal visible={paymentModalVisible} transparent animationType="slide" onRequestClose={() => setPaymentModalVisible(false)}>
         <View className="flex-1 bg-black/80 justify-center items-center p-4">
           <BrutalistCard colorClass="bg-background max-w-sm w-full p-0 overflow-hidden">
             <View className={`p-4 border-b-4 border-border flex-row justify-between items-center ${paymentSuccess ? 'bg-accent2' : 'bg-primary'}`}>
                <Text className="text-border font-black text-xl uppercase">
-                 {paymentSuccess ? (language === 'es' ? '¡Descuento Obtenido!' : 'Discount Claimed!') : (language === 'es' ? 'Puntos Insuficientes' : 'Not Enough Points')}
+                 {paymentSuccess ? (language === 'es' ? '¡Pago Confirmado!' : 'Payment Confirmed!') : (language === 'es' ? 'Error en Pago' : 'Payment Failed')}
                </Text>
                <FontAwesome5 name={paymentSuccess ? 'check-circle' : 'exclamation-circle'} size={24} color={colors.border} />
             </View>
@@ -297,22 +399,29 @@ export default function BusinessDetailScreen() {
                    <View className="w-16 h-16 bg-accent2 border-4 border-border rounded-full justify-center items-center mb-4 shadow-brutal-sm">
                       <FontAwesome5 name="receipt" size={28} color={colors.border} />
                    </View>
-                   <Text className="text-border font-black text-lg text-center uppercase mb-2">
+                   <Text className="text-border font-black text-lg text-center uppercase mb-1">
                      {selectedMenuItem?.name}
                    </Text>
-                   <Text className="text-border text-sm font-bold text-center mb-6 leading-relaxed">
-                     {language === 'es' 
-                       ? `Se descontaron exactamente ${selectedMenuItem?.discountHZ || 10} Puntos Huellazos ($HZ) de tu monedero. Muestra esta pantalla al personal de ${place.name} para hacer válido tu beneficio.` 
-                       : `Deducted exactly ${selectedMenuItem?.discountHZ || 10} Huellazos Points ($HZ) from your wallet. Show this screen to the staff at ${place.name}.`}
+                   <Text className="text-border text-xs font-bold text-center opacity-80 uppercase mb-4">
+                     ${selectedMenuItem?.priceMXN} MXN (Solana Devnet)
                    </Text>
+                   <Text className="text-border text-sm font-bold text-center mb-4 leading-relaxed">
+                     {language === 'es' 
+                       ? `Se ha procesado tu compra en Solana. Muestra este recibo digital en el mostrador de ${place.name}.` 
+                       : `Your purchase was confirmed on Solana. Show this receipt at ${place.name}.`}
+                   </Text>
+                   <View className="bg-accent2/30 p-3 border-2 border-border w-full mb-6 flex-row justify-between items-center">
+                     <Text className="text-border font-black text-xs uppercase">Bono Ganado:</Text>
+                     <Text className="text-border font-black text-sm">+15 Puntos HZ</Text>
+                   </View>
                    <BrutalistButton title={t('common.okay')} colorClass="bg-accent1" onPress={() => setPaymentModalVisible(false)} />
                 </View>
               ) : (
                 <View className="items-center">
                    <Text className="text-border text-sm font-bold text-center mb-6">
-                     {language === 'es'
-                       ? 'No tienes suficientes Puntos Huellazos acumulados. ¡Sigue explorando lugares para ganar más!'
-                       : 'You do not have enough Huellazos points. Keep exploring to earn more!'}
+                     {paymentError || (language === 'es'
+                       ? 'No se pudo completar la transacción en el monedero.'
+                       : 'Could not complete wallet transaction.')}
                    </Text>
                    <BrutalistButton title={t('common.close')} colorClass="bg-primary" onPress={() => setPaymentModalVisible(false)} />
                 </View>
@@ -341,15 +450,20 @@ export default function BusinessDetailScreen() {
                <Text className="text-border font-black text-xl text-center uppercase mb-1">{place.name}</Text>
                <Text className="text-border font-bold text-sm text-center mb-4">{place.address}</Text>
 
-               <View className="bg-secondary/30 p-4 border-2 border-border w-full mb-6">
+               <View className="bg-secondary/30 p-4 border-2 border-border w-full mb-4">
                   <View className="flex-row justify-between mb-2">
                      <Text className="text-border font-bold text-xs uppercase">Reservado para:</Text>
                      <Text className="text-border font-black text-xs uppercase">{guestCount} {guestCount === 1 ? 'Persona' : 'Personas'}</Text>
                   </View>
                   <View className="flex-row justify-between">
-                     <Text className="text-border font-bold text-xs uppercase">Estado:</Text>
-                     <Text className="text-accent2 font-black text-xs uppercase">Confirmado en Mesa</Text>
+                     <Text className="text-border font-bold text-xs uppercase">Depósito de Garantía:</Text>
+                     <Text className="text-accent2 font-black text-xs uppercase">0.01 SOL (Confirmado)</Text>
                   </View>
+               </View>
+
+               <View className="bg-accent2/30 p-3 border-2 border-border w-full mb-6 flex-row justify-between items-center">
+                  <Text className="text-border font-black text-xs uppercase">Bono de Reservación:</Text>
+                  <Text className="text-border font-black text-sm">+20 Puntos HZ</Text>
                </View>
 
                <BrutalistButton title={t('common.okay')} colorClass="bg-accent1" onPress={() => setReservationModalVisible(false)} />

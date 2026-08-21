@@ -126,37 +126,45 @@ export default function ScanScreen() {
            <FontAwesome5 name="user-astronaut" size={24} color="#FAF9F6" />
         </View>
 
-        {/* Render POI Pins */}
+        {/* Render POI Pins - Compact & Reduced Label Width */}
         {mapPoints.map((poi) => (
           <Pressable
             key={poi.id}
             onPress={() => handlePoiClick(poi)}
             style={{ top: poi.top, left: poi.left }}
-            className="absolute z-30 active:scale-125 transition-transform"
+            className="absolute z-30 items-center active:scale-110"
           >
-            <View className="bg-accent1 p-3 border-4 border-border shadow-brutal-sm rounded-full justify-center items-center">
-              <FontAwesome5 name={poi.category === 'business' ? 'store' : 'landmark'} size={18} color="#FAF9F6" />
+            <View className="bg-accent1 p-2.5 border-4 border-border shadow-brutal-sm rounded-full justify-center items-center">
+              <FontAwesome5 name={poi.category === 'business' ? 'store' : 'landmark'} size={15} color="#FAF9F6" />
             </View>
-            <View className="bg-background border-2 border-border px-2 py-0.5 mt-1 shadow-brutal-sm self-center">
-              <Text className="text-border font-black text-[9px] uppercase">{poi.name}</Text>
+            <View className="bg-background border-2 border-border px-1.5 py-0.5 mt-1 shadow-brutal-sm max-w-[80px]">
+              <Text className="text-border font-black text-[8px] uppercase text-center" numberOfLines={1} ellipsizeMode="tail">
+                {poi.name}
+              </Text>
             </View>
           </Pressable>
         ))}
 
         {/* Map Controls */}
         <View className="absolute bottom-4 left-4 right-4 flex-row justify-between z-20">
-           <BrutalistButton title={t('scan.radar_tools')} colorClass="bg-secondary" onPress={() => setIsToolsModalVisible(true)} />
-           <BrutalistButton title={t('scan.trade_button')} colorClass="bg-accent2" onPress={() => setIsTradeModalVisible(true)} />
+           <View className="w-[48%]">
+             <BrutalistButton title={t('scan.radar_tools')} colorClass="bg-secondary" onPress={() => setIsToolsModalVisible(true)} />
+           </View>
+           <View className="w-[48%]">
+             <BrutalistButton title={t('scan.trade_button')} colorClass="bg-accent2" onPress={() => setIsTradeModalVisible(true)} />
+           </View>
         </View>
 
       </View>
 
       {/* Action Footer */}
       <View className="p-4 bg-background border-b-4 border-border flex-row justify-between items-center">
-         <View className="flex-1 mr-4">
-           <Text className="text-border font-black text-xs uppercase">{t('scan.radar_hint')}</Text>
+         <View className="flex-1 mr-3">
+           <Text className="text-border font-black text-xs uppercase" numberOfLines={2}>{t('scan.radar_hint')}</Text>
          </View>
-         <BrutalistButton title={t('scan.scan_button')} colorClass="bg-primary" onPress={handleOpenScanner} />
+         <View className="w-36">
+           <BrutalistButton title={t('scan.scan_button')} colorClass="bg-primary" onPress={handleOpenScanner} />
+         </View>
       </View>
 
       {/* Activity Feed */}

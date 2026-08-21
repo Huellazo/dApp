@@ -88,6 +88,8 @@ export interface LootItem {
 // --- Context Type ---
 export interface HuellazoAppState {
   // State
+  userName: string
+  userAvatar: any
   xp: number
   points: number
   level: string
@@ -101,6 +103,8 @@ export interface HuellazoAppState {
   ownedNfts: any[]
 
   // Actions
+  setUserName: (name: string) => void
+  setUserAvatar: (avatar: any) => void
   addXp: (amount: number) => void
   earnPoints: (amount: number, description: string) => void
   spendPoints: (amount: number) => boolean
@@ -225,6 +229,9 @@ const AppStateContext = createContext<HuellazoAppState | undefined>(undefined)
 
 // --- Provider ---
 export function AppStateProvider({ children }: { children: React.ReactNode }) {
+  const [userName, setUserNameState] = useState(MOCK_USER.name)
+  const [userAvatar, setUserAvatarState] = useState(MOCK_USER.avatarUrl)
+
   const [xp, setXp] = useState(1200)
   const [points, setPoints] = useState(650)
   const [passportMinted, setPassportMinted] = useState(false)
@@ -272,6 +279,14 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     if (!tokensLoaded) return
     AsyncStorage.setItem(EARNED_TOKENS_STORAGE_KEY, JSON.stringify(earnedTokens)).catch(console.error)
   }, [earnedTokens, tokensLoaded])
+
+  const setUserName = useCallback((name: string) => {
+    setUserNameState(name)
+  }, [])
+
+  const setUserAvatar = useCallback((avatar: any) => {
+    setUserAvatarState(avatar)
+  }, [])
 
   const addXp = useCallback((amount: number) => {
     setXp(prev => prev + amount)
@@ -408,6 +423,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AppStateContext.Provider value={{
+      userName, userAvatar, setUserName, setUserAvatar,
       xp, points, level, passportMinted, activeNfts, earnedTokens,
       status, faction, transactions, inventory, ownedNfts, isRadarBoosted,
       addXp, earnPoints, spendPoints, unlockNft, mintPassport, mintPoiToken,
@@ -424,6 +440,8 @@ export function useAppState(): HuellazoAppState {
   if (!context) {
     // Safe fallback object for hot reloading or unmounted context
     return {
+      userName: MOCK_USER.name, userAvatar: MOCK_USER.avatarUrl,
+      setUserName: () => {}, setUserAvatar: () => {},
       xp: 1200, points: 650, level: 'Bronce', passportMinted: false, activeNfts: ['cenote'],
       earnedTokens: [], status: 'normal', faction: null, transactions: [], inventory: [],
       ownedNfts: MOCK_USER.nfts, isRadarBoosted: false, addXp: () => {}, earnPoints: () => {}, spendPoints: () => false,
