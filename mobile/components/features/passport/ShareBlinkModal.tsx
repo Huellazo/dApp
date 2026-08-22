@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Linking, Share, ScrollView } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Linking, Share, ScrollView, Image } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
@@ -18,12 +18,14 @@ export function ShareBlinkModal({
   visible,
   onClose,
   stampTitle = 'Estampa de Pasaporte Huellazo',
+  stampImage,
   poiId = 'poi3',
 }: ShareBlinkModalProps) {
   if (!visible) return null;
 
   const blinkMeta = BlinkService.getBlinkMetadata(poiId);
   const dialectDialToUrl = BlinkService.getDialectBlinkUrl(poiId);
+  const displayImageUri = stampImage || blinkMeta.imageUrl;
 
   const handleShareToTwitter = async () => {
     const twitterUrl = BlinkService.getTwitterShareUrl(stampTitle, poiId);
@@ -33,7 +35,7 @@ export function ShareBlinkModal({
   const handleNativeShare = async () => {
     try {
       await Share.share({
-        message: `¡Obtuve mi estampa digital "${stampTitle}" en Huellazo! ☀️\n\n🖼️ Imagen: ${blinkMeta.imageUrl}\n\nReclama la tuya:\n${dialectDialToUrl}`,
+        message: `¡Obtuve mi estampa digital "${stampTitle}" en Huellazo! ☀️\n\n🖼️ Imagen: ${displayImageUri}\n\nReclama la tuya:\n${dialectDialToUrl}`,
         title: 'Compartir Estampa Huellazo en Redes Sociales',
       });
     } catch (err) {
@@ -65,12 +67,24 @@ export function ShareBlinkModal({
             </TouchableOpacity>
           </View>
 
-          <View className="p-5">
-            <Text className="text-border font-black text-lg uppercase mb-2">
+          <View className="p-5 items-center">
+            {/* Visual Stamp Image Preview */}
+            <View 
+              className="w-28 h-28 border-4 border-border rounded-xl mb-3 overflow-hidden shadow-brutal-sm bg-white"
+              style={{ borderColor: colors.border }}
+            >
+              <Image 
+                source={{ uri: displayImageUri }}
+                className="w-full h-full"
+                resizeMode="cover"
+              />
+            </View>
+
+            <Text className="text-border font-black text-lg uppercase text-center mb-1">
               {stampTitle}
             </Text>
 
-            <Text className="text-border text-xs font-bold leading-relaxed mb-4">
+            <Text className="text-border text-xs font-bold leading-relaxed text-center mb-4">
               ¡Muestra tus logros turísticos al mundo! Cualquier persona que vea tu publicación en <Text className="text-primary font-black">X (Twitter)</Text> o redes sociales podrá interactuar con tu estampa y obtener Puntos Huellazos ($HZ) con un solo toque.
             </Text>
 
