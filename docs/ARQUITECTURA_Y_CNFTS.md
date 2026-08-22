@@ -1,6 +1,6 @@
 # Análisis Completo de Arquitectura & Guía de Compressed NFTs (cNFTs) 🌿
 
-Este documento desglosa minuciosamente **todas las tecnologías integradas en la dApp Huellazo** en sus capas de Blockchain, Backend y Mobile, y explica a profundidad el funcionamiento y la propuesta de valor de los **Compressed NFTs (cNFTs)**.
+Este documento desglosa minuciosamente **todas las tecnologías integradas en la dApp Huellazo** en sus capas de Blockchain, Backend y Mobile, y explica el proceso paso a paso para la implementación de **Compressed NFTs (cNFTs) con Metaplex Bubblegum, Solflare y Helius DAS API**.
 
 ---
 
@@ -31,23 +31,6 @@ huellazo-dApp/
    - Macros `#[ephemeral]` con instrucciones `delegate`, `commit` y `undelegate` para transferir PDAs a capas L2 de ejecución ultra-rápida y sin comisiones de gas.
 5. **Metaplex Bubblegum (`mpl-bubblegum`) & SPL State Compression**:
    - Estándar para minteo y gestión de **Compressed NFTs (cNFTs)** masivos a fracciones de centavo de dólar.
-
-### 🌐 Registro de Despliegue en Solana Devnet
-
-- **Red / Cluster**: Solana Devnet
-- **Program ID en Devnet**: `2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ`
-- **Enlace Solana Explorer (Programa)**: [https://explorer.solana.com/address/2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ?cluster=devnet](https://explorer.solana.com/address/2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ?cluster=devnet)
-- **Firma de Transacción (Signature)**: `2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb`
-- **Enlace Solana Explorer (Transacción)**: [https://explorer.solana.com/tx/2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb?cluster=devnet](https://explorer.solana.com/tx/2QGezHCspgQfbEtRYJ3GsmzyLj6E27bdyH28LkKB8uLt27TYnjTgbysV25aLpSykUH6xr5HaQGDhcdNJFJwCaFKb?cluster=devnet)
-- **Devnet RPC Endpoint**: `https://devnet.helius-rpc.com/?api-key=TU_API_KEY_HELIUS`
-
-```bash
-Program Id: 2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ
-Owner: BPFLoaderUpgradeab1e11111111111111111111111
-Data Length: 400,360 bytes
-Status: Active on Devnet Slot 486286645
-```
-
 
 ---
 
@@ -80,8 +63,8 @@ Status: Active on Devnet Slot 486286645
 
 ## 🌲 2. ¿Qué son los Compressed NFTs (cNFTs) y por qué son clave en Huellazo?
 
-### ¿El Problema de los NFTs Tradicionales?
-En Solana convencional, cada NFT requiere crear una cuenta `Mint` y una cuenta de metadatos `Metadata`. Emitir **10,000 NFTs tradicionales** cuesta aproximadamente **15 a 20 SOL** (más de $2,500 USD) en comisiones de almacenamiento on-chain (`rent exemption`). Para un proyecto de turismo masivo con miles de turistas escaneando monumentos, esto es financieramente inviable.
+### El Problema de los NFTs Tradicionales
+En Solana convencional, cada NFT requiere crear una cuenta `Mint` y una cuenta de metadatos `Metadata`. Emitir **10,000 NFTs tradicionales** cuesta aproximadamente **15 a 20 SOL** (más de $2,500 USD) en comisiones de espacio en cuenta (`rent exemption`). Para un proyecto de turismo masivo con miles de turistas escaneando monumentos, esto es financieramente inviable.
 
 ### La Solución: Compressed NFTs (cNFTs) con Metaplex Bubblegum
 Los **Compressed NFTs (cNFTs)** utilizan **SPL State Compression** e **hilos de Merkle Concurrentes (Concurrent Merkle Trees)**:
@@ -96,22 +79,115 @@ Los **Compressed NFTs (cNFTs)** utilizan **SPL State Compression** e **hilos de 
    - ¡Cada estampa de viaje cuesta **menos de 0.0001 USD**!
 
 3. **Indexación Read-API Off-Chain**:
-   - Los datos detallados de cada estampa (imagen, coordenadas, fecha de visita) son indexados por nodos Read-API (como Helius o Triton) que leen las transacciones pasadas de Solana.
-
-4. **Descompresión (Uncompress) Híbrida**:
-   - Mediante **Metaplex Bubblegum**, si un usuario desea transferir o vender su estampa en un marketplace secundario tradicional (como Magic Eden o Tensor), puede invocar la función `uncompress`, convirtiendo su cNFT en un NFT tradicional de Solana en el momento que lo necesite.
+   - Los datos detallados de cada estampa (imagen, coordenadas, fecha de visita) son indexados por nodos Read-API (como Helius) que leen las transacciones pasadas de Solana.
 
 ---
 
-## 🎯 3. Resumen de Flujo Completo
+## 🛠️ 3. Proceso de Implementación Técnica Paso a Paso
+
+El proceso para lograr la emisión, almacenamiento y visualización exitosa de los cNFTs en **Solflare** y **Phantom** se desarrolló en 7 etapas:
 
 ```mermaid
 graph TD
-    A[Turista llega a Monumento en Huajuapan] --> B[App Móvil obtiene Coordenadas GPS]
-    B --> C[Backend FastAPI valida Geofencing con Shapely]
-    C -->|Válido| D[Solicitud de Transacción Web3]
-    D -->|Si es L2 Rápido| E[MagicBlock Ephemeral Rollups - Zero Gas]
-    D -->|Si es Colección Masiva| F[Metaplex Bubblegum cNFT - Merkle Tree]
-    F --> G[Firma nativa en Phantom/Solflare vía MWA]
-    G --> H[Estampa Minteada e Inmutable en Solana Devnet]
+    Stage1[1. Definición de Metadatos JSON y Colección Metaplex] --> Stage2[2. Inicialización de Umi Client con Bubblegum y DAS API]
+    Stage2 --> Stage3[3. Creación y Persistencia del Árbol Merkle On-Chain]
+    Stage3 --> Stage4[4. Vinculación del Propietario leafOwner con la Billetera]
+    Stage4 --> Stage5[5. Ejecución del Minteo mintV2 / mintV1]
+    Stage5 --> Stage6[6. Sincronización DAS API e Indexación de la Billetera]
+    Stage6 --> Stage7[7. Visualización en Solflare / Phantom y Re-escaneo con Animación]
 ```
+
+---
+
+### Etapa 1: Definición de Metadatos JSON y Colección Metaplex (`/mobile/assets/metadata`)
+Para que billeteras como **Solflare** y **Phantom** muestren correctamente la estampa y sus propiedades:
+1. **Esquema Estándar Metaplex**: Cada archivo JSON define `name`, `symbol: "HUELLAZO"`, `description`, `image`, `external_url` y `attributes`.
+2. **Propiedad de Colección Unificada**:
+   ```json
+   "collection": {
+     "name": "Huellazo",
+     "family": "Huellazo Mixteca"
+   }
+   ```
+   *Efecto*: Solflare y Phantom leen este campo y agrupan automáticamente todas las estampas dentro de una carpeta limpia titulada **"Huellazo"**.
+3. **Hospedaje de Alta Disponibilidad**: Los JSON e imágenes PNG se hospedan mediante GitHub Raw con URLs públicas en formato HTTPS (`HTTP 200 OK`).
+
+---
+
+### Etapa 2: Inicialización del Cliente Metaplex Umi (`/mobile/services/cnft-service.ts`)
+Instanciamos el cliente `@metaplex-foundation/umi` con los plugins de Bubblegum y DAS API:
+```typescript
+export function getUmiClient(customRpcUrl?: string): UmiDas {
+  const rpcUrl = customRpcUrl || HELIUS_DEVNET_DAS_RPC;
+  const umi = createBaseUmi()
+    .use(defaultPlugins(rpcUrl))
+    .use(mplBubblegum())
+    .use(dasApi());
+
+  return umi as UmiDas;
+}
+```
+
+---
+
+### Etapa 3: Creación y Persistencia del Árbol Merkle On-Chain (`crearArbolMerkle`)
+Para almacenar los cNFTs, se crea un Árbol Merkle concurrente en Solana Devnet:
+- **Parámetros**: `maxDepth = 14` (capacidad de 16,384 cNFTs) y `maxBufferSize = 64`.
+- **Compatibilidad**: Ejecuta `createTreeV2` con fallback a `createTree` (V1).
+- **Persistencia**: La dirección del árbol se almacena en `AsyncStorage` (`huellazo:merkle-tree:devnet:v2`) para no crear árboles innecesarios en cada minteo.
+
+---
+
+### Etapa 4: Vinculación del Propietario (`leafOwner`) y Conexión de Billeteras
+Uno de los descubrimientos clave fue asegurar que el parámetro `leafOwner` apunte a la dirección de la billetera del usuario y no a la clave privada temporal del cliente:
+```typescript
+const providerPk = typeof window !== 'undefined'
+  ? ((window as any).solflare?.publicKey?.toBase58?.() ||
+     (window as any).phantom?.solana?.publicKey?.toBase58?.())
+  : undefined;
+
+const targetAddress = walletAddress || providerPk || undefined;
+const leafOwner = targetAddress ? toUmiPublicKey(targetAddress) : umi.identity.publicKey;
+```
+Al pasar `leafOwner = targetAddress`, el cNFT queda registrado a nombre de la billetera real del usuario (`KLVFn69o3w9pvKNsza3YJtyszf8e1E5GCDByxeRhVzg`).
+
+---
+
+### Etapa 5: Ejecución del Minteo (`mintearCnftEstampa`)
+Construimos y enviamos la transacción de minteo de metadatos comprimidos a través de Metaplex Bubblegum:
+```typescript
+const builder = await mintV2(umi, {
+  merkleTree,
+  leafOwner,
+  metadata: {
+    name: input.name,
+    uri: input.uri,
+    sellerFeeBasisPoints: 0,
+    collection: none(),
+    creators: [{ address: umi.identity.publicKey, verified: true, share: 100 }],
+  },
+});
+const res = await builder.sendAndConfirm(umi);
+const leaf = await parseLeafFromMintV2Transaction(umi, res.signature);
+```
+
+---
+
+### Etapa 6: Indexación DAS API y Visualización Instantánea
+Una vez minteado, la dApp consulta el servicio Helius DAS API mediante `getAssetsByOwner` y `getAsset`:
+1. `esperarIndexacionCnft`: Realiza un sondeo asíncrono en segundo plano hasta que el nodo Read-API haya procesado la hojilla (`leaf.id`).
+2. `listarCnftsPorOwner`: Permite a la dApp y a la billetera **Solflare** listar las estampas activas del usuario sin necesidad de consultar toda la cadena de bloques.
+
+---
+
+### Etapa 7: Re-escaneo de Estampas y Animación de Celebración
+Si un usuario vuelve a escanear un lugar o estampa que ya poseía:
+- La dApp detecta `alreadyMinted = true`.
+- Despliega la micro-animación de celebración `StickerClaimAnimation` con el encabezado `¡ESTAMPA REGISTRADA!` y la insignia: *"¡Ya tenías esta estampa registrada en tu pasaporte! Disfruta nuevamente de tu animación."*
+
+---
+
+## 🧪 Verificación de Estado
+
+- **Compilación TypeScript (`npx tsc --noEmit`)**: **0 Errores**.
+- **Integración Solflare / Phantom**: Verificada y funcional con carpetas de colección unificadas.

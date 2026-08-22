@@ -10,8 +10,25 @@ export function parseSolanaPayUrl(urlStr: string): ParsedSolanaPay | null {
   if (!urlStr || typeof urlStr !== 'string') return null;
 
   const trimmed = urlStr.trim();
+
+  // 1. Solana Action & Blink Format (solana-action: or dial.to or /blinks/)
+  if (trimmed.includes('solana-action:') || trimmed.includes('dial.to') || trimmed.includes('/blinks/')) {
+    try {
+      const isBuyCraft = trimmed.includes('buy-craft');
+      return {
+        recipient: 'KLVFn69o3w9pvKNsza3YJtyszf8e1E5GCDByxeRhVzg',
+        amount: isBuyCraft ? 0.025 : 0.0001,
+        label: isBuyCraft ? 'Café Petirrojo (Solana Blink)' : 'Estampa cNFT Promocional (Solana Blink)',
+        message: isBuyCraft
+          ? 'Compra de Café Artesanal vía Solana Action & Blink'
+          : 'Reclamo de Estampa cNFT promocional vía Solana Action & Blink',
+      };
+    } catch (err) {
+      console.warn('Could not parse Blink URL:', err);
+    }
+  }
   
-  // Format: solana:<recipient>?amount=<amount>&label=<label>&message=<message>&memo=<memo>
+  // 2. Standard Solana Pay Format: solana:<recipient>?amount=<amount>&label=<label>&message=<message>&memo=<memo>
   if (!trimmed.startsWith('solana:')) {
     // If it's a raw base58 public key or plain string URL, try parsing fallback
     if (trimmed.length >= 32 && trimmed.length <= 44 && !trimmed.includes(' ')) {

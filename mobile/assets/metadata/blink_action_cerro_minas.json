@@ -1,0 +1,14 @@
+{
+  "icon": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_cerro_minas.png",
+  "title": "Estampa Digital — Cerro de las Minas",
+  "description": "¡Reclama tu estampa digital de pasaporte del antiguo asentamiento prehispánico de la cultura Ñuiñe en Huellazo!",
+  "label": "Reclamar Estampa Digital",
+  "links": {
+    "actions": [
+      {
+        "label": "Reclamar Estampa Digital de Pasaporte (+100 $HZ)",
+        "href": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/metadata/cerro_minas.json"
+      }
+    ]
+  }
+}

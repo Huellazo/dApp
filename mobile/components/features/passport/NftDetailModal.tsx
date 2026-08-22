@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, Image, Pressable } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, Feather } from '@expo/vector-icons';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { colors } from '@/theme/colors';
 import { useHuellazoCnft } from '@/hooks/useHuellazoCnft';
 import { getMetadataJsonUrl } from '@/services/metadata-service';
+import { ShareBlinkModal } from './ShareBlinkModal';
 
 export interface NFT {
   id: string;
@@ -37,6 +38,7 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
   const [isMinting, setIsMinting] = useState(false);
   const [mintStatus, setMintStatus] = useState<'idle' | 'success'>('idle');
   const [mintError, setMintError] = useState<string | null>(null);
+  const [isShareBlinkVisible, setIsShareBlinkVisible] = useState(false);
 
   if (!nft) return null;
 
@@ -156,40 +158,61 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
 
              {/* Action Button */}
              {mintStatus === 'success' ? (
-               <View className="bg-accent2 p-2.5 border-2 border-border items-center">
-                 <Text className="text-border font-black text-xs uppercase mb-0.5">¡Guardado en Tu Monedero!</Text>
-                 <Text className="text-border font-bold text-[9px] text-center opacity-90 mb-2">
-                   Registrado en Solana Devnet con tu dirección de monedero.
-                 </Text>
-                 <Pressable
-                   onPress={() => {
-                     setMintStatus('idle');
-                     setMintError(null);
-                   }}
-                   className="bg-background px-3 py-1.5 border-2 border-border shadow-brutal-sm active:scale-95"
-                 >
-                   <Text className="text-border font-black text-[9px] uppercase">Volver a Guardar en Monedero</Text>
-                 </Pressable>
-               </View>
-             ) : (
-               <View>
-                 <BrutalistButton
-                   title={isMinting ? "Guardando..." : "Guardar en Monedero"}
-                   colorClass="bg-accent1"
-                   disabled={isMinting}
-                   onPress={handleSaveToWallet}
-                 />
-                 {mintError && (
-                   <Text className="text-primary font-bold text-[10px] text-center mt-1">
-                     {mintError}
-                   </Text>
-                 )}
-               </View>
-             )}
-
+                <View className="bg-accent2 p-2.5 border-2 border-border items-center space-y-2">
+                  <Text className="text-border font-black text-xs uppercase mb-0.5">¡Guardado en Tu Monedero!</Text>
+                  <Text className="text-border font-bold text-[9px] text-center opacity-90 mb-1">
+                    Registrado en Solana Devnet con tu dirección de monedero.
+                  </Text>
+                  <View className="flex-row space-x-2">
+                    <Pressable
+                      onPress={() => setIsShareBlinkVisible(true)}
+                      className="bg-primary px-3 py-1.5 border-2 border-border shadow-brutal-sm active:scale-95 flex-row items-center space-x-1"
+                    >
+                      <Feather name="share-2" size={12} color="#FAF9F6" />
+                      <Text className="text-background font-black text-[9px] uppercase">Compartir Blink</Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => {
+                        setMintStatus('idle');
+                        setMintError(null);
+                      }}
+                      className="bg-background px-3 py-1.5 border-2 border-border shadow-brutal-sm active:scale-95"
+                    >
+                      <Text className="text-border font-black text-[9px] uppercase">Volver a Guardar</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              ) : (
+                <View className="space-y-2">
+                  <BrutalistButton
+                    title={isMinting ? "Guardando..." : "Guardar en Monedero"}
+                    colorClass="bg-accent1"
+                    disabled={isMinting}
+                    onPress={handleSaveToWallet}
+                  />
+                  <BrutalistButton
+                    title="Compartir Estampa en Redes"
+                    colorClass="bg-accent2"
+                    onPress={() => setIsShareBlinkVisible(true)}
+                  />
+                  {mintError && (
+                    <Text className="text-primary font-bold text-[10px] text-center mt-1">
+                      {mintError}
+                    </Text>
+                  )}
+                </View>
+              )}
           </View>
         </BrutalistCard>
       </View>
+
+      <ShareBlinkModal
+         visible={isShareBlinkVisible}
+         onClose={() => setIsShareBlinkVisible(false)}
+         stampTitle={nft.title}
+         stampImage={typeof nft.image === 'string' ? nft.image : undefined}
+         poiId={nft.id}
+       />
     </Modal>
   );
 }

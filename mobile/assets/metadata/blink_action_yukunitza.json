@@ -1,0 +1,14 @@
+{
+  "icon": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_mirador_yukunitza.png",
+  "title": "Estampa Digital — Mirador de Cristal Yukunitzá",
+  "description": "¡Reclama tu estampa digital ecoturística del Mirador Yukunitzá y acumula +90 Puntos Huellazos ($HZ)!",
+  "label": "Reclamar Estampa Digital",
+  "links": {
+    "actions": [
+      {
+        "label": "Reclamar Estampa Digital de Pasaporte (+90 $HZ)",
+        "href": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/metadata/mirador_yukunitza.json"
+      }
+    ]
+  }
+}

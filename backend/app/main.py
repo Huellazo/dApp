@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import users, visits, merchants, proposals, payments
+from app.routers import users, visits, merchants, proposals, payments, blinks
 
 app = FastAPI(
     title="Huellazo API",
@@ -23,6 +23,7 @@ app.include_router(visits.router, prefix=f"{settings.api_prefix}/visits", tags=[
 app.include_router(merchants.router, prefix=f"{settings.api_prefix}/merchants", tags=["merchants"])
 app.include_router(proposals.router, prefix=f"{settings.api_prefix}/proposals", tags=["proposals"])
 app.include_router(payments.router, prefix=f"{settings.api_prefix}/payments", tags=["payments"])
+app.include_router(blinks.router, prefix=f"{settings.api_prefix}/blinks", tags=["blinks"])
 
 @app.get("/health")
 async def health_check():

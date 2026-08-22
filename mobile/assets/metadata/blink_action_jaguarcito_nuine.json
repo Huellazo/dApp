@@ -1,0 +1,14 @@
+{
+  "icon": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_jaguarcito_nuine.png",
+  "title": "Estampa Legendaria — Jaguarcito Ñuiñe",
+  "description": "¡Obtén el mítico guardián de piedra de la cultura Ñuiñe de Huajuapan de León con +150 $HZ!",
+  "label": "Reclamar Estampa Legendaria",
+  "links": {
+    "actions": [
+      {
+        "label": "Reclamar Estampa Legendaria (+150 $HZ)",
+        "href": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/metadata/jaguarcito_nuine.json"
+      }
+    ]
+  }
+}

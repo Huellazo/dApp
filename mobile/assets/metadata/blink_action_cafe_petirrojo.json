@@ -1,0 +1,14 @@
+{
+  "icon": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_cafe_petirrojo.png",
+  "title": "Café de Especialidad Petirrojo",
+  "description": "Apoya al comercio local mixteco comprando café artesanal de especialidad en Huajuapan de León.",
+  "label": "Comprar por 0.025 SOL",
+  "links": {
+    "actions": [
+      {
+        "label": "Comprar Café Artesanal (0.025 SOL)",
+        "href": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/metadata/cafe_petirrojo.json"
+      }
+    ]
+  }
+}
