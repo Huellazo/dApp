@@ -1,26 +1,21 @@
 {
-  "name": "Estampa Guaje de Oro",
-  "symbol": "HZ",
-  "description": "Fruto icónico que da nombre a Huajuapan ('Lugar de Guajes'), bañado en oro conmemorativo.",
+  "name": "Guaje de Oro",
+  "symbol": "HUELLAZO",
+  "description": "Fruto místico áureo que dio nombre ancestral a la legendaria tierra de Huajuapan de León.",
+  "seller_fee_basis_points": 0,
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_guaje_oro.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Emblema Municipal"
-    },
-    {
-      "trait_type": "Origen",
-      "value": "Mercado Zaragoza, Huajuapan"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Rara"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+50 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Tesoros Legendarios" },
+    { "trait_type": "Origen", "value": "Toponimia Huajuapeña" },
+    { "trait_type": "Ubicación", "value": "Mercado Zaragoza, Huajuapan" },
+    { "trait_type": "Rareza", "value": "Legendario" },
+    { "trait_type": "Recompensa HZ", "value": "+200 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

@@ -1,26 +1,21 @@
 {
-  "name": "Estampa Sol de la Mixteca",
-  "symbol": "HZ",
-  "description": "Símbolo ancestral del Sol Mixteco que representa la calidez, historia y raíces de la región Huajuapeña.",
+  "name": "Sol de la Mixteca",
+  "symbol": "HUELLAZO",
+  "description": "Emblema resplandeciente de la Tierra del Sol, contemplado desde las alturas del Mirador Yukunitzá.",
+  "seller_fee_basis_points": 0,
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_sol_mixteca.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Símbolo Tradicional"
-    },
-    {
-      "trait_type": "Origen",
-      "value": "Mixteca Alta"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Épica"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+80 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Símbolo Patrio Mixteco" },
+    { "trait_type": "Origen", "value": "Tierra del Sol" },
+    { "trait_type": "Ubicación", "value": "Mirador Yukunitzá, Huajuapan" },
+    { "trait_type": "Rareza", "value": "Épico" },
+    { "trait_type": "Recompensa HZ", "value": "+120 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

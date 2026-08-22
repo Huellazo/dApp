@@ -95,10 +95,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (selectedAccount?.publicKey) {
       setWalletAddress(new PublicKey(selectedAccount.publicKey).toBase58())
+    } else if (typeof window !== 'undefined') {
+      const provider = (window as any).solflare || (window as any).phantom?.solana || (window as any).solana;
+      if (provider?.publicKey) {
+        const pKeyStr = provider.publicKey.toBase58 ? provider.publicKey.toBase58() : provider.publicKey.toString();
+        setWalletAddress(pKeyStr);
+      } else {
+        setWalletAddress(null);
+      }
     } else {
-      setWalletAddress(null)
+      setWalletAddress(null);
     }
-  }, [selectedAccount])
+  }, [selectedAccount]);
 
   return (
     <AuthContext.Provider

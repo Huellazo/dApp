@@ -1,26 +1,20 @@
 {
   "name": "Estampa Fonda Julita",
-  "symbol": "HZ",
-  "description": "Fonda gastronómica tradicional célebre por su auténtico Mole de Caderas mixteco.",
+  "symbol": "HUELLAZO",
+  "description": "Restaurante de cocina tradicional mixteca fundado por Doña Julita. Casa del galardonado Mole de Caderas.",
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_fonda_julita.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Comercio Local"
-    },
-    {
-      "trait_type": "Giro",
-      "value": "Gastronomía Tradicional"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Rara"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+40 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Comercio Aliado" },
+    { "trait_type": "Giro", "value": "Cocina Tradicional Mixteca" },
+    { "trait_type": "Ubicación", "value": "Centro, Huajuapan de León" },
+    { "trait_type": "Rareza", "value": "Rara" },
+    { "trait_type": "Recompensa HZ", "value": "+70 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

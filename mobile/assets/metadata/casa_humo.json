@@ -1,26 +1,20 @@
 {
   "name": "Estampa La Casa de Humo",
-  "symbol": "HZ",
-  "description": "Restaurante de cocina artesanal mixteca a la leña en Huajuapan de León.",
+  "symbol": "HUELLAZO",
+  "description": "Comedor de leña ancestral y pulquería tradicional en Huajuapan. Especialistas en pulque artesanal y machucadas.",
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_casa_humo.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Comercio Local"
-    },
-    {
-      "trait_type": "Giro",
-      "value": "Cocina de Humo Tradicional"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Épica"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+50 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Comercio Aliado" },
+    { "trait_type": "Giro", "value": "Cocina de Leña & Pulquería" },
+    { "trait_type": "Ubicación", "value": "Huajuapan de León, Oaxaca" },
+    { "trait_type": "Rareza", "value": "Rara" },
+    { "trait_type": "Recompensa HZ", "value": "+60 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

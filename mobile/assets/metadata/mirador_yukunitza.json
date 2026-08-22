@@ -1,26 +1,20 @@
 {
-  "name": "Estampa Mirador Yukunitzá",
-  "symbol": "HZ",
-  "description": "Punto panorámico sobre el cerro Yukunitzá con vistas espectaculares del valle de Huajuapan.",
+  "name": "Mirador de Cristal Yukunitzá",
+  "symbol": "HUELLAZO",
+  "description": "Mirador panorámico de cristal suspendido en el Cerro Yukunitzá con vistas espectaculares del valle de Huajuapan.",
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_mirador_yukunitza.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Naturaleza y Senderismo"
-    },
-    {
-      "trait_type": "Origen",
-      "value": "Cerro Yukunitzá"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Épica"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+60 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Ecoturismo & Paisaje" },
+    { "trait_type": "Origen", "value": "Cerro Yukunitzá" },
+    { "trait_type": "Ubicación", "value": "Huajuapan de León, Oaxaca" },
+    { "trait_type": "Rareza", "value": "Épico" },
+    { "trait_type": "Recompensa HZ", "value": "+90 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

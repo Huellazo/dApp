@@ -1,26 +1,20 @@
 {
-  "name": "Estampa Café Petirrojo",
-  "symbol": "HZ",
-  "description": "Cafetería gastronómica artesanal en Huajuapan registrada en la red de comercios Huellazo Pay.",
+  "name": "Estampa Cafetería Petirrojo",
+  "symbol": "HUELLAZO",
+  "description": "Famosa cafetería y bistro artesanal en Huajuapan con ambiente acogedor, cafés de especialidad y desayunos completos.",
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_cafe_petirrojo.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Comercio Local"
-    },
-    {
-      "trait_type": "Giro",
-      "value": "Cafetería Artesanal"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Común"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+30 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Comercio Aliado" },
+    { "trait_type": "Giro", "value": "Cafetería & Bistro" },
+    { "trait_type": "Ubicación", "value": "Guerrero N° 8, Centro, Huajuapan" },
+    { "trait_type": "Rareza", "value": "Común" },
+    { "trait_type": "Recompensa HZ", "value": "+55 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

@@ -1,26 +1,20 @@
 {
-  "name": "Estampa Catedral de San Juan Bautista",
-  "symbol": "HZ",
-  "description": "Monumento histórico y espiritual en el corazón de Huajuapan de León.",
+  "name": "Catedral El Señor de los Corazones",
+  "symbol": "HUELLAZO",
+  "description": "Santuario histórico del siglo XVIII en el corazón de Huajuapan de León, protector y patrono de la ciudad.",
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_catedral.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Patrimonio Histórico"
-    },
-    {
-      "trait_type": "Origen",
-      "value": "Huajuapan Centro"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Común"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+35 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Santuario Histórico" },
+    { "trait_type": "Origen", "value": "Arquitectura Colonial Siglo XVIII" },
+    { "trait_type": "Ubicación", "value": "Centro Histórico, Huajuapan" },
+    { "trait_type": "Rareza", "value": "Rara" },
+    { "trait_type": "Recompensa HZ", "value": "+80 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

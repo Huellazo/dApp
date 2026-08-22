@@ -1,26 +1,21 @@
 {
-  "name": "Estampa Maestro Jarabe Mixteco",
-  "symbol": "HZ",
-  "description": "Danza folklórica icónica de Huajuapan de León que engalana los lunes del cerro y fiestas patronales.",
+  "name": "Maestro Jarabe Mixteco",
+  "symbol": "HUELLAZO",
+  "description": "Magno baile folklórico de pareja representativo de Huajuapan de León presentado en la Guelaguetza.",
+  "seller_fee_basis_points": 0,
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_jarabe_mixteco.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Danza y Tradición"
-    },
-    {
-      "trait_type": "Origen",
-      "value": "Huajuapan de León, Oaxaca"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Épica"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+75 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Folklore & Danza" },
+    { "trait_type": "Origen", "value": "Guelaguetza Oaxaqueña" },
+    { "trait_type": "Ubicación", "value": "Parque Independencia, Huajuapan" },
+    { "trait_type": "Rareza", "value": "Rara" },
+    { "trait_type": "Recompensa HZ", "value": "+100 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

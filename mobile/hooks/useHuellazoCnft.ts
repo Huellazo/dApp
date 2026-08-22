@@ -55,7 +55,16 @@ export function useHuellazoCnft() {
         const merkleTree = await obtenerOMintarArbolMerkle(umi);
 
         // 2. Mint Compressed NFT (cNFT) leaf in the tree, target owner = connected wallet (Solflare/Phantom)
-        const result = await mintearCnftEstampa(umi, merkleTree, metadata, walletAddress || undefined);
+        const providerPk = typeof window !== 'undefined'
+          ? ((window as any).solflare?.publicKey?.toBase58?.() ||
+             (window as any).phantom?.solana?.publicKey?.toBase58?.() ||
+             (window as any).solana?.publicKey?.toBase58?.() ||
+             (window as any).solflare?.publicKey?.toString?.() ||
+             (window as any).phantom?.solana?.publicKey?.toString?.())
+          : undefined;
+
+        const targetAddress = walletAddress || providerPk || undefined;
+        const result = await mintearCnftEstampa(umi, merkleTree, metadata, targetAddress);
 
         setLastCnftResult(result);
 

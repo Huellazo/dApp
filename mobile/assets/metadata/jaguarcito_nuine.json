@@ -1,26 +1,21 @@
 {
-  "name": "Estampa Jaguarcito Ñuiñe",
-  "symbol": "HZ",
-  "description": "Estampa coleccionable oficial en formato cNFT que conmemora la cultura precolombina Ñuiñe de Huajuapan de León, Oaxaca.",
+  "name": "Jaguarcito Ñuiñe",
+  "symbol": "HUELLAZO",
+  "description": "Gran guardián místico felino tallado en piedra de la cuna arqueológica Ñuiñe en Huajuapan de León.",
+  "seller_fee_basis_points": 0,
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_jaguarcito_nuine.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Patrimonio Cultural"
-    },
-    {
-      "trait_type": "Origen",
-      "value": "Huajuapan de León, Oaxaca"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Legendaria"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+100 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Mitología Ancestral" },
+    { "trait_type": "Origen", "value": "Cultura Ñuiñe" },
+    { "trait_type": "Ubicación", "value": "Cerro de las Minas, Huajuapan" },
+    { "trait_type": "Rareza", "value": "Legendario" },
+    { "trait_type": "Recompensa HZ", "value": "+150 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [

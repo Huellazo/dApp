@@ -1,26 +1,20 @@
 {
-  "name": "Estampa Zona Arqueológica Cerro de las Minas",
-  "symbol": "HZ",
-  "description": "Antiguo asentamiento prehispánico de la cultura Ñuiñe con vistas panorámicas de Huajuapan.",
+  "name": "Zona Arqueológica Cerro de las Minas",
+  "symbol": "HUELLAZO",
+  "description": "Antiguo centro rector prehispánico de la cultura Ñuiñe (400 a.C. - 800 d.C.) con majestuosas vistas de Huajuapan de León.",
   "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/huajuapan/huajuapan_cerro_minas.png",
   "external_url": "https://huellazo.app",
+  "collection": {
+    "name": "Huellazo",
+    "family": "Huellazo Mixteca"
+  },
   "attributes": [
-    {
-      "trait_type": "Categoría",
-      "value": "Zona Arqueológica"
-    },
-    {
-      "trait_type": "Origen",
-      "value": "Cultura Ñuiñe"
-    },
-    {
-      "trait_type": "Rareza",
-      "value": "Rara"
-    },
-    {
-      "trait_type": "Recompensa HZ",
-      "value": "+50 HZ"
-    }
+    { "trait_type": "Categoría", "value": "Zona Arqueológica" },
+    { "trait_type": "Origen", "value": "Cultura Ñuiñe" },
+    { "trait_type": "Ubicación", "value": "Huajuapan de León, Oaxaca" },
+    { "trait_type": "Rareza", "value": "Rara" },
+    { "trait_type": "Recompensa HZ", "value": "+100 $HZ" },
+    { "trait_type": "Edición", "value": "Pasaporte Mixteca 2026" }
   ],
   "properties": {
     "files": [
