@@ -7,7 +7,7 @@ import { TradeOfferModal } from '@/components/features/passport/TradeOfferModal'
 import { PinataModal } from '@/components/features/wallet/PinataModal';
 import { useAppState } from '@/context/app-state';
 import { useLanguage } from '@/context/language-context';
-import { MOCK_POIS, MOCK_LOCKED_STAMPS, LockedStamp } from '@/mocks/db';
+import { MOCK_POIS, MOCK_LOCKED_STAMPS, MOCK_USER, LockedStamp } from '@/mocks/db';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { useRouter } from 'expo-router';
@@ -37,14 +37,15 @@ export default function CollectionsScreen() {
   const inventoryNfts = inventory.filter(item => item.type === 'nft').map(item => ({
     id: item.id,
     title: item.name,
-    location: item.description || 'Unknown',
+    location: item.description || 'Ubicación Desconocida',
     image: item.image,
     date: item.obtainedAt,
     style: item.style
   }));
 
   const nonNftInventory = inventory.filter(item => item.type !== 'nft');
-  const allNfts = [...ownedNfts, ...inventoryNfts];
+  const displayOwnedNfts = (ownedNfts && ownedNfts.length >= MOCK_USER.nfts.length) ? ownedNfts : MOCK_USER.nfts;
+  const allNfts = [...displayOwnedNfts, ...inventoryNfts];
 
   // Set of all obtained names and titles (lowercase for comparison)
   const obtainedNames = [
@@ -259,8 +260,8 @@ export default function CollectionsScreen() {
                 <Text className="text-border font-black uppercase text-center text-lg mb-2">{t('collections.no_stickers')}</Text>
               </BrutalistCard>
             ) : (
-              allNfts.map((nft: any) => (
-                <View key={nft.id} className="w-[48%] mb-4">
+              allNfts.map((nft: any, idx: number) => (
+                <View key={`nft-${nft.id}-${idx}`} className="w-[48%] mb-4">
                   <Pressable onPress={() => setSelectedNft(nft)} className="active:scale-95 transition-transform">
                     <BrutalistCard colorClass="bg-background p-0 overflow-hidden">
                       <View className={`w-full h-32 ${nft.style === 'chromatic' ? 'bg-[#FF00FF]/30' : nft.style === 'metallic' ? 'bg-[#C0C0C0]' : 'bg-accent1/30'} border-b-4 border-border justify-center items-center relative overflow-hidden p-2`}>

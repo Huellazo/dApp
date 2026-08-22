@@ -1,0 +1,22 @@
+{
+  "name": "Jícara de Pulque Tradicional",
+  "symbol": "HZ-PULQUE",
+  "description": "Estampa artesanal del elixir ancestral pulquero mixteco en Huellazo.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_pulque_mixteco.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Bebida Ancestral" },
+    { "trait_type": "Zona", "value": "Huajuapan" },
+    { "trait_type": "Rareza", "value": "Rara" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_pulque_mixteco.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

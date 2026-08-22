@@ -1,0 +1,22 @@
+{
+  "name": "Pirámides del Cerro de las Minas",
+  "symbol": "HZ-PYRAMID",
+  "description": "Estampa monumental de la acrópolis prehispánica Ñuiñe en Huellazo.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/tourism_pyramid.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Arqueología" },
+    { "trait_type": "Zona", "value": "Huajuapan" },
+    { "trait_type": "Rareza", "value": "Épico" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/tourism_pyramid.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

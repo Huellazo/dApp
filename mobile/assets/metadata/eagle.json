@@ -1,0 +1,22 @@
+{
+  "name": "Águila Real Sagrada",
+  "symbol": "HZ-EAGLE",
+  "description": "Estampa del Templo Mayor del Centro Histórico CDMX en Huellazo.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_eagle.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Arqueología & Historia" },
+    { "trait_type": "Zona", "value": "CDMX" },
+    { "trait_type": "Rareza", "value": "Rara" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_eagle.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

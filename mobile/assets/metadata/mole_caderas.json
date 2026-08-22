@@ -1,0 +1,22 @@
+{
+  "name": "Cazuela de Mole de Caderas",
+  "symbol": "HZ-MOLE",
+  "description": "Estampa gastronómica del tradicional Mole de Caderas de Huajuapan de León.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_mole_caderas.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Gastronomía Mixteca" },
+    { "trait_type": "Zona", "value": "Huajuapan" },
+    { "trait_type": "Rareza", "value": "Épico" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_mole_caderas.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

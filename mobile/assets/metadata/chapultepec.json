@@ -1,0 +1,22 @@
+{
+  "name": "Bosque Sagrado de Chapultepec",
+  "symbol": "HZ-CHAPUL",
+  "description": "Estampa turística del histórico Bosque de Chapultepec en Huellazo.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/tourism_chapultepec.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Ecoturismo" },
+    { "trait_type": "Zona", "value": "CDMX" },
+    { "trait_type": "Rareza", "value": "Rara" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/tourism_chapultepec.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

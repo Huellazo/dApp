@@ -13,6 +13,7 @@ interface StickerClaimAnimationProps {
   rewardPoints: number;
   image?: any;
   mintAddress?: string;
+  alreadyMinted?: boolean;
   onClose: () => void;
   onGoToPassport: () => void;
 }
@@ -24,6 +25,7 @@ export function StickerClaimAnimation({
   rewardPoints,
   image,
   mintAddress,
+  alreadyMinted,
   onClose,
   onGoToPassport,
 }: StickerClaimAnimationProps) {
@@ -100,11 +102,13 @@ export function StickerClaimAnimation({
         <BrutalistCard colorClass="bg-background p-0 overflow-hidden" variant="info">
           
           {/* Header */}
-          <View className="bg-accent2 p-3.5 border-b-4 border-border flex-row justify-between items-center">
+          <View className={`${alreadyMinted ? 'bg-primary' : 'bg-accent2'} p-3.5 border-b-4 border-border flex-row justify-between items-center`}>
              <View className="flex-row items-center flex-1 mr-2">
-                <FontAwesome5 name="star" size={18} color={colors.border} style={{ marginRight: 8 }} />
-                <Text className="text-border font-black text-lg uppercase" numberOfLines={1}>
-                  {language === 'es' ? '¡ESTAMPA CONSEGUIDA!' : 'STAMP UNLOCKED!'}
+                <FontAwesome5 name={alreadyMinted ? "check-circle" : "star"} size={18} color={alreadyMinted ? "#FAF9F6" : colors.border} style={{ marginRight: 8 }} />
+                <Text className={`${alreadyMinted ? 'text-background' : 'text-border'} font-black text-base uppercase`} numberOfLines={1}>
+                  {alreadyMinted 
+                    ? (language === 'es' ? '¡ESTAMPA REGISTRADA!' : 'STAMP ALREADY OWNED!')
+                    : (language === 'es' ? '¡ESTAMPA CONSEGUIDA!' : 'STAMP UNLOCKED!')}
                 </Text>
              </View>
 
@@ -130,7 +134,7 @@ export function StickerClaimAnimation({
              </Animated.View>
 
              {/* Image Container with Neo-Brutalist Frame */}
-             <View className="w-36 h-36 bg-background border-4 border-border shadow-brutal-md mb-4 justify-center items-center overflow-hidden p-2 rounded-xl">
+             <View className="w-36 h-36 bg-background border-4 border-border shadow-brutal-md mb-3 justify-center items-center overflow-hidden p-2 rounded-xl">
                 {image ? (
                   <Image source={typeof image === 'string' ? { uri: image } : image} style={{ width: '85%', height: '85%', resizeMode: 'contain' }} />
                 ) : (
@@ -141,6 +145,17 @@ export function StickerClaimAnimation({
              {/* Title & Location */}
              <Text className="text-border font-black text-xl text-center uppercase mb-0.5">{title}</Text>
              <Text className="text-border font-bold text-xs opacity-75 mb-3">{location}</Text>
+
+             {/* Friendly Re-Scan Notice Badge */}
+             {alreadyMinted && (
+               <View className="bg-accent1/30 border-2 border-border p-2 rounded-md mb-3 w-full items-center">
+                 <Text className="text-border font-bold text-xs text-center">
+                   {language === 'es'
+                     ? '¡Ya tenías esta estampa registrada en tu pasaporte! Disfruta nuevamente de tu animación.'
+                     : 'You already collected this stamp! Enjoy the animation again.'}
+                 </Text>
+               </View>
+             )}
 
              {/* Points Reward Badge */}
              <View className="bg-accent2 border-2 border-border px-4 py-1.5 shadow-brutal-sm mb-4 flex-row items-center">

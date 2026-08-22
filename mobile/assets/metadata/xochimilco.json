@@ -1,0 +1,22 @@
+{
+  "name": "Trajinera de Xochimilco",
+  "symbol": "HZ-XOCHI",
+  "description": "Estampa conmemorativa de los Canales de Xochimilco, CDMX en Huellazo.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_xochimilco.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Patrimonio Cultural" },
+    { "trait_type": "Zona", "value": "CDMX" },
+    { "trait_type": "Rareza", "value": "Especial" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_xochimilco.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

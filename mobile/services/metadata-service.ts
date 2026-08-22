@@ -6,14 +6,28 @@
 export const POI_METADATA_MAP: Record<string, string> = {
   // Sitios Turísticos
   poi1: 'cerro_minas.json',
+  poi2: 'catedral_huajuapan.json',
   poi3: 'catedral_huajuapan.json',
+  poi4: 'mirador_yukunitza.json',
   poi5: 'jaguarcito_nuine.json',
   poi7: 'mirador_yukunitza.json',
 
-  // Comercios Aliatos
+  // Comercios Aliados
   biz1: 'cafe_petirrojo.json',
   biz3: 'casa_humo.json',
   biz5: 'fonda_julita.json',
+
+  // ID numéricos de catálogo
+  '1': 'jaguarcito_nuine.json',
+  '2': 'sol_mixteca.json',
+  '3': 'jarabe_mixteco.json',
+  '4': 'guaje_oro.json',
+  '5': 'catedral_huajuapan.json',
+  '6': 'cerro_minas.json',
+  '7': 'mirador_yukunitza.json',
+  '8': 'cafe_petirrojo.json',
+  '9': 'casa_humo.json',
+  '10': 'fonda_julita.json',
 
   // Estampas de Pasaporte Especiales
   jaguarcito_nuine: 'jaguarcito_nuine.json',
@@ -26,6 +40,18 @@ export const POI_METADATA_MAP: Record<string, string> = {
   cafe_petirrojo: 'cafe_petirrojo.json',
   casa_humo: 'casa_humo.json',
   fonda_julita: 'fonda_julita.json',
+  xochimilco: 'xochimilco.json',
+  luchador: 'luchador.json',
+  eagle: 'eagle.json',
+  alebrije: 'alebrije.json',
+  mitote_mixteco: 'mitote_mixteco.json',
+  mole_caderas: 'mole_caderas.json',
+  pitaya_sagrada: 'pitaya_sagrada.json',
+  pulque_mixteco: 'pulque_mixteco.json',
+  pyramid: 'pyramid.json',
+  chapultepec: 'chapultepec.json',
+  pottery: 'pottery.json',
+  taco: 'taco.json',
 };
 
 /**

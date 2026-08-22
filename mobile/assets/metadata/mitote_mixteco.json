@@ -1,0 +1,22 @@
+{
+  "name": "Mitote y Máscara Mixteca",
+  "symbol": "HZ-MITOTE",
+  "description": "Estampa conmemorativa de la Casa de la Cultura de Huajuapan de León.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_mitote_mixteco.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Danza & Tradición" },
+    { "trait_type": "Zona", "value": "Huajuapan" },
+    { "trait_type": "Rareza", "value": "Rara" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_mitote_mixteco.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

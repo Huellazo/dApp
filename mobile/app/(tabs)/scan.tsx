@@ -114,6 +114,7 @@ export default function ScanScreen() {
         setClaimedPoi(matchedPoi);
         setClaimedReward(reward);
         setMintedToken(result.token);
+        setAlreadyMinted(result.alreadyMinted);
         setModalVisible(false);
         setClaimAnimationVisible(true);
         return;
@@ -590,6 +591,7 @@ export default function ScanScreen() {
         rewardPoints={claimedReward}
         image={claimedPoi?.image}
         mintAddress={mintedToken?.mintAddress}
+        alreadyMinted={alreadyMinted}
         onClose={() => setClaimAnimationVisible(false)}
         onGoToPassport={handleGoToPassport}
       />

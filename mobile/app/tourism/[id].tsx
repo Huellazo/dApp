@@ -15,8 +15,8 @@ export default function TourismDetailScreen() {
   if (!place) {
     return (
       <View className="flex-1 bg-background justify-center items-center">
-        <Text className="text-border font-bold text-xl uppercase">Place not found</Text>
-        <BrutalistButton title="Go Back" onPress={() => router.back()} className="mt-4" />
+        <Text className="text-border font-bold text-xl uppercase">Lugar no encontrado</Text>
+        <BrutalistButton title="Volver" onPress={() => router.back()} className="mt-4" />
       </View>
     );
   }
@@ -35,7 +35,7 @@ export default function TourismDetailScreen() {
             />
           ) : (
             <View className="flex-1 justify-center items-center opacity-50">
-               <Text className="text-border font-black text-2xl uppercase">[ NO IMAGE ]</Text>
+               <Text className="text-border font-black text-2xl uppercase">[ SIN IMAGEN ]</Text>
             </View>
           )}
 
@@ -77,13 +77,13 @@ export default function TourismDetailScreen() {
           </ScrollView>
 
           {/* Historical Overview */}
-          <Text className="text-xl font-bold text-border mb-2 uppercase">Historical Overview</Text>
+          <Text className="text-xl font-bold text-border mb-2 uppercase">Reseña Histórica</Text>
           <Text className="text-border text-base leading-relaxed mb-6">
             {place.description}
           </Text>
 
           {/* Check-in Rewards (PokeStop style) */}
-          <Text className="text-xl font-bold text-border mb-2 uppercase">Loot / Rewards</Text>
+          <Text className="text-xl font-bold text-border mb-2 uppercase">Recompensas por Visita</Text>
           <BrutalistCard colorClass="bg-background mb-8 p-4">
              <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center">
@@ -92,7 +92,7 @@ export default function TourismDetailScreen() {
                   </View>
                   <View className="ml-4">
                     <Text className="text-border font-bold text-lg">{place.reward} $HUELLAZOS</Text>
-                    <Text className="text-border text-xs uppercase opacity-70">Token Reward</Text>
+                    <Text className="text-border text-xs uppercase opacity-70">Puntos Huellazos ($HZ)</Text>
                   </View>
                 </View>
              </View>
@@ -145,7 +145,7 @@ export default function TourismDetailScreen() {
           </View>
         </View>
         <BrutalistButton 
-          title="GO SCAN" 
+          title="ESCANEAR AHORA" 
           colorClass="bg-accent1" 
           onPress={() => router.push('/(tabs)/scan')}
         />

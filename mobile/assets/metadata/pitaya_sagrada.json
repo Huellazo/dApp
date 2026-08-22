@@ -1,0 +1,22 @@
+{
+  "name": "Pitaya Sagrada de la Mixteca",
+  "symbol": "HZ-PITAYA",
+  "description": "Estampa conmemorativa de la fruta exótica sagrada de la Mixteca en Huellazo.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_pitaya_sagrada.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Fruto Sagrado" },
+    { "trait_type": "Zona", "value": "Huajuapan" },
+    { "trait_type": "Rareza", "value": "Rara" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_pitaya_sagrada.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

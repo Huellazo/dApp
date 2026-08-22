@@ -158,9 +158,18 @@ export function NftDetailModal({ visible, nft, onClose, onTradePress }: Props) {
              {mintStatus === 'success' ? (
                <View className="bg-accent2 p-2.5 border-2 border-border items-center">
                  <Text className="text-border font-black text-xs uppercase mb-0.5">¡Guardado en Tu Monedero!</Text>
-                 <Text className="text-border font-bold text-[9px] text-center opacity-90">
+                 <Text className="text-border font-bold text-[9px] text-center opacity-90 mb-2">
                    Registrado en Solana Devnet con tu dirección de monedero.
                  </Text>
+                 <Pressable
+                   onPress={() => {
+                     setMintStatus('idle');
+                     setMintError(null);
+                   }}
+                   className="bg-background px-3 py-1.5 border-2 border-border shadow-brutal-sm active:scale-95"
+                 >
+                   <Text className="text-border font-black text-[9px] uppercase">Volver a Guardar en Monedero</Text>
+                 </Pressable>
                </View>
              ) : (
                <View>

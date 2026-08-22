@@ -1,0 +1,22 @@
+{
+  "name": "Santo del Ring",
+  "symbol": "HZ-LUCHA",
+  "description": "Estampa conmemorativa de la Arena México en Huellazo.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_luchador.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Deporte & Leyenda" },
+    { "trait_type": "Zona", "value": "CDMX" },
+    { "trait_type": "Rareza", "value": "Épico" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/nft_luchador.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

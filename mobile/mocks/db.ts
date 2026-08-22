@@ -28,7 +28,7 @@ export const MOCK_USER = {
   avatarUrl: require('@/assets/images/profile_wallet.png'),
   nfts: [
     {
-      id: '1',
+      id: 'jaguarcito_nuine',
       title: 'Jaguarcito Ñuiñe',
       location: 'Cerro de las Minas, Huajuapan',
       image: require('@/assets/images/nfts/nft_jaguarcito_nuiñe.png'),
@@ -36,7 +36,7 @@ export const MOCK_USER = {
       style: 'chromatic'
     },
     {
-      id: '2',
+      id: 'sol_mixteca',
       title: 'Sol de la Mixteca',
       location: 'Mirador Yukunitzá, Huajuapan',
       image: require('@/assets/images/nfts/nft_sol_mixteca.png'),
@@ -44,62 +44,149 @@ export const MOCK_USER = {
       style: 'metallic'
     },
     {
-      id: '3',
+      id: 'jarabe_mixteco',
       title: 'Maestro Jarabe Mixteco',
       location: 'Parque Independencia, Huajuapan',
       image: require('@/assets/images/nfts/nft_jarabe_mixteco.png'),
       date: '2026-06-01T20:00:00Z'
     },
     {
-      id: '4',
+      id: 'guaje_oro',
       title: 'Guaje de Oro',
       location: 'Mercado Zaragoza, Huajuapan',
       image: require('@/assets/images/nfts/nft_guaje_oro.png'),
       date: '2026-06-10T12:00:00Z'
+    },
+    {
+      id: 'xochimilco',
+      title: 'Trajinera de Xochimilco',
+      location: 'Canales de Xochimilco, CDMX',
+      image: require('@/assets/images/nfts/nft_xochimilco.png'),
+      date: '2026-07-01T11:00:00Z',
+      style: 'chromatic'
+    },
+    {
+      id: 'luchador',
+      title: 'Santo del Ring',
+      location: 'Arena México, CDMX',
+      image: require('@/assets/images/nfts/nft_luchador.png'),
+      date: '2026-07-10T19:30:00Z',
+      style: 'metallic'
+    },
+    {
+      id: 'eagle',
+      title: 'Águila Real Sagrada',
+      location: 'Templo Mayor, CDMX',
+      image: require('@/assets/images/nfts/nft_eagle.png'),
+      date: '2026-07-18T16:00:00Z'
+    },
+    {
+      id: 'alebrije',
+      title: 'Alebrije Fantástico',
+      location: 'Museo de Arte Popular, CDMX',
+      image: require('@/assets/images/nfts/nft_alebrije.png'),
+      date: '2026-08-05T13:20:00Z',
+      style: 'chromatic'
+    },
+    {
+      id: 'mitote_mixteco',
+      title: 'Mitote y Máscara Mixteca',
+      location: 'Casa de la Cultura, Huajuapan',
+      image: require('@/assets/images/nfts/nft_mitote_mixteco.png'),
+      date: '2026-08-06T15:00:00Z',
+      style: 'chromatic'
+    },
+    {
+      id: 'mole_caderas',
+      title: 'Cazuela de Mole de Caderas',
+      location: 'Fonda Julita, Huajuapan de León',
+      image: require('@/assets/images/nfts/nft_mole_caderas.png'),
+      date: '2026-08-08T14:30:00Z',
+      style: 'metallic'
+    },
+    {
+      id: 'pitaya_sagrada',
+      title: 'Pitaya Sagrada de la Mixteca',
+      location: 'Mercado Zaragoza, Huajuapan',
+      image: require('@/assets/images/nfts/nft_pitaya_sagrada.png'),
+      date: '2026-08-10T11:20:00Z',
+      style: 'chromatic'
+    },
+    {
+      id: 'pulque_mixteco',
+      title: 'Jícara de Pulque Tradicional',
+      location: 'La Casa de Humo, Huajuapan',
+      image: require('@/assets/images/nfts/nft_pulque_mixteco.png'),
+      date: '2026-08-12T17:45:00Z'
+    },
+    {
+      id: 'pyramid',
+      title: 'Pirámides del Cerro de las Minas',
+      location: 'Zona Arqueológica, Huajuapan',
+      image: require('@/assets/images/nfts/tourism_pyramid.png'),
+      date: '2026-08-14T09:15:00Z',
+      style: 'metallic'
+    },
+    {
+      id: 'pottery',
+      title: 'Alfarería Prehispánica Ñuiñe',
+      location: 'MUREH - Museo Regional, Huajuapan',
+      image: require('@/assets/images/nfts/workshop_pottery.png'),
+      date: '2026-08-15T16:00:00Z'
+    },
+    {
+      id: 'taco',
+      title: 'Taco de Barbacoa de Chivo',
+      location: 'Mercado Porfirio Díaz, Huajuapan',
+      image: require('@/assets/images/nfts/business_taco.png'),
+      date: '2026-08-16T12:30:00Z'
+    },
+    {
+      id: 'cerro_minas',
+      title: 'Zona Arqueológica Cerro de las Minas',
+      location: 'Huajuapan de León, Oaxaca',
+      image: require('@/assets/images/huajuapan/huajuapan_cerro_minas.png'),
+      date: '2026-08-18T10:00:00Z'
+    },
+    {
+      id: 'catedral_huajuapan',
+      title: 'Catedral de El Señor de los Corazones',
+      location: 'Centro Histórico, Huajuapan',
+      image: require('@/assets/images/huajuapan/huajuapan_catedral.png'),
+      date: '2026-08-19T12:00:00Z'
+    },
+    {
+      id: 'mirador_yukunitza',
+      title: 'Mirador de Cristal Yukunitzá',
+      location: 'Cerro Yukunitzá, Huajuapan',
+      image: require('@/assets/images/huajuapan/huajuapan_mirador_yukunitza.png'),
+      date: '2026-08-20T18:00:00Z'
+    },
+    {
+      id: 'cafe_petirrojo',
+      title: 'Cafetería Petirrojo',
+      location: 'Colonia Centro, Huajuapan',
+      image: require('@/assets/images/huajuapan/huajuapan_cafe_petirrojo.png'),
+      date: '2026-08-21T09:30:00Z'
+    },
+    {
+      id: 'casa_humo',
+      title: 'La Casa de Humo',
+      location: 'Huajuapan de León, Oaxaca',
+      image: require('@/assets/images/huajuapan/huajuapan_casa_humo.png'),
+      date: '2026-08-21T14:00:00Z'
+    },
+    {
+      id: 'fonda_julita',
+      title: 'Fonda Julita - Cocina Mixteca',
+      location: 'Centro, Huajuapan de León',
+      image: require('@/assets/images/huajuapan/huajuapan_fonda_julita.png'),
+      date: '2026-08-21T16:15:00Z'
     }
   ]
 };
 
 export const MOCK_LOCKED_STAMPS: LockedStamp[] = [
-  {
-    id: 'ls-xochimilco',
-    title: 'Trajinera de Xochimilco',
-    location: 'Canales de Xochimilco, CDMX',
-    zone: 'cdmx',
-    image: require('@/assets/images/nfts/nft_xochimilco.png'),
-    hint: 'Usa el Radar cerca del Embarcadero Cuemanco en Xochimilco.',
-    rewardPoints: 100,
-    style: 'chromatic'
-  },
-  {
-    id: 'ls-luchador',
-    title: 'Santo del Ring',
-    location: 'Arena México, CDMX',
-    zone: 'cdmx',
-    image: require('@/assets/images/nfts/nft_luchador.png'),
-    hint: 'Asiste a un evento en la Arena México y escanea tu visita.',
-    rewardPoints: 120,
-    style: 'metallic'
-  },
-  {
-    id: 'ls-eagle',
-    title: 'Águila Real Sagrada',
-    location: 'Templo Mayor, Centro Histórico CDMX',
-    zone: 'cdmx',
-    image: require('@/assets/images/nfts/nft_eagle.png'),
-    hint: 'Explora la zona arqueológica del Templo Mayor.',
-    rewardPoints: 150
-  },
-  {
-    id: 'ls-alebrije',
-    title: 'Alebrije Fantástico',
-    location: 'Museo de Arte Popular, CDMX',
-    zone: 'cdmx',
-    image: require('@/assets/images/nfts/nft_alebrije.png'),
-    hint: 'Visita las salas del Museo de Arte Popular.',
-    rewardPoints: 110,
-    style: 'chromatic'
-  },
   {
     id: 'ls-chapultepec',
     title: 'Bosque Sagrado de Chapultepec',
@@ -108,72 +195,6 @@ export const MOCK_LOCKED_STAMPS: LockedStamp[] = [
     image: require('@/assets/images/nfts/tourism_chapultepec.png'),
     hint: 'Recorre el Lago Mayor de Chapultepec y escanea tu huella.',
     rewardPoints: 90
-  },
-  {
-    id: 'ls-mole-caderas',
-    title: 'Cazuela de Mole de Caderas',
-    location: 'Fonda Julita, Huajuapan de León',
-    zone: 'huajuapan',
-    image: require('@/assets/images/nfts/nft_mole_caderas.png'),
-    hint: 'Prueba el tradicional Mole de Caderas en Fonda Julita.',
-    rewardPoints: 100,
-    style: 'metallic'
-  },
-  {
-    id: 'ls-mitote-mixteco',
-    title: 'Mitote y Máscara Mixteca',
-    location: 'Casa de la Cultura, Huajuapan de León',
-    zone: 'huajuapan',
-    image: require('@/assets/images/nfts/nft_mitote_mixteco.png'),
-    hint: 'Visita los talleres del Jarabe Mixteco en la Casa de la Cultura.',
-    rewardPoints: 85
-  },
-  {
-    id: 'ls-pitaya-sagrada',
-    title: 'Pitaya Sagrada de la Mixteca',
-    location: 'Mercado Municipal Zaragoza, Huajuapan',
-    zone: 'huajuapan',
-    image: require('@/assets/images/nfts/nft_pitaya_sagrada.png'),
-    hint: 'Compra una nieve artesanal de pitaya en el Mercado Zaragoza.',
-    rewardPoints: 95,
-    style: 'chromatic'
-  },
-  {
-    id: 'ls-pulque-mixteco',
-    title: 'Jícara de Pulque Tradicional',
-    location: 'La Casa de Humo, Huajuapan de León',
-    zone: 'huajuapan',
-    image: require('@/assets/images/nfts/nft_pulque_mixteco.png'),
-    hint: 'Degusta machucadas y pulque artesanal a la leña.',
-    rewardPoints: 90
-  },
-  {
-    id: 'ls-pottery',
-    title: 'Alfarería Prehispánica Ñuiñe',
-    location: 'MUREH - Museo Regional, Huajuapan',
-    zone: 'huajuapan',
-    image: require('@/assets/images/nfts/workshop_pottery.png'),
-    hint: 'Visita la sala de cerámica del MUREH.',
-    rewardPoints: 80
-  },
-  {
-    id: 'ls-taco',
-    title: 'Taco de Barbacoa de Chivo',
-    location: 'Mercado Porfirio Díaz, Huajuapan',
-    zone: 'huajuapan',
-    image: require('@/assets/images/nfts/business_taco.png'),
-    hint: 'Almuerza barbacoa de chivo en el Mercado Porfirio Díaz.',
-    rewardPoints: 75
-  },
-  {
-    id: 'ls-pyramid',
-    title: 'Pirámides del Cerro de las Minas',
-    location: 'Zona Arqueológica, Huajuapan de León',
-    zone: 'huajuapan',
-    image: require('@/assets/images/nfts/tourism_pyramid.png'),
-    hint: 'Sube a la cima de la zona arqueológica Ñuiñe.',
-    rewardPoints: 100,
-    style: 'metallic'
   }
 ];
 

@@ -1,0 +1,22 @@
+{
+  "name": "Alfarería Prehispánica Ñuiñe",
+  "symbol": "HZ-POTTERY",
+  "description": "Estampa artesanal del MUREH Museo Regional de Huajuapan.",
+  "seller_fee_basis_points": 0,
+  "image": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/workshop_pottery.png",
+  "external_url": "https://huellazo.app",
+  "attributes": [
+    { "trait_type": "Categoría", "value": "Artesanía Prehispánica" },
+    { "trait_type": "Zona", "value": "Huajuapan" },
+    { "trait_type": "Rareza", "value": "Rara" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/images/nfts/workshop_pottery.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}
