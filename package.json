@@ -21,6 +21,7 @@
     "anchor:deploy:devnet": "cd anchor && anchor deploy --provider.cluster devnet",
     "create-token": "node scripts/create-spl-token.js",
     "generate:blink-qr": "node scripts/generate-blink-qr.js",
+    "claim:blink-devnet": "node scripts/claim-blink-devnet.js",
     "generate:place-qr": "node scripts/generate-place-stamp-qr.js",
     "setup": "npm install && cp -n .env.example .env || true && echo 'Done. Edit .env with your tokens.'"
   }

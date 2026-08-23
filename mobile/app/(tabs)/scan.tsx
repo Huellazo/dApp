@@ -88,7 +88,30 @@ export default function ScanScreen() {
   const handleProcessQrCode = (qrString: string) => {
     setQrScanError(null);
 
-    // 1. POI Place Check-in QR Code (huellazo:place or id=poi)
+    // 1. Piñata Blink Reward QR Code (huellazo:pinata, solana-action, or /blinks/)
+    if (qrString.includes('huellazo:pinata') || qrString.includes('solana-action:') || qrString.includes('blink')) {
+      try {
+        const urlStr = qrString.replace('huellazo:', 'https://huellazo.app/').replace('solana:', 'https://huellazo.app/');
+        const urlObj = new URL(urlStr);
+        const poiId = urlObj.searchParams.get('id') || urlObj.searchParams.get('poiId') || 'cerro_minas';
+        const reward = Number(urlObj.searchParams.get('reward')) || 100;
+        
+        const matchedPoi = MOCK_POIS.find(p => p.id === poiId) || MOCK_POIS[0];
+        
+        // Award Piñata Reward Points ($HZ) directly in the app
+        earnPoints(reward, `Recompensa de Piñata Blink: ${matchedPoi.name}`);
+
+        setClaimedPoi(matchedPoi);
+        setClaimedReward(reward);
+        setModalVisible(false);
+        setClaimAnimationVisible(true);
+        return;
+      } catch (err) {
+        console.warn('Piñata Blink QR parse notice:', err);
+      }
+    }
+
+    // 2. POI Place Check-in QR Code (huellazo:place or id=poi)
     if (qrString.includes('huellazo:place') || qrString.includes('solana:place') || qrString.includes('id=poi')) {
       try {
         const urlStr = qrString.replace('huellazo:', 'https://huellazo.app/').replace('solana:', 'https://huellazo.app/');

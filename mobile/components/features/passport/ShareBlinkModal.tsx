@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Linking, Share, ScrollView, Image } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Linking, Share, ScrollView } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { BrutalistCard } from '@/components/ui/BrutalistCard';
 import { BrutalistButton } from '@/components/ui/BrutalistButton';
@@ -23,9 +23,7 @@ export function ShareBlinkModal({
 }: ShareBlinkModalProps) {
   if (!visible) return null;
 
-  const blinkMeta = BlinkService.getBlinkMetadata(poiId);
   const dialectDialToUrl = BlinkService.getDialectBlinkUrl(poiId);
-  const displayImageUri = stampImage || blinkMeta.imageUrl;
 
   const handleShareToTwitter = async () => {
     const twitterUrl = BlinkService.getTwitterShareUrl(stampTitle, poiId);
@@ -34,10 +32,8 @@ export function ShareBlinkModal({
 
   const handleNativeShare = async () => {
     try {
-      await Share.share({
-        message: `¡Obtuve mi estampa digital "${stampTitle}" en Huellazo! ☀️\n\n🖼️ Imagen: ${displayImageUri}\n\nReclama la tuya:\n${dialectDialToUrl}`,
-        title: 'Compartir Estampa Huellazo en Redes Sociales',
-      });
+      const payload = BlinkService.getNativeSharePayload(stampTitle, poiId);
+      await Share.share(payload);
     } catch (err) {
       console.warn('Share notice:', err);
     }
@@ -67,30 +63,18 @@ export function ShareBlinkModal({
             </TouchableOpacity>
           </View>
 
-          <View className="p-5 items-center">
-            {/* Visual Stamp Image Preview */}
-            <View 
-              className="w-28 h-28 border-4 border-border rounded-xl mb-3 overflow-hidden shadow-brutal-sm bg-white"
-              style={{ borderColor: colors.border }}
-            >
-              <Image 
-                source={{ uri: displayImageUri }}
-                className="w-full h-full"
-                resizeMode="cover"
-              />
-            </View>
-
-            <Text className="text-border font-black text-lg uppercase text-center mb-1">
+          <View className="p-5">
+            <Text className="text-border font-black text-lg uppercase mb-2">
               {stampTitle}
             </Text>
 
-            <Text className="text-border text-xs font-bold leading-relaxed text-center mb-4">
-              ¡Muestra tus logros turísticos al mundo! Cualquier persona que vea tu publicación en <Text className="text-primary font-black">X (Twitter)</Text> o redes sociales podrá interactuar con tu estampa y obtener Puntos Huellazos ($HZ) con un solo toque.
+            <Text className="text-border text-xs font-bold leading-relaxed mb-4">
+              ¡Muestra tus logros turísticos al mundo! Cualquiera que vea tu publicación en <Text className="text-primary font-black">X (Twitter)</Text> o redes sociales podrá interactuar con tu estampa y obtener Puntos Huellazos ($HZ) con un solo toque.
             </Text>
 
-            {/* Enlace Interactivo Box */}
+            {/* Enlace Interactivo Box (Proporcionado y compacto) */}
             <View 
-              className="p-3 border-3 border-border mb-5"
+              className="p-3 border-3 border-border mb-5 w-full"
               style={{ backgroundColor: '#F2CC8F', borderColor: colors.border, borderWidth: 3 }}
             >
               <Text className="text-[10px] font-black text-border uppercase mb-1">
@@ -98,24 +82,24 @@ export function ShareBlinkModal({
               </Text>
               <ScrollView 
                 nestedScrollEnabled 
-                style={{ maxHeight: 90 }} 
+                style={{ maxHeight: 50 }} 
                 contentContainerStyle={{ paddingVertical: 2 }}
                 showsVerticalScrollIndicator={true}
               >
                 <Text 
                   selectable 
-                  className="text-xs font-mono text-border font-bold mb-1"
+                  className="text-xs font-mono text-border font-bold"
                 >
                   {dialectDialToUrl}
                 </Text>
               </ScrollView>
               <Text className="text-[9px] text-border/80 font-bold mt-1">
-                ✓ Enlace completo verificado y compatible con la red oficial de Huellazo.
+                ✓ Compatible con la red oficial de Huellazo en redes sociales.
               </Text>
             </View>
 
-            {/* Action Buttons */}
-            <View className="space-y-3 mb-2">
+            {/* Botones de Acción */}
+            <View className="space-y-3 mb-1">
               <BrutalistButton
                 title="COMPARTIR EN X (TWITTER)"
                 colorClass="bg-primary"

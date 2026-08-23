@@ -16,7 +16,7 @@ const ARTIFACTS_DIR = '/home/m4r10/.gemini/antigravity-ide/brain/0c98b43c-8fa1-4
 
 const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/Huellazo/dApp/main/mobile/assets/metadata';
 
-// Presets for Solana Blink & Place cNFT Claim QR Codes (100% Serverless)
+// Presets for Solana Blink & Piñata Recompensa QR Codes (100% Serverless)
 const BLINK_PRESETS = [
   {
     id: 'cerro_minas',
@@ -27,9 +27,9 @@ const BLINK_PRESETS = [
     dark: '#1D2A44',
     light: '#FAF9F6',
     accent: '#E07A5F',
-    description: 'Estampa cNFT Promocional y Reclamo vía Solana Blink',
+    description: 'Piñata Recompensa (+100 HZ) y Reclamo vía Solana Blink',
     blinkUrl: `https://dial.to/devnet?action=solana-action:${encodeURIComponent(GITHUB_RAW_BASE + '/blink_action_cerro_minas.json')}`,
-    placeUri: 'huellazo:place?id=poi3&name=Zona%20Arqueol%C3%B3gica%20Cerro%20de%20las%20Minas&reward=100',
+    placeUri: 'huellazo:pinata?id=poi3&reward=100',
   },
   {
     id: 'yukunitza',
@@ -40,9 +40,9 @@ const BLINK_PRESETS = [
     dark: '#112211',
     light: '#81B29A',
     accent: '#F2CC8F',
-    description: 'Reclamo Ecoturístico cNFT y Solana Blink en Redes Sociales',
+    description: 'Piñata Ecoturística (+90 HZ) y Solana Blink en Redes Sociales',
     blinkUrl: `https://dial.to/devnet?action=solana-action:${encodeURIComponent(GITHUB_RAW_BASE + '/blink_action_yukunitza.json')}`,
-    placeUri: 'huellazo:place?id=poi4&name=Mirador%20de%20Cristal%20Yukunitz%C3%A1&reward=90',
+    placeUri: 'huellazo:pinata?id=poi4&reward=90',
   },
   {
     id: 'jaguarcito_nuine',
@@ -53,9 +53,9 @@ const BLINK_PRESETS = [
     dark: '#2A0845',
     light: '#F2CC8F',
     accent: '#E07A5F',
-    description: 'Estampa Mística Ñuiñe Legendaria',
+    description: 'Piñata Mística Legendaria (+150 HZ)',
     blinkUrl: `https://dial.to/devnet?action=solana-action:${encodeURIComponent(GITHUB_RAW_BASE + '/blink_action_jaguarcito_nuine.json')}`,
-    placeUri: 'huellazo:place?id=poi101&name=Jaguarcito%20%C3%91ui%C3%B1e&reward=150',
+    placeUri: 'huellazo:pinata?id=poi101&reward=150',
   },
   {
     id: 'cafe_petirrojo_craft',
