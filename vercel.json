@@ -2,6 +2,13 @@
   "version": 2,
   "builds": [
     {
+      "src": "mobile/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
       "src": "backend/app/main.py",
       "use": "@vercel/python"
     }
@@ -30,7 +37,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "backend/app/main.py"
+      "dest": "/mobile/$1"
     }
   ]
 }
