@@ -57,24 +57,28 @@ export function useAuthorization() {
       
       setAvailableWebWallets(wallets);
 
-      // Auto-connect if trusted (we just check phantom for auto-connect for now, 
-      // or we can iterate available wallets. Let's just do phantom if available)
-      if (phantomProvider) {
+      // Auto-connect prioritizing stored user choice
+      const savedWalletId = typeof window !== 'undefined' ? localStorage.getItem('huellazo_selected_wallet') : null;
+
+      if (savedWalletId === 'solflare' && window.solflare) {
+        window.solflare.connect({ onlyIfTrusted: true }).then(() => {
+          if (window.solflare.publicKey) {
+            setWebWalletAddress(window.solflare.publicKey.toString());
+            setActiveWebWallet(window.solflare);
+          }
+        }).catch(() => {});
+      } else if (phantomProvider) {
         phantomProvider.connect({ onlyIfTrusted: true }).then((res: { publicKey: PublicKey }) => {
           setWebWalletAddress(res.publicKey.toString());
           setActiveWebWallet(phantomProvider);
-        }).catch(() => {
-          // Not trusted yet
-        });
+        }).catch(() => {});
       } else if (window.solflare) {
         window.solflare.connect({ onlyIfTrusted: true }).then(() => {
           if (window.solflare.publicKey) {
             setWebWalletAddress(window.solflare.publicKey.toString());
             setActiveWebWallet(window.solflare);
           }
-        }).catch(() => {
-          // Not trusted yet
-        });
+        }).catch(() => {});
       }
     }
   }, []);
@@ -129,6 +133,10 @@ export function useAuthorization() {
           if (pubKey) {
             setWebWalletAddress(pubKey);
             setActiveWebWallet(provider);
+            const chosenId = provider.isSolflare ? 'solflare' : 'phantom';
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('huellazo_selected_wallet', chosenId);
+            }
             return pubKey;
           }
         } else {
@@ -167,6 +175,9 @@ export function useAuthorization() {
     if (Platform.OS === 'web') {
       if (activeWebWallet) {
         await activeWebWallet.disconnect();
+      }
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('huellazo_selected_wallet');
       }
       setWebWalletAddress(null);
       setActiveWebWallet(null);

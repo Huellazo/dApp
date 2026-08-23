@@ -31,43 +31,29 @@ export function StickerClaimAnimation({
 }: StickerClaimAnimationProps) {
   const { language } = useLanguage();
 
-  // Animated Values for Lightweight Performance
   const scaleAnim = useRef(new Animated.Value(0.2)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
-  const sparkleAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (visible) {
-      // 1. Reset Values
       scaleAnim.setValue(0.2);
       rotateAnim.setValue(0);
-      sparkleAnim.setValue(0);
 
-      // 2. Spring Bounce Scale
       Animated.spring(scaleAnim, {
         toValue: 1,
-        friction: 5,
-        tension: 80,
+        friction: 6,
+        tension: 90,
         useNativeDriver: true,
       }).start();
 
-      // 3. Continuous Rotating Radiance Background Loop
       Animated.loop(
         Animated.timing(rotateAnim, {
           toValue: 1,
-          duration: 12000,
+          duration: 14000,
           easing: Easing.linear,
           useNativeDriver: true,
         })
       ).start();
-
-      // 4. Sparkle Floating Sequence
-      Animated.timing(sparkleAnim, {
-        toValue: 1,
-        duration: 800,
-        easing: Easing.out(Easing.back(1.5)),
-        useNativeDriver: true,
-      }).start();
     }
   }, [visible]);
 
@@ -78,117 +64,113 @@ export function StickerClaimAnimation({
     outputRange: ['0deg', '360deg'],
   });
 
-  const sparkTranslateY = sparkleAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [15, -10],
-  });
-
   return (
-    <View className="absolute inset-0 z-50 bg-black/85 justify-center items-center p-4">
-      
-      {/* Animated Rotating Rays Backdrop */}
-      <Animated.View 
-        style={{ transform: [{ rotate: spin }] }} 
-        className="absolute w-80 h-80 rounded-full border-4 border-dashed border-accent2/40 opacity-40 justify-center items-center"
-      >
-        <View className="w-64 h-64 rounded-full border-2 border-dashed border-primary/50" />
-      </Animated.View>
+    <View className="absolute inset-0 z-50 bg-black/80 justify-center items-center p-4">
+      {/* Fondo de rayos rotatorios animado */}
+      <Animated.View
+        style={{ transform: [{ rotate: spin }] }}
+        className="absolute w-80 h-80 rounded-full border-4 border-dashed border-accent2/30 opacity-30 justify-center items-center"
+      />
 
-      {/* Main Animated Card */}
-      <Animated.View 
-        style={{ transform: [{ scale: scaleAnim }] }} 
-        className="w-full max-w-sm"
-      >
-        <BrutalistCard colorClass="bg-background p-0 overflow-hidden" variant="info">
+      {/* Card principal unificada que abarca el modal de escaneo de forma limpia */}
+      <Animated.View style={{ transform: [{ scale: scaleAnim }] }} className="w-full max-w-sm">
+        <BrutalistCard colorClass="bg-background p-0 overflow-hidden rounded-2xl border-4 border-border shadow-brutal" variant="info">
           
-          {/* Header */}
-          <View className={`${alreadyMinted ? 'bg-primary' : 'bg-accent2'} p-3.5 border-b-4 border-border flex-row justify-between items-center`}>
-             <View className="flex-row items-center flex-1 mr-2">
-                <FontAwesome5 name={alreadyMinted ? "check-circle" : "star"} size={18} color={alreadyMinted ? "#FAF9F6" : colors.border} style={{ marginRight: 8 }} />
-                <Text className={`${alreadyMinted ? 'text-background' : 'text-border'} font-black text-base uppercase`} numberOfLines={1}>
-                  {alreadyMinted 
-                    ? (language === 'es' ? '¡ESTAMPA REGISTRADA!' : 'STAMP ALREADY OWNED!')
-                    : (language === 'es' ? '¡ESTAMPA CONSEGUIDA!' : 'STAMP UNLOCKED!')}
-                </Text>
-             </View>
+          {/* Header Superior */}
+          <View className={`${alreadyMinted ? 'bg-primary' : 'bg-accent2'} p-4 border-b-4 border-border flex-row justify-between items-center`}>
+            <View className="flex-row items-center flex-1 mr-2">
+              <FontAwesome5
+                name={alreadyMinted ? 'check-circle' : 'medal'}
+                size={20}
+                color={alreadyMinted ? '#FAF9F6' : colors.border}
+                style={{ marginRight: 8 }}
+              />
+              <Text className={`${alreadyMinted ? 'text-background' : 'text-border'} font-black text-base uppercase`} numberOfLines={1}>
+                {alreadyMinted
+                  ? (language === 'es' ? '¡ESTAMPA REGISTRADA!' : 'STAMP ALREADY OWNED!')
+                  : (language === 'es' ? '¡NUEVA ESTAMPA SOLANA!' : 'NEW SOLANA STAMP!')}
+              </Text>
+            </View>
 
-             <Pressable 
-               onPress={onClose}
-               className="w-8 h-8 rounded-full bg-background border-2 border-border justify-center items-center shadow-brutal-sm active:scale-95"
-             >
-               <FontAwesome5 name="times" size={14} color={colors.border} />
-             </Pressable>
+            <Pressable
+              onPress={onClose}
+              className="w-9 h-9 rounded-full bg-background border-2 border-border justify-center items-center shadow-brutal-sm active:scale-95"
+            >
+              <FontAwesome5 name="times" size={14} color={colors.border} />
+            </Pressable>
           </View>
 
-          {/* Body */}
-          <View className="p-5 items-center bg-secondary/20">
-             
-             {/* Floating Sparkles Row */}
-             <Animated.View 
-               style={{ transform: [{ translateY: sparkTranslateY }] }} 
-               className="flex-row justify-between w-48 mb-1"
-             >
-                <FontAwesome5 name="sparkles" size={16} color={colors.primary} />
-                <FontAwesome5 name="medal" size={18} color={colors.accent2} />
-                <FontAwesome5 name="sparkles" size={16} color={colors.primary} />
-             </Animated.View>
-
-             {/* Image Container with Neo-Brutalist Frame */}
-             <View className="w-36 h-36 bg-background border-4 border-border shadow-brutal-md mb-3 justify-center items-center overflow-hidden p-2 rounded-xl">
-                {image ? (
-                  <Image source={typeof image === 'string' ? { uri: image } : image} style={{ width: '85%', height: '85%', resizeMode: 'contain' }} />
-                ) : (
-                  <FontAwesome5 name="award" size={48} color={colors.border} />
-                )}
-             </View>
-
-             {/* Title & Location */}
-             <Text className="text-border font-black text-xl text-center uppercase mb-0.5">{title}</Text>
-             <Text className="text-border font-bold text-xs opacity-75 mb-3">{location}</Text>
-
-             {/* Friendly Re-Scan Notice Badge */}
-             {alreadyMinted && (
-               <View className="bg-accent1/30 border-2 border-border p-2 rounded-md mb-3 w-full items-center">
-                 <Text className="text-border font-bold text-xs text-center">
-                   {language === 'es'
-                     ? '¡Ya tenías esta estampa registrada en tu pasaporte! Disfruta nuevamente de tu animación.'
-                     : 'You already collected this stamp! Enjoy the animation again.'}
-                 </Text>
-               </View>
-             )}
-
-             {/* Points Reward Badge */}
-             <View className="bg-accent2 border-2 border-border px-4 py-1.5 shadow-brutal-sm mb-4 flex-row items-center">
-                <FontAwesome5 name="coins" size={14} color={colors.border} style={{ marginRight: 6 }} />
-                <Text className="text-border font-black text-sm uppercase">+{rewardPoints} PUNTOS $HZ</Text>
-             </View>
-
-             {/* Solana Devnet Authenticity Tag */}
-             {mintAddress && (
-               <View className="bg-background border-2 border-border p-2 w-full mb-4">
-                 <Text className="text-border text-[9px] font-bold uppercase opacity-70">
-                   {language === 'es' ? 'Firma On-Chain Devnet:' : 'On-Chain Devnet Signature:'}
-                 </Text>
-                 <Text className="text-border font-mono text-[9px]">
-                   {mintAddress.slice(0, 10)}...{mintAddress.slice(-10)}
-                 </Text>
-               </View>
-             )}
-
-             {/* Action Button */}
-             <View className="w-full">
-                <BrutalistButton 
-                  title={language === 'es' ? "VER EN MI PASAPORTE" : "VIEW IN PASSPORT"} 
-                  colorClass="bg-primary" 
-                  onPress={onGoToPassport} 
+          {/* Cuerpo Central Unificado */}
+          <View className="p-5 items-center bg-surface/30">
+            
+            {/* Imagen de la Estampa cNFT */}
+            <View className="w-40 h-40 bg-background border-4 border-border shadow-brutal-md mb-4 justify-center items-center overflow-hidden p-2 rounded-2xl relative">
+              {image ? (
+                <Image
+                  source={typeof image === 'string' ? { uri: image } : image}
+                  style={{ width: '100%', height: '100%', borderRadius: 12 }}
+                  resizeMode="cover"
                 />
-             </View>
+              ) : (
+                <FontAwesome5 name="award" size={56} color={colors.border} />
+              )}
+              
+              <View className="absolute bottom-2 right-2 bg-accent2 border-2 border-border px-2 py-0.5 rounded shadow-brutal-sm">
+                <Text className="text-border font-black text-[9px] uppercase">cNFT</Text>
+              </View>
+            </View>
+
+            {/* Nombre y Ubicación */}
+            <Text className="text-border font-black text-xl text-center uppercase mb-1 leading-tight">
+              {title}
+            </Text>
+            <Text className="text-border font-bold text-xs opacity-70 mb-4 text-center">
+              📍 {location}
+            </Text>
+
+            {/* Recompensa de Puntos ($HZ) */}
+            <View className="bg-accent2 border-3 border-border px-4 py-2 shadow-brutal-sm mb-4 flex-row items-center w-full justify-between rounded-xl">
+              <View className="flex-row items-center">
+                <FontAwesome5 name="coins" size={16} color={colors.border} style={{ marginRight: 8 }} />
+                <Text className="text-border font-black text-xs uppercase">Recompensa Otorgada</Text>
+              </View>
+              <Text className="text-border font-black text-base">+{rewardPoints} $HZ</Text>
+            </View>
+
+            {/* Firma On-Chain Solana Devnet */}
+            {mintAddress && (
+              <View className="bg-background border-2 border-border p-2.5 w-full mb-4 rounded-xl">
+                <Text className="text-border text-[9px] font-black uppercase opacity-70 mb-0.5">
+                  {language === 'es' ? 'Firma On-Chain Devnet:' : 'On-Chain Devnet Signature:'}
+                </Text>
+                <Text className="text-border font-mono text-[9px]">
+                  {mintAddress.slice(0, 12)}...{mintAddress.slice(-12)}
+                </Text>
+              </View>
+            )}
+
+            {/* Botones de Acción */}
+            <View className="w-full gap-2.5">
+              <BrutalistButton
+                title={language === 'es' ? "VER EN MI PASAPORTE" : "VIEW IN PASSPORT"}
+                colorClass="bg-primary"
+                onPress={onGoToPassport}
+              />
+              
+              <Pressable
+                onPress={onClose}
+                className="w-full py-2.5 bg-background border-2 border-border justify-center items-center rounded-xl active:scale-95 shadow-brutal-sm"
+              >
+                <Text className="text-border font-black text-xs uppercase">
+                  {language === 'es' ? 'SEGUIR EXPLORANDO' : 'CONTINUE EXPLORING'}
+                </Text>
+              </Pressable>
+            </View>
 
           </View>
 
         </BrutalistCard>
       </Animated.View>
-
     </View>
   );
 }

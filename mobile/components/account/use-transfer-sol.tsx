@@ -29,11 +29,21 @@ export function useTransferSol({ address }: { address: PublicKey }) {
         let webSignature: string | undefined;
 
         if (Platform.OS === 'web') {
-          const provider = (window as any).solana;
-          if (!provider?.isPhantom) {
-            throw new Error('Phantom wallet not found');
+          const savedWallet = typeof window !== 'undefined' ? localStorage.getItem('huellazo_selected_wallet') : null;
+          let provider: any = null;
+
+          if (savedWallet === 'solflare' && (window as any).solflare) {
+            provider = (window as any).solflare;
+          } else if ((window as any).solflare?.isConnected) {
+            provider = (window as any).solflare;
+          } else {
+            provider = (window as any).phantom?.solana || (window as any).solana;
           }
-          
+
+          if (!provider || typeof provider.signAndSendTransaction !== 'function') {
+            throw new Error('No active Solana wallet found');
+          }
+
           const { signature: txSig } = await provider.signAndSendTransaction(transaction);
           webSignature = txSig;
         } else {

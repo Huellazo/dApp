@@ -6,6 +6,7 @@ Huellazo is a gamified and sustainable mobile tourism dApp built on the Solana n
 
 ## 📚 Documentation & Technical Guides
 
+- 🧪 **[Web3 & Solana Testing Manual](docs/GUIA_PRUEBAS_WEB3_SOLANA.md)**: Complete step-by-step testing guide for Phantom/Solflare wallets, Solana Pay QRs, cNFT minting, Blinks, and Pokémon P2P Trading.
 - 🌐 **[Web3 Integration Guide](docs/WEB3_INTEGRATION.md)**: Detailed technical specifications for Solana Devnet RPC connections, PDAs, instructions (`mint_place`, `mint_business`), and Mobile Wallet Adapter hooks.
 - 🪙 **[Tokenomics Strategy & SPL Token Guide](docs/ESTRATEGIA_TOKEN_HUELLAZOS.md)**: Deep-dive into converting $HZ points into native Solana SPL Tokens via Anchor CPIs.
 - 🌲 **[Full Architecture & cNFTs Guide](docs/ARQUITECTURA_Y_CNFTS.md)**: Deep-dive into monorepo layers, Metaplex Bubblegum, Merkle Trees, and SPL State Compression for Compressed NFTs.
@@ -115,12 +116,13 @@ npm run mobile:android
 
 ---
 
-## 🎮 Gamification Modules (Hackathon Features)
+## 🎮 Gamification & Web3 Modules (Hackathon Features)
 
 During the hackathon, we built several dynamic modules that bring the Huellazo economy to life on the frontend:
 
-- **Dynamic NFT Passport (`ownedNfts` state):** Unlike a static list, your passport is a dynamic inventory. You can earn, trade, and lose stamps based on your actions.
-- **P2P Synchronous Trading (Pokémon Style):** Users can offer their Stamps/NFTs by generating a QR Code (`TradeOfferModal`). Another user can scan it using the Huellazo Radar to initiate a 1-on-1 swap (`TradeAcceptModal`), making the NFTs truly liquid assets.
+- **Universal Intelligent QR Scanner (`scan.tsx`):** A unified Neo-Brutalist action button (`📷 ESCANEAR CÓDIGO QR`) and modal that automatically parses and routes live camera streams, uploaded QR photos, or quick test presets from `./qrcodes` to process Solana Pay transactions (`solana:`), cNFT POI mints, Solana Actions/Blinks (`solana-action:`), or P2P trades.
+- **P2P Synchronous Trading (Pokémon Style):** Users can offer their Stamps/NFTs by generating a QR Code (`TradeOfferModal`). Scanning it opens `TradeAcceptModal` featuring a **Pokémon Trade Machine Animation**—with energy beams, card crossover, white flash, and Devnet transaction hash signatures with direct Solscan links.
+- **Dynamic NFT Passport (`ownedNfts` state):** Managed via `passport.tsx`, your passport displays unlocked cNFT stamps, explorer levels/XP, SOL and Puntos Huellazos ($HZ) balances, and transaction history.
 - **Overclocked Radar (Token Utility):** Users can burn 100 `$HUELLAZOS` to "Overclock" their radar for 30 minutes. This visually transforms the UI to neon green and simulates the discovery of hidden POIs and rare drops.
 - **Local Blockchain Feed:** The scanner includes a "Local Node Feed" that simulates real-time on-chain activity from nearby explorers (e.g., "User 0x8A... minted a Taco Stamp"), creating a multiplayer Web3 experience.
 - **Piñata Loot Engine:** A probabilistic loot system where users can spend points to break a piñata and win random rewards, including ultra-rare "Chromatic" NFTs.

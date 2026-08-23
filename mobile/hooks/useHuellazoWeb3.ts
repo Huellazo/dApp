@@ -54,7 +54,10 @@ export function useHuellazoWeb3() {
         let provider = activeWebWallet;
 
         if (!provider && typeof window !== 'undefined') {
-          if (selectedAccount?.label === 'Solflare' || (window as any).solflare?.isConnected) {
+          const savedWallet = localStorage.getItem('huellazo_selected_wallet');
+          if (savedWallet === 'solflare' && (window as any).solflare) {
+            provider = (window as any).solflare;
+          } else if (selectedAccount?.label === 'Solflare' || (window as any).solflare?.isConnected) {
             provider = (window as any).solflare;
           } else if (selectedAccount?.label === 'Phantom' || (window as any).phantom?.solana?.isConnected) {
             provider = (window as any).phantom?.solana || (window as any).solana;

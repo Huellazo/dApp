@@ -14,7 +14,6 @@ import { lamportsToSol } from '@/utils/lamports-to-sol';
 import { useAppState } from '@/context/app-state';
 import { useLanguage } from '@/context/language-context';
 import { useHuellazoWeb3 } from '@/hooks/useHuellazoWeb3';
-import { TradeAcceptModal } from '@/components/features/passport/TradeAcceptModal';
 import { PublicKey } from '@solana/web3.js';
 
 const AVATAR_OPTIONS = [
@@ -71,9 +70,6 @@ export default function PassportScreen() {
   const [topupSuccessModal, setTopupSuccessModal] = useState(false);
   const [topupLoading, setTopupLoading] = useState(false);
   const [topupError, setTopupError] = useState<string | null>(null);
-
-  // Trade Modal State
-  const [isTradeModalVisible, setIsTradeModalVisible] = useState(false);
 
   const statusBorderColor = 
     status === 'wanted' ? 'border-primary' : 
@@ -368,32 +364,6 @@ export default function PassportScreen() {
         </View>
       </BrutalistCard>
 
-      {/* Quick Actions Header */}
-      <View className="mb-4">
-        <Text className="text-xl font-black text-border uppercase">{t('passport.quick_actions')}</Text>
-        <Text className="text-border text-xs font-bold opacity-80 mt-0.5">
-          {language === 'es' ? 'Envía estampas generando un QR o escanea para recibir coleccionables P2P' : 'Send stamps by generating a QR or scan to receive P2P collectibles'}
-        </Text>
-      </View>
-
-      {/* Quick Action Buttons: Enviar Estampa & Escanear QR */}
-      <View className="flex-row justify-between mb-8">
-        <View className="w-[48%]">
-           <BrutalistButton 
-             title={language === 'es' ? "ENVIAR ESTAMPA" : "SEND STAMP"} 
-             colorClass="bg-accent2" 
-             onPress={() => setIsTradeModalVisible(true)} 
-           />
-        </View>
-        <View className="w-[48%]">
-           <BrutalistButton 
-             title={language === 'es' ? "ESCANEAR QR" : "SCAN QR"} 
-             colorClass="bg-primary" 
-             onPress={() => router.push('/(tabs)/scan')} 
-           />
-        </View>
-      </View>
-
       {/* Transaction History Section */}
       <Text className="text-2xl font-black text-border mb-4 uppercase">{t('passport.transaction_history')}</Text>
       <View className="mb-12">
@@ -661,9 +631,6 @@ export default function PassportScreen() {
           </BrutalistCard>
         </View>
       </Modal>
-
-      {/* Trade Modal for collectible stamps */}
-      <TradeAcceptModal visible={isTradeModalVisible} onClose={() => setIsTradeModalVisible(false)} />
 
     </ScrollView>
   );
