@@ -1,58 +1,45 @@
-# Guía de Ajustes de Construcción en Vercel — Huellazo dApp
+# Guía de Despliegue en Vercel — 18 Variables de Entorno de Huellazo
 
-Esta guía detalla la **configuración exacta de construcción (Build Settings)** necesaria en el panel de Vercel para asegurar un despliegue exitoso sin errores:
-
----
-
-## ⚙️ Configuración del Proyecto en Vercel (Project Settings)
-
-Al importar tu repositorio `Huellazo/dApp` en [vercel.com](https://vercel.com):
-
-1. **Framework Preset**: Selecciona **`Other`** (Vercel utilizará las reglas definidas en `vercel.json`).
-2. **Root Directory**: **`./`** (déjalo por defecto en la raíz).
-3. **Build Command**: Déjalo deshabilitado / vacío (`Override` en **OFF**). Vercel ejecutará automáticamente la compilación de Python definida en `@vercel/python`.
-4. **Output Directory**: Déjalo deshabilitado / vacío.
-5. **Install Command**: Déjalo deshabilitado / vacío. Vercel instalará automáticamente las dependencias registradas en `requirements.txt`.
+Esta lista contiene las **18 variables de entorno** exactas preparadas y optimizadas para pegarlas en el panel de **Vercel** ([vercel.com](https://vercel.com)):
 
 ---
 
-## 📋 Archivos Creados para Vercel
-- **[vercel.json](file:///home/m4r10/Documents/projects/dApp/vercel.json)**:
-  - Runtime: `@vercel/python` apuntando a `backend/app/main.py`.
-  - Cabeceras Globales CORS: `X-Action-Version: 2.1.3`, `X-Blockchain-Ids: solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp`, `Access-Control-Allow-Origin: *`.
-- **[requirements.txt](file:///home/m4r10/Documents/projects/dApp/requirements.txt)**:
-  - Situado en la raíz del proyecto para autodetección inmediata por Vercel.
+## 📋 Lista Completa de las 18 Variables para Vercel
 
----
+```env
+# --- Base de Datos PostgreSQL ---
+POSTGRES_DB=huellazo
+POSTGRES_USER=huellazo_user
+POSTGRES_PASSWORD=huellazo_dev_2026
+DB_PORT=5432
+DATABASE_URL=postgresql+asyncpg://huellazo_user:huellazo_dev_2026@localhost:5432/huellazo
 
-## 🚀 Pasos para Desplegar (Paso a Paso)
+# --- Backend API (FastAPI) ---
+ENVIRONMENT=production
+CORS_ORIGINS=*
 
-### Opción A: Vercel Web Dashboard (Recomendada)
-1. Haz commit y push de tus cambios a GitHub:
-   ```bash
-   git add .
-   git commit -m "feat: add vercel build settings and CORS headers"
-   git push origin main
-   ```
-2. Ve a [vercel.com/new](https://vercel.com/new) e importa `Huellazo/dApp`.
-3. Verifica que en **Build and Output Settings** todas las opciones estén por defecto (sin override).
-4. Haz clic en **Deploy**.
+# --- Solana Network & Anchor Smart Contracts (Devnet) ---
+SOLANA_RPC_URL=https://api.devnet.solana.com
+HUELLAZO_PROGRAM_ID=2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ
+VAULT_PROGRAM_ID=HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU
+VALIDATOR_RPC_PORT=8899
 
-### Opción B: Vercel CLI
-```bash
-vercel --prod
+# --- Mapbox (Servicios de Mapas) ---
+MAPBOX_ACCESS_TOKEN=pk.eyJ1IjoibTRyMTAiLCJhIjoiY2x6eXF4NXR5MDFueDJqcjJ4ZnV6MXRjNiJ9.demo
+MAPBOX_DOWNLOADS_TOKEN=sk.eyJ1IjoibTRyMTAiLCJhIjoiY2x6eXF4NXR5MDFueDJqcjJ4ZnV6MXRjNiJ9.demo
+
+# --- Expo Mobile Frontend ---
+EXPO_PUBLIC_API_URL=https://huellazo-dapp.vercel.app
+EXPO_PUBLIC_SOLANA_RPC=https://api.devnet.solana.com
+EXPO_PUBLIC_HUELLAZO_PROGRAM_ID=2S3Xwt56qB314HcLVrRtREyquEz78rAgJaxZmv1s6emZ
+EXPO_PUBLIC_VAULT_PROGRAM_ID=HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU
+EXPO_PUBLIC_MAPBOX_TOKEN=pk.eyJ1IjoibTRyMTAiLCJhIjoiY2x6eXF4NXR5MDFueDJqcjJ4ZnV6MXRjNiJ9.demo
 ```
 
 ---
 
-## 🔗 Probar tu Solana Blink en Dialect Devnet (`dial.to`)
-
-Abre en tu navegador la URL que genera Vercel (e.g. `https://huellazo-dapp.vercel.app`):
-```text
-https://dial.to/devnet?action=solana-action:https://huellazo-dapp.vercel.app/api/v1/blinks/claim-stamp?poiId=cerro_minas
-```
-
-### ✅ Resultado Esperado:
-- **Respuesta 200 OK** (CERO error 503).
-- Carga instantánea de la imagen en alta definición hospedada en GitHub.
-- Firma y ejecución de la transacción en **Solana Devnet**.
+## ⚙️ Cómo Agregar las Variables en Vercel
+1. En el panel de Vercel, ve a la sección **Environment Variables**.
+2. Copia todo el bloque de texto superior de una sola vez.
+3. Vercel detectará y separará automáticamente el nombre de la variable y su valor.
+4. Haz clic en **Save** o **Deploy**.

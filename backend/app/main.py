@@ -1,3 +1,12 @@
+import os
+import sys
+from pathlib import Path
+
+# Inyectar el directorio backend a sys.path para resolución de módulos en Vercel Serverless
+backend_dir = Path(__file__).resolve().parent.parent
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
