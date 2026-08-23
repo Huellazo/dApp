@@ -1,10 +1,12 @@
 from pydantic_settings import BaseSettings
-from typing import List
+from pydantic import field_validator
+from typing import List, Union
+import json
 
 class Settings(BaseSettings):
     # -- App --
     environment: str = "development"
-    api_prefix: str = "/api"
+    api_prefix: str = "/api/v1"
 
     # -- Database --
     database_url: str = "postgresql+asyncpg://huellazo_user:huellazo_dev_2026@localhost:5432/huellazo"
@@ -16,6 +18,20 @@ class Settings(BaseSettings):
 
     # -- CORS --
     cors_origins: List[str] = ["*"]
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str):
+            if v.startswith("[") and v.endswith("]"):
+                try:
+                    return json.loads(v)
+                except Exception:
+                    pass
+            if "," in v:
+                return [i.strip() for i in v.split(",")]
+            return [v.strip()]
+        return v
 
     class Config:
         env_file = ".env"

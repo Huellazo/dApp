@@ -12,7 +12,7 @@ import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-ad
 import { generateSigner, signerIdentity } from '@metaplex-foundation/umi';
 
 export function useHuellazoCnft() {
-  const { walletAddress } = useAuth();
+  const { walletAddress, activeWebWallet, selectedAccount } = useAuth();
   const [isMintingCnft, setIsMintingCnft] = useState(false);
   const [lastCnftResult, setLastCnftResult] = useState<MintCnftResult | null>(null);
   const [cnftError, setCnftError] = useState<string | null>(null);
@@ -20,9 +20,19 @@ export function useHuellazoCnft() {
   const umi = useMemo(() => {
     const umiClient = getUmiClient();
 
-    // If wallet adapter is connected in browser / mobile (Solflare / Phantom / Solana)
+    // Respect active connected wallet provider (Solflare / Phantom)
     if (typeof window !== 'undefined') {
-      const provider = (window as any).solflare || (window as any).phantom?.solana || (window as any).solana;
+      let provider = activeWebWallet;
+      if (!provider) {
+        if (selectedAccount?.label === 'Solflare' || (window as any).solflare?.isConnected) {
+          provider = (window as any).solflare;
+        } else if (selectedAccount?.label === 'Phantom' || (window as any).phantom?.solana?.isConnected) {
+          provider = (window as any).phantom?.solana || (window as any).solana;
+        } else {
+          provider = (window as any).solflare || (window as any).phantom?.solana || (window as any).solana;
+        }
+      }
+
       if (provider && provider.publicKey) {
         try {
           umiClient.use(walletAdapterIdentity(provider));
@@ -40,7 +50,7 @@ export function useHuellazoCnft() {
     }
 
     return umiClient;
-  }, [walletAddress]);
+  }, [walletAddress, activeWebWallet, selectedAccount]);
 
   /**
    * Mints a Compressed NFT (cNFT) stamp on Solana Devnet via Metaplex Bubblegum V2 & Helius DAS API
@@ -56,7 +66,8 @@ export function useHuellazoCnft() {
 
         // 2. Mint Compressed NFT (cNFT) leaf in the tree, target owner = connected wallet (Solflare/Phantom)
         const providerPk = typeof window !== 'undefined'
-          ? ((window as any).solflare?.publicKey?.toBase58?.() ||
+          ? (activeWebWallet?.publicKey?.toBase58?.() ||
+             (window as any).solflare?.publicKey?.toBase58?.() ||
              (window as any).phantom?.solana?.publicKey?.toBase58?.() ||
              (window as any).solana?.publicKey?.toBase58?.() ||
              (window as any).solflare?.publicKey?.toString?.() ||

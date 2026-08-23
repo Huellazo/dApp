@@ -15,6 +15,9 @@ export interface AuthProviderState {
   signOut: () => Promise<void>
   updateUserState: (user: User) => Promise<void>
   walletAddress: string | null
+  activeWebWallet: any
+  authorization: any
+  selectedAccount: any
 }
 
 const AuthContext = createContext<AuthProviderState>({} as AuthProviderState)
@@ -117,7 +120,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
         signIn,
         signOut,
         updateUserState,
-        walletAddress
+        walletAddress,
+        activeWebWallet,
+        authorization,
+        selectedAccount,
       }}
     >
       {children}

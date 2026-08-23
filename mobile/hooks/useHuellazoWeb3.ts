@@ -27,7 +27,7 @@ export interface OnChainMintResult {
 }
 
 export function useHuellazoWeb3() {
-  const { walletAddress } = useAuth();
+  const { walletAddress, activeWebWallet, authorization, selectedAccount } = useAuth();
   const { mintCnftStamp } = useHuellazoCnft();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSignature, setLastSignature] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export function useHuellazoWeb3() {
   }, [userPubkey]);
 
   /**
-   * Helper to sign and send transactions via Web Wallet (Phantom/Solflare) or Mobile Wallet Adapter (MWA)
+   * Helper to sign and send transactions maintaining exact persistent wallet selection (Solflare / Phantom)
    */
   const executeWalletTransaction = useCallback(
     async (transaction: Transaction, activePubkey: PublicKey): Promise<string> => {
@@ -49,9 +49,20 @@ export function useHuellazoWeb3() {
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = activePubkey;
 
-      // 1. Web Browser (Phantom / Solflare)
+      // 1. Web Browser (Uses persistent activeWebWallet or connected Solflare / Phantom provider)
       if (Platform.OS === 'web') {
-        const provider = (window as any).phantom?.solana || (window as any).solana || (window as any).solflare;
+        let provider = activeWebWallet;
+
+        if (!provider && typeof window !== 'undefined') {
+          if (selectedAccount?.label === 'Solflare' || (window as any).solflare?.isConnected) {
+            provider = (window as any).solflare;
+          } else if (selectedAccount?.label === 'Phantom' || (window as any).phantom?.solana?.isConnected) {
+            provider = (window as any).phantom?.solana || (window as any).solana;
+          } else {
+            provider = (window as any).solflare || (window as any).phantom?.solana || (window as any).solana;
+          }
+        }
+
         if (provider && typeof provider.signAndSendTransaction === 'function') {
           const { signature } = await provider.signAndSendTransaction(transaction);
           return signature;
@@ -62,16 +73,26 @@ export function useHuellazoWeb3() {
         }
       }
 
-      // 2. Mobile Native (Mobile Wallet Adapter Protocol)
+      // 2. Mobile Native (Mobile Wallet Adapter Protocol with persistent auth_token)
       if (Platform.OS !== 'web') {
         const resultSignature = await transact(async (wallet) => {
-          await wallet.authorize({
-            cluster: 'devnet',
-            identity: {
-              name: AppConfig.name,
-              uri: AppConfig.uri,
-            },
-          });
+          if (authorization?.auth_token) {
+            await wallet.reauthorize({
+              auth_token: authorization.auth_token,
+              identity: {
+                name: AppConfig.name,
+                uri: AppConfig.uri,
+              },
+            });
+          } else {
+            await wallet.authorize({
+              cluster: 'devnet',
+              identity: {
+                name: AppConfig.name,
+                uri: AppConfig.uri,
+              },
+            });
+          }
 
           const [signedTx] = await wallet.signTransactions({
             transactions: [transaction],
@@ -86,7 +107,7 @@ export function useHuellazoWeb3() {
 
       throw new Error('NO_WALLET');
     },
-    []
+    [activeWebWallet, authorization, selectedAccount]
   );
 
   /**
