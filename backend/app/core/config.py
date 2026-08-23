@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 from pydantic import field_validator
-from typing import List, Union
+from typing import List, Union, Any
 import json
 
 class Settings(BaseSettings):
@@ -17,24 +17,30 @@ class Settings(BaseSettings):
     vault_program_id: str = "HLGbJxYnfKAnYxoaLyWVFMR2gQp1MKFdEtg1auK4VuRU"
 
     # -- CORS --
-    cors_origins: List[str] = ["*"]
+    cors_origins: Union[List[str], str] = ["*"]
 
     @field_validator("cors_origins", mode="before")
     @classmethod
-    def parse_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+    def parse_cors_origins(cls, v: Any) -> List[str]:
         if isinstance(v, str):
-            if v.startswith("[") and v.endswith("]"):
+            v_str = v.strip()
+            if v_str.startswith("[") and v_str.endswith("]"):
                 try:
-                    return json.loads(v)
+                    res = json.loads(v_str)
+                    if isinstance(res, list):
+                        return [str(x) for x in res]
                 except Exception:
                     pass
-            if "," in v:
-                return [i.strip() for i in v.split(",")]
-            return [v.strip()]
-        return v
+            if "," in v_str:
+                return [i.strip() for i in v_str.split(",")]
+            return [v_str]
+        elif isinstance(v, list):
+            return [str(x) for x in v]
+        return ["*"]
 
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"
 
 settings = Settings()
